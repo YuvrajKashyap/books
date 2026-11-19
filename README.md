@@ -35,3 +35,5 @@ Deploy to the existing yk-reading-room project. Test a staged production build b
 Visitors can browse titles, authors, covers and the four categories through GET /api/shelf. This read-only catalogue uses separate public book identifiers. Reading activity, notes, queue order, backups and mutations require authorized private access. The owner signs in at /admin.
 
 The Vite client lives in frontend/, the Hono service in backend/, the deployment entry point in api/, and portable types and library rules in shared/. The public room loads more shelves as you scroll. Jacket source records live in frontend/src/shelf/jackets.json. Original library jackets are identified in the book inspector. The oak material comes from the three.js example texture collection.
+
+An authorized command may request the updated library with the header `Prefer: return=representation`. The response includes the committed revision, optional book ID and library snapshot. Omitting the header returns the compact receipt.

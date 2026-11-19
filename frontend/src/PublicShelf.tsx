@@ -3,7 +3,7 @@ import {Link,useSearchParams} from 'react-router-dom';
 import {ArrowDown,ArrowLeft,ArrowRight,BookOpen,ChevronDown,KeyRound,Search,X} from 'lucide-react';
 import {Dialog,type ShelfBook} from './components';
 import {ThemePicker} from './ThemePicker';
-import {focuses} from '../../shared/model';
+import {focuses} from '../../shared/categories';
 import {Hardcover} from './shelf/Hardcover';
 import {displayTitle,jacketFor} from './shelf/artwork';
 

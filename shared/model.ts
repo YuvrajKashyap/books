@@ -1,10 +1,6 @@
 import { z } from "zod";
-export const focuses = [
-  "Identity + Discipline",
-  "Wealth + Execution",
-  "Behavior + Mental Models",
-  "Misc.",
-] as const;
+import { focuses } from "./categories.ts";
+export { focuses };
 export const statuses = ["Reading", "To Read", "Completed"] as const;
 export const columns = [
   "author",

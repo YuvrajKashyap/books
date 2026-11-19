@@ -34,9 +34,10 @@ app.use("*", async (c, next) => {
   c.header("Cache-Control", "private, no-store");
   await next();
 });
-app.get("/api/config", (c) =>
-  c.json({ url: env("SUPABASE_URL"), key: env("SUPABASE_KEY") }),
-);
+app.get("/api/config", (c) => {
+  c.header("Cache-Control", "public, max-age=60, s-maxage=300");
+  return c.json({ url: env("SUPABASE_URL"), key: env("SUPABASE_KEY") });
+});
 app.get("/api/shelf", async (c) => {
   const books = await db().begin("read only", async (tx) => {
     await scope(tx);
@@ -56,9 +57,8 @@ app.get("/api/shelf", async (c) => {
   c.header("Cache-Control", "public, max-age=30, s-maxage=60");
   return c.json({ books });
 });
-app.use("/api/*", bodyLimit({ maxSize: 4_000_000 }));
 app.use("/api/*", async (c, next) => {
-  const token = c.req.header("Authorization")?.replace(/^Bearer /, "") || "";
+  const token = /^Bearer ([^\s]+)$/i.exec(c.req.header("Authorization") || "")?.[1] || "";
   let write = equal(token, env("AGENT_WRITE")),
     read = write || equal(token, env("AGENT_READ"));
   if (!read && token) {
@@ -78,6 +78,7 @@ app.use("/api/*", async (c, next) => {
   c.set("write", write);
   await next();
 });
+app.use("/api/command", bodyLimit({ maxSize: 4_000_000 }));
 type Tx = postgres.TransactionSql;
 const scope = (tx: Tx) =>
   tx`select set_config('books.owner',${env("BOOKS_OWNER_ID")},true)`;
@@ -264,7 +265,11 @@ app.post("/api/command", async (c) => {
       await tx`update books.library set rotation=${rotation},views=${tx.json(views)}`;
     }
     await tx`update books.library set revision=revision+1`;
-    return { revision: revision + 1, id: selectedId };
+    const receipt = { revision: revision + 1, id: selectedId };
+    if (c.req.header("Prefer") === "return=representation") {
+      return { ...receipt, library: { version: 1, ...(await header(tx)), books: await fields(tx) } };
+    }
+    return receipt;
   });
   return c.json(result);
 });

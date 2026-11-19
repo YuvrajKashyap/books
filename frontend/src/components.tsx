@@ -6,7 +6,8 @@ import {
   type CSSProperties,
 } from "react";
 import { BookOpen, X, Bookmark, Leaf, Layers, Compass } from "lucide-react";
-import { focuses, type Book } from "../../shared/model";
+import type { Book } from "../../shared/model";
+import { focuses } from "../../shared/categories";
 import {jacketFor} from "./shelf/artwork";
 export type ShelfBook=Pick<Book,"id"|"title"|"author"|"focus"|"cover">;
 export function Brand() {
