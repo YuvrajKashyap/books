@@ -81,10 +81,11 @@ export function ink(b: ShelfBook) {
     [...b.id].reduce((n, c) => n + c.charCodeAt(0), 0) % cloth.length
   ];
 }
-export function Cover({ book: b }: { book: ShelfBook }) {
+export function Cover({ book: b, shelf = false, priority = false }: { book: ShelfBook; shelf?: boolean; priority?: boolean }) {
   const [failed, setFailed] = useState<string[]>([]);
   const isbn = /^\d{13}$/.test(b.cover) ? b.cover : "";
-  const src = [jacketFor(b)?.file, isbn && "/covers/" + isbn + ".jpg", isbn && "https://covers.openlibrary.org/b/isbn/" + isbn + "-M.jpg?default=false"].find(url => url && !failed.includes(url));
+  const jacket = jacketFor(b);
+  const src = [jacket?.file, isbn && "/covers/" + isbn + ".jpg", isbn && "https://covers.openlibrary.org/b/isbn/" + isbn + "-M.jpg?default=false"].find(url => url && !failed.includes(url));
   return (
     <span
       aria-hidden="true"
@@ -92,12 +93,15 @@ export function Cover({ book: b }: { book: ShelfBook }) {
       style={{ "--cloth": ink(b) } as CSSProperties}
     >
       {src ? (
+        <picture style={{ display: "contents" }}>
+          {shelf && jacket?.small && src === jacket.file && !failed.includes(jacket.small) && <source media="(max-width: 480px) and (max-resolution: 2.5dppx)" srcSet={jacket.small} />}
         <img
           alt=""
           src={src}
-          onError={() => setFailed(previous => [...previous, src])}
-          loading="lazy"
-        />
+          onError={event => { const path = new URL(event.currentTarget.currentSrc || src, location.href).pathname; setFailed(previous => [...previous, path === jacket?.small ? path : src]); }}
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+        /></picture>
       ) : (
         <>
           <span className="cover-author">{b.author || "Yuvraj’s Bookshelf"}</span>

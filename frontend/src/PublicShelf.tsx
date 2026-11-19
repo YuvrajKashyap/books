@@ -15,7 +15,7 @@ function BookcaseRow({books,index,columns,open}:{books:ShelfBook[],index:number,
  return <div className="bay" ref={ref} style={{'--columns':columns,'--grain-y':(index*117)%600+'px'} as CSSProperties}>
  <div className="bay-floor"/><div className="row-books">{books.map((b,i)=><button key={b.id} className="volume" aria-label={'Pick up '+displayTitle(b.title)+' by '+b.author} onClick={()=>open(b.id)} style={{'--lean':[-4,2,-2,3,-3,1][i%6]+'deg','--delay':i*35+'ms','--height':(.92+((i+index)%3)*.04)} as CSSProperties}
  onPointerMove={e=>{if(e.pointerType!=='mouse')return;const el=e.currentTarget,r=el.getBoundingClientRect();el.style.setProperty('--yaw',((e.clientX-r.left)/r.width*14-7)+'deg')}} onPointerLeave={e=>e.currentTarget.style.removeProperty('--yaw')}>
- <span className="volume-shadow"/><span className="volume-lift"><Hardcover book={b}/></span><span className="volume-caption">{displayTitle(b.title)}</span></button>)}</div>
+ <span className="volume-shadow"/><span className="volume-lift"><Hardcover book={b} shelf priority={index===0}/></span><span className="volume-caption">{displayTitle(b.title)}</span></button>)}</div>
  <div className="shelf-lip"><span className="brass-plate">SHELF {String(index+1).padStart(2,'0')}</span></div></div>
 }
 export function PublicShelf(){
