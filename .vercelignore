@@ -1,0 +1,6 @@
+private/
+scripts/
+tests/
+supabase/
+.env*
+dist/
