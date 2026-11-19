@@ -12,7 +12,7 @@ import {
   viewSchema,
   focuses,
   type Book,
-} from "../src/model.js";
+} from "../shared/model.js";
 const app = new Hono<{ Variables: { write: boolean } }>();
 const env = (name: string) => process.env[name]?.trim() || "";
 let pool: ReturnType<typeof postgres>;

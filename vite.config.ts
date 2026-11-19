@@ -4,6 +4,8 @@ import { getRequestListener } from "@hono/node-server";
 import { existsSync } from "node:fs";
 import api from "./backend/app.js";
 export default defineConfig({
+  root: "frontend",
+  build: {outDir:"../dist",emptyOutDir:true},
   plugins: [
     react(),
     {

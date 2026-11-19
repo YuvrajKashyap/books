@@ -8,7 +8,7 @@ import {
   nextPick,
   completed,
   type Book,
-} from "../src/model.ts";
+} from "../shared/model.ts";
 const make = (
   id: string,
   focus: Book["focus"],

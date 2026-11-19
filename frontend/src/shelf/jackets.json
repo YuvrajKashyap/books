@@ -1,0 +1,910 @@
+{
+  "$100M Money Models|Alex Hormozi": {
+    "file": "/jackets/85d699eae7550a61.webp",
+    "source": "https://openlibrary.org/works/OL44353578W"
+  },
+  "100M Leads|Alex Hormozi": {
+    "file": "/jackets/3385632639f152e1.webp",
+    "source": "https://openlibrary.org/works/OL35758299W"
+  },
+  "100M Offers|Alex Hormozi": {
+    "file": "/covers/9781737475736.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9781737475736-L.jpg"
+  },
+  "12 Rules for Life|Jordan B. Peterson": {
+    "file": "/jackets/fc459bf13d4f172c.webp",
+    "source": "https://openlibrary.org/works/OL17837119W"
+  },
+  "33 Strategies of War|Robert Greene": {
+    "file": "/jackets/1867b04ea2e91de0.webp",
+    "source": "https://openlibrary.org/works/OL9290241W"
+  },
+  "48 Laws of Power|Robert Greene": {
+    "file": "/jackets/6d6dc34dd6152674.webp",
+    "source": "https://openlibrary.org/works/OL1968368W"
+  },
+  "5 Types of People Who Can Ruin Your Life|Bill Eddy": {
+    "file": "/jackets/982a67c88ad48aa7.webp",
+    "source": "https://openlibrary.org/works/OL20572620W"
+  },
+  "50 Scientifically Proven Ways to be Persuasive|Noah J. Goldstein, Steve J. Martin & Robert Cialdini": {
+    "file": "/jackets/865428f6ea108610.webp",
+    "source": "https://openlibrary.org/works/OL12438246W"
+  },
+  "7 Strategies for Wealth & Happiness|Jim Rohn": {
+    "file": "/jackets/7590ef8d2b5e9ef6.webp",
+    "source": "https://openlibrary.org/works/OL8262300W"
+  },
+  "A Brief History of Time|Stephen Hawking": {
+    "file": "/jackets/6e8483368842bff6.webp",
+    "source": "https://openlibrary.org/works/OL1892617W"
+  },
+  "A Causal Test of the Strength of Weak Ties|Science / LinkedIn study": {
+    "custom": true,
+    "file": "/jackets/4dde21c46e7dc575.webp"
+  },
+  "A Happy Pocket Full Of Money|David Cameron Gikandi": {
+    "file": "/jackets/90630f0cbe6e0309.webp",
+    "source": "https://openlibrary.org/works/OL20027636W"
+  },
+  "A Hitchhiker\u2019s Guide to the Galaxy|Douglas Adams": {
+    "file": "/jackets/b6a303ff626949ef.webp",
+    "source": "https://books.apple.com/us/book/id419923960"
+  },
+  "A Random Walk Down Wallstreet|Burton G. Malkiel": {
+    "file": "/jackets/c78feab2ea967f2c.webp",
+    "source": "https://openlibrary.org/works/OL2000283W"
+  },
+  "A Short History of Nearly Everything|Bill Bryson": {
+    "file": "/jackets/5b0c5e657a4c2532.webp",
+    "source": "https://openlibrary.org/works/OL74128W"
+  },
+  "AI Engineering|Chip Huyen": {
+    "file": "/jackets/0628448079359fad.webp",
+    "source": "https://openlibrary.org/works/OL39671094W"
+  },
+  "Activate Your Brain|Scott G. Halford": {
+    "file": "/jackets/d343946dc5f20a5e.webp",
+    "source": "https://openlibrary.org/works/OL20983575W"
+  },
+  "Algorithms to Live by|Brian Christian & Tom Griffiths": {
+    "file": "/jackets/06a8250805fe6aea.webp",
+    "source": "https://openlibrary.org/works/OL17357767W"
+  },
+  "Antifragile|Nassim Nicholas Taleb": {
+    "file": "/jackets/964113ed504435d2.webp",
+    "source": "https://openlibrary.org/works/OL16726829W"
+  },
+  "Art of War|Sun Tzu": {
+    "file": "/jackets/368a60cf3bbef744.webp",
+    "source": "https://openlibrary.org/works/OL244537W"
+  },
+  "As We Speak|Peter Meyers & Shann Nix": {
+    "file": "/jackets/8da0c36980605cf0.webp",
+    "source": "https://openlibrary.org/works/OL15936439W"
+  },
+  "As a Man Thinketh|James Allen": {
+    "file": "/jackets/c5879e1e3ed9d301.webp",
+    "source": "https://openlibrary.org/works/OL43024W"
+  },
+  "Atomic Habits|James Clear": {
+    "file": "/jackets/9a1463e437457d02.webp",
+    "source": "https://openlibrary.org/works/OL17930368W"
+  },
+  "Bad Blood|John Carreyrou": {
+    "file": "/jackets/d84bffdd453bfb72.webp",
+    "source": "https://openlibrary.org/works/OL17892614W"
+  },
+  "Becoming Steve Jobs|Brent Schlender & Rick Tetzeli": {
+    "file": "/jackets/a72e532ef8bb10e5.webp",
+    "source": "https://openlibrary.org/works/OL17881333W"
+  },
+  "Beyond Order|Jordan B. Peterson": {
+    "file": "/jackets/df6ffeb1eed318ea.webp",
+    "source": "https://openlibrary.org/works/OL23612724W"
+  },
+  "Black Swan|Nassim Nicholas Taleb": {
+    "file": "/jackets/7856e6dd506fef4e.webp",
+    "source": "https://openlibrary.org/works/OL3295030W"
+  },
+  "Blitzscaling|Reid Hoffman & Chris Yeh": {
+    "file": "/jackets/044376a45dd1a951.webp",
+    "source": "https://openlibrary.org/works/OL18027210W"
+  },
+  "Born to Win|Zig Ziglar": {
+    "file": "/jackets/0e975e6810ed6175.webp",
+    "source": "https://openlibrary.org/works/OL20403148W"
+  },
+  "Built to Sell|John Warrillow": {
+    "file": "/jackets/8d190d9dc5d6e080.webp",
+    "source": "https://openlibrary.org/works/OL16149036W"
+  },
+  "Burn the Boats|Matt Higgins": {
+    "file": "/jackets/39149e77e0e39326.webp",
+    "source": "https://openlibrary.org/works/OL34853975W"
+  },
+  "Business Habits that Drive High Performance|Jon R. Katzenbach, James Thomas & Gretchen Anderson": {
+    "custom": true,
+    "file": "/jackets/da1a25052824daf5.webp"
+  },
+  "Business Model Generation|Alexander Osterwalder & Yves Pigneur": {
+    "file": "/jackets/5a96c2c95339d7b3.webp",
+    "source": "https://openlibrary.org/works/OL29249246W"
+  },
+  "Buy Back Your Time|Dan Martell": {
+    "file": "/jackets/e332b1f946fd3752.webp",
+    "source": "https://openlibrary.org/works/OL27915564W"
+  },
+  "Can\u2019t Hurt Me|David Goggins": {
+    "file": "/jackets/840d0ad1a080d2c5.webp",
+    "source": "https://openlibrary.org/works/OL18108064W"
+  },
+  "Capital Returns|Edward Chancellor": {
+    "file": "/jackets/89d99a2bc0e4b2d7.webp",
+    "source": "https://openlibrary.org/works/OL21163218W"
+  },
+  "Cashvertising|Drew Eric Whitman": {
+    "file": "/jackets/f0528c2f15cd0d1c.webp",
+    "source": "https://openlibrary.org/works/OL9732822W"
+  },
+  "Chinas Super Consumers|Savio Chan & Michael Zakkour": {
+    "file": "/jackets/62a5a335d162e9cd.webp",
+    "source": "https://openlibrary.org/works/OL21547161W"
+  },
+  "Company of One|Paul Jarvis": {
+    "file": "/jackets/0ff3d2edebf8a9ec.webp",
+    "source": "https://openlibrary.org/works/OL19799434W"
+  },
+  "Confessions of an Advertising Man|David Ogilvy": {
+    "file": "/jackets/1e9dcdc9214dc6c5.webp",
+    "source": "https://openlibrary.org/works/OL3346507W"
+  },
+  "Content Inc.|Joe Pulizzi": {
+    "file": "/jackets/83debdd120114563.webp",
+    "source": "https://openlibrary.org/works/OL20019763W"
+  },
+  "Copywriting Secrets|Jim Edwards": {
+    "file": "/jackets/8b554a4ed6b5df26.webp",
+    "source": "https://openlibrary.org/works/OL22799949W"
+  },
+  "Courage Is Calling|Ryan Holiday": {
+    "file": "/jackets/f207a63bbcb64bad.webp",
+    "source": "https://openlibrary.org/works/OL24698824W"
+  },
+  "Cryptoassets|Chris Burniske & Jack Tatar": {
+    "file": "/jackets/801638da496da734.webp",
+    "source": "https://openlibrary.org/works/OL20978163W"
+  },
+  "Deep Work|Cal Newport": {
+    "file": "/jackets/25c631cfbf573025.webp",
+    "source": "https://openlibrary.org/works/OL17713267W"
+  },
+  "Devil Take the Hindmost|Edward Chancellor": {
+    "file": "/jackets/cd417f4e3fa403a8.webp",
+    "source": "https://openlibrary.org/works/OL8034211W"
+  },
+  "Digital Minimalism|Cal Newport": {
+    "file": "/jackets/891b95d6250192f1.webp",
+    "source": "https://openlibrary.org/works/OL19541830W"
+  },
+  "Discipline Equals Freedom Field Manual|Jocko Willink": {
+    "file": "/jackets/bbe956c9194444f8.webp",
+    "source": "https://books.apple.com/us/book/id1523308951"
+  },
+  "Discipline Is Destiny|Ryan Holiday": {
+    "file": "/jackets/d33dfc7c2acf413b.webp",
+    "source": "https://openlibrary.org/works/OL27023502W"
+  },
+  "Do Things That Don\u2019t Scale|Paul Graham": {
+    "custom": true,
+    "file": "/jackets/7dd89c7d167a5600.webp"
+  },
+  "DotCom Secrets|Russell Brunson": {
+    "file": "/jackets/4e46ee7790ad9ce7.webp",
+    "source": "https://openlibrary.org/works/OL21687423W"
+  },
+  "Economic Facts and Fallacies|Thomas Sowell": {
+    "file": "/jackets/90a9a247723cde9a.webp",
+    "source": "https://openlibrary.org/works/OL1935761W"
+  },
+  "Economics in One Lesson|Henry Hazlitt": {
+    "file": "/jackets/b5c99b0a5bcf5870.webp",
+    "source": "https://openlibrary.org/works/OL541970W"
+  },
+  "Elon Musk - Walter Isaacson|Walter Isaacson": {
+    "file": "/jackets/ae92dd06293885c3.webp",
+    "source": "https://openlibrary.org/works/OL35720357W"
+  },
+  "Elon Musk- Ashlee Vance|Ashlee Vance": {
+    "file": "/covers/9780062301239.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780062301239-L.jpg"
+  },
+  "Enterprise AI Startups are Rewriting the Benchmarks|a16z": {
+    "custom": true,
+    "file": "/jackets/540d667efdb8c01c.webp"
+  },
+  "Enterprise Sales for Founders|YC Startup Library": {
+    "custom": true,
+    "file": "/jackets/0daad51358738c98.webp"
+  },
+  "Entrusted|Frank Hanna": {
+    "custom": true,
+    "file": "/jackets/2e9add0275d67816.webp"
+  },
+  "Epictetus|Epictetus": {
+    "file": "/jackets/29d5b1126c794ea8.webp",
+    "source": "https://openlibrary.org/works/OL10411274W"
+  },
+  "Exceptional|Daniel Cable": {
+    "file": "/jackets/02b2191c8a37d21e.webp",
+    "source": "https://books.apple.com/us/book/id1521312059"
+  },
+  "Expert Secrets|Russell Brunson": {
+    "file": "/jackets/6aab0809fcb3f94a.webp",
+    "source": "https://openlibrary.org/works/OL19718645W"
+  },
+  "Fake|Robert T. Kiyosaki": {
+    "file": "/jackets/67647255f0914e91.webp",
+    "source": "https://openlibrary.org/works/OL20639729W"
+  },
+  "Filthy Rich|James Patterson": {
+    "file": "/jackets/825044a2fb46644c.webp",
+    "source": "https://openlibrary.org/works/OL20032876W"
+  },
+  "Focus|Daniel Goleman": {
+    "file": "/jackets/45aa38665c1fbd2f.webp",
+    "source": "https://openlibrary.org/works/OL21723054W"
+  },
+  "Founders at Work|Jessica Livingston": {
+    "file": "/jackets/16975761f6f32301.webp",
+    "source": "https://openlibrary.org/works/OL16063674W"
+  },
+  "Games People Play|Eric Berne": {
+    "file": "/jackets/aca93a8ffea9a71e.webp",
+    "source": "https://openlibrary.org/works/OL1593567W"
+  },
+  "Getting Things Done|David Allen": {
+    "file": "/jackets/caef6f44b98d9eee.webp",
+    "source": "https://openlibrary.org/works/OL271504W"
+  },
+  "Goals|Brian Tracy": {
+    "file": "/jackets/9e38612b410fded0.webp",
+    "source": "https://openlibrary.org/works/OL2392330W"
+  },
+  "Good to Great|Jim Collins": {
+    "file": "/jackets/269df963b5c34dee.webp",
+    "source": "https://openlibrary.org/works/OL3486275W"
+  },
+  "Gym Launch Secrets|Alex Hormozi": {
+    "file": "/jackets/930ea95992a326a8.webp",
+    "source": "https://openlibrary.org/works/OL29239335W"
+  },
+  "High Output Management|Andrew S. Grove": {
+    "file": "/covers/9780679762881.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780679762881-L.jpg"
+  },
+  "How Asia Works|Joe Studwell": {
+    "file": "/jackets/753e295627bf9fda.webp",
+    "source": "https://openlibrary.org/works/OL17474661W"
+  },
+  "How They Get You|Chris Kohler": {
+    "file": "/jackets/2ec52c2c94957435.webp",
+    "source": "https://openlibrary.org/works/OL44546919W"
+  },
+  "How to Become Insanely Well-Connected|First Round Review": {
+    "custom": true,
+    "file": "/jackets/fa10233ef068f609.webp"
+  },
+  "How to Get Rich|Felix Dennis": {
+    "file": "/covers/9781591842712.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9781591842712-L.jpg"
+  },
+  "How to Make Money in Stocks|William J. O\u2019Neil": {
+    "file": "/jackets/f01db83c5171bd81.webp",
+    "source": "https://openlibrary.org/works/OL3498124W"
+  },
+  "How to Make Shit Happen|Sean Whalen": {
+    "custom": true,
+    "file": "/jackets/da435f14085e162c.webp"
+  },
+  "How to Win Friends and Influence People|Dale Carnegie": {
+    "file": "/jackets/481cf83f40897af7.webp",
+    "source": "https://openlibrary.org/works/OL1063267W"
+  },
+  "Hyper Learning|Edward D. Hess": {
+    "file": "/jackets/5d71eaa7ac444ead.webp",
+    "source": "https://openlibrary.org/works/OL24585878W"
+  },
+  "Hyperfocus: How to Work Less to Achieve More|Chris Bailey": {
+    "file": "/jackets/c3f54a6946c2e612.webp",
+    "source": "https://openlibrary.org/works/OL20743870W"
+  },
+  "Influence: Psychology of Persuasion|Robert Cialdini": {
+    "file": "/jackets/8e187463968602d5.webp",
+    "source": "https://openlibrary.org/works/OL3902892W"
+  },
+  "Invent it, Sell it, Bank it|Lori Greiner": {
+    "file": "/jackets/fcffb8fcdbfb8af4.webp",
+    "source": "https://openlibrary.org/works/OL16813554W"
+  },
+  "It Doesn\u2019t Have to Be Crazy at Work|Jason Fried & David Heinemeier Hansson": {
+    "file": "/jackets/cb4c1458aae174d6.webp",
+    "source": "https://openlibrary.org/works/OL18427651W"
+  },
+  "James Bond|Ian Fleming": {
+    "file": "/jackets/f56bcfe42c13b129.webp",
+    "source": "https://openlibrary.org/works/OL8164912W"
+  },
+  "Judgment in Managerial Decision Making|Max H. Bazerman & Don A. Moore": {
+    "file": "/jackets/349eab0dc9471b7e.webp",
+    "source": "https://openlibrary.org/works/OL1965645W"
+  },
+  "Leonardo da Vinci|Walter Isaacson": {
+    "file": "/jackets/d971735aa891bc65.webp",
+    "source": "https://openlibrary.org/works/OL17802920W"
+  },
+  "Let My People Go Surfing|Yvon Chouinard": {
+    "file": "/jackets/dc984f1d072fddee.webp",
+    "source": "https://openlibrary.org/works/OL16028960W"
+  },
+  "Letters From a Stoic|Seneca": {
+    "file": "/jackets/47b2e7ec2ec963d3.webp",
+    "source": "https://openlibrary.org/works/OL102290W"
+  },
+  "Lost and Founder|Rand Fishkin": {
+    "file": "/jackets/bc2adf3ba2887a25.webp",
+    "source": "https://openlibrary.org/works/OL19740367W"
+  },
+  "Main Street Millionaire|Codie Sanchez": {
+    "file": "/jackets/fd2ccf955619b19e.webp",
+    "source": "https://books.apple.com/us/book/id6478843192"
+  },
+  "Makers and Takers|Rana Foroohar": {
+    "file": "/jackets/2197eebde79ddd4c.webp",
+    "source": "https://openlibrary.org/works/OL20027656W"
+  },
+  "Mastering the Market Cycle|Howard Marks": {
+    "file": "/jackets/8dd6714ae4b3c709.webp",
+    "source": "https://openlibrary.org/works/OL20891114W"
+  },
+  "Mastery|Robert Greene": {
+    "file": "/covers/9780143124177.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780143124177-L.jpg"
+  },
+  "Measure What Matters|John Doerr": {
+    "file": "/jackets/d92e372b28a1173f.webp",
+    "source": "https://openlibrary.org/works/OL24232412W"
+  },
+  "Meditations|Marcus Aurelius": {
+    "file": "/covers/9780812968255.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780812968255-L.jpg"
+  },
+  "Mind Over Money|Brad Klontz & Ted Klontz": {
+    "file": "/jackets/3f1e0c83a2779d2d.webp",
+    "source": "https://openlibrary.org/works/OL13655613W"
+  },
+  "Mindset: The New Psychology of Success|Carol S. Dweck": {
+    "file": "/jackets/3faf5e591c198501.webp",
+    "source": "https://openlibrary.org/works/OL2003465W"
+  },
+  "Mindset|Carol S. Dweck": {
+    "file": "/jackets/3faf5e591c198501.webp",
+    "source": "https://openlibrary.org/works/OL2003465W"
+  },
+  "Mini Habits|Stephen Guise": {
+    "file": "/jackets/d79d4dd5281ba521.webp",
+    "source": "https://openlibrary.org/works/OL17807404W"
+  },
+  "Misbehaving|Richard H. Thaler": {
+    "file": "/jackets/3b22b924e36d9ef9.webp",
+    "source": "https://openlibrary.org/works/OL17940527W"
+  },
+  "Money: Master the Game|Tony Robbins": {
+    "file": "/jackets/f4e8f43be0d9ceb0.webp",
+    "source": "https://books.apple.com/us/book/id912145129"
+  },
+  "Moral Mazes|Robert Jackall": {
+    "file": "/jackets/470db6ebee0af41b.webp",
+    "source": "https://openlibrary.org/works/OL2651494W"
+  },
+  "More Everything Forever|Adam Becker": {
+    "file": "/jackets/7b6678c145063d5f.webp",
+    "source": "https://openlibrary.org/works/OL43199356W"
+  },
+  "More Money Than Trust|Graham Duncan": {
+    "custom": true,
+    "file": "/jackets/88201b9fc9d8a093.webp"
+  },
+  "Nail it Then Scale it|Nathan Furr & Paul Ahlstrom": {
+    "file": "/jackets/a332bf06a92fa14c.webp",
+    "source": "https://openlibrary.org/works/OL16803618W"
+  },
+  "Never Eat Alone|Keith Ferrazzi & Tahl Raz": {
+    "file": "/covers/9780385346658.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780385346658-L.jpg"
+  },
+  "Never Finished|David Goggins": {
+    "file": "/jackets/27171d45beb8d50a.webp",
+    "source": "https://openlibrary.org/works/OL29244027W"
+  },
+  "Never Split the Difference|Chris Voss": {
+    "file": "/jackets/963b852fc2b06793.webp",
+    "source": "https://openlibrary.org/works/OL18819818W"
+  },
+  "Nonviolent Communication|Marshall B. Rosenberg": {
+    "file": "/jackets/c89daa385d741553.webp",
+    "source": "https://openlibrary.org/works/OL2018966W"
+  },
+  "Ogilvy on Advertising|David Ogilvy": {
+    "file": "/jackets/aa98b5062820e14d.webp",
+    "source": "https://openlibrary.org/works/OL3346506W"
+  },
+  "One Up On Wall Street|Peter Lynch": {
+    "file": "/jackets/346d3c82e2cbf598.webp",
+    "source": "https://openlibrary.org/works/OL2841891W"
+  },
+  "One to Many|Jason Fladlien": {
+    "file": "/jackets/36e41183fca7aa8f.webp",
+    "source": "https://openlibrary.org/works/OL20573084W"
+  },
+  "Open|Andre Agassi": {
+    "file": "/jackets/28ea55a206a89802.webp",
+    "source": "https://openlibrary.org/works/OL13826401W"
+  },
+  "Other People\u2019s Money|John Kay": {
+    "file": "/jackets/80376e37d28a07fc.webp",
+    "source": "https://openlibrary.org/works/OL20235380W"
+  },
+  "Outliers|Malcolm Gladwell": {
+    "file": "/jackets/82aca7fb5fab00d4.webp",
+    "source": "https://openlibrary.org/works/OL5749847W"
+  },
+  "Outlive: The Science and Art of Longevity|Dr. Peter Attia": {
+    "custom": true,
+    "file": "/jackets/90a0dbad8a396609.webp"
+  },
+  "Pitch Anything|Oren Klaff": {
+    "file": "/jackets/bb51bf0cb2427090.webp",
+    "source": "https://books.apple.com/us/book/id1517457643"
+  },
+  "Pivot|Jenny Blake": {
+    "file": "/jackets/8dc2c25e46c5d48c.webp",
+    "source": "https://openlibrary.org/works/OL17667224W"
+  },
+  "Poor Charlie's Almanack|Charles T. Munger (edited by Peter D. Kaufman)": {
+    "file": "/jackets/4a85401ef51d23e4.webp",
+    "source": "https://books.apple.com/us/book/id6449554550"
+  },
+  "Pre-Suasion: A Revolutionary Way to Influence and Persuade|Robert Cialdini": {
+    "file": "/jackets/9da0b40e0b9b3da6.webp",
+    "source": "https://openlibrary.org/works/OL17592794W"
+  },
+  "Predictable Revenue|Aaron Ross & Marylou Tyler": {
+    "file": "/jackets/1a3390e5c1b333ee.webp",
+    "source": "https://openlibrary.org/works/OL17363382W"
+  },
+  "Principles|Ray Dalio": {
+    "file": "/jackets/2389077c27c5d2f7.webp",
+    "source": "https://openlibrary.org/works/OL18147675W"
+  },
+  "Problem Solving 101|Ken Watanabe": {
+    "file": "/jackets/3f72f8ed3ef98bff.webp",
+    "source": "https://openlibrary.org/works/OL13623364W"
+  },
+  "Psycho-Cybernetics|Maxwell Maltz": {
+    "file": "/covers/9780399176135.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780399176135-L.jpg"
+  },
+  "Reach Out, Stay in Touch and Deepen Your Connections|First Round Review": {
+    "custom": true,
+    "file": "/jackets/7fd1d276289a880f.webp"
+  },
+  "Read People Like a Book|Patrick King": {
+    "file": "/jackets/5c3e5c85dec45150.webp",
+    "source": "https://openlibrary.org/works/OL25291486W"
+  },
+  "Read Write Own|Chris Dixon": {
+    "file": "/jackets/4249e8b4c2840899.webp",
+    "source": "https://books.apple.com/us/book/id6450391992"
+  },
+  "Ready, Fire, Aim|Michael Masterson": {
+    "file": "/jackets/84e4287181455d8b.webp",
+    "source": "https://openlibrary.org/works/OL5840234W"
+  },
+  "Reality Transurfing|Vadim Zeland": {
+    "file": "/jackets/fa08f54915cec629.webp",
+    "source": "https://openlibrary.org/works/OL21097163W"
+  },
+  "Relentless|Tim S. Grover": {
+    "file": "/jackets/568f3b44a49bc726.webp",
+    "source": "https://openlibrary.org/works/OL19966051W"
+  },
+  "Rework|Jason Fried & David Heinemeier Hansson": {
+    "file": "/jackets/0d52acf1302fd92d.webp",
+    "source": "https://openlibrary.org/works/OL15168112W"
+  },
+  "Rich Dad Poor Dad|Robert T. Kiyosaki": {
+    "file": "/jackets/31c672f8b7a1409c.webp",
+    "source": "https://openlibrary.org/works/OL2010879W"
+  },
+  "Rich Dad\u2019s Guide to Investing|Robert T. Kiyosaki": {
+    "file": "/jackets/673204fab4c7c6e0.webp",
+    "source": "https://openlibrary.org/works/OL2010894W"
+  },
+  "Rich Kid Smart Kid|Robert T. Kiyosaki": {
+    "file": "/jackets/df2b3cda28db2229.webp",
+    "source": "https://books.apple.com/us/book/id1057060993"
+  },
+  "Richsterious Autopilot Money|Richsterius (org)": {
+    "custom": true,
+    "file": "/jackets/fc62294b536705b2.webp"
+  },
+  "Right Thing, Right Now|Ryan Holiday": {
+    "file": "/jackets/151387f4474266be.webp",
+    "source": "https://openlibrary.org/works/OL37540943W"
+  },
+  "Rising Strong|Bren\u00e9 Brown": {
+    "file": "/jackets/4381c1adde381766.webp",
+    "source": "https://openlibrary.org/works/OL19671174W"
+  },
+  "Sapiens|Yuval Noah Harari": {
+    "file": "/jackets/1d38bacdf1a4c3f6.webp",
+    "source": "https://openlibrary.org/works/OL17075811W"
+  },
+  "Secrets of the Millionaire Mind|T. Harv Eker": {
+    "file": "/jackets/bdf788fa5ddd08d1.webp",
+    "source": "https://openlibrary.org/works/OL275915W"
+  },
+  "Sell or Be Sold|Grant Cardone": {
+    "file": "/jackets/1d28b16a08f2b83f.webp",
+    "source": "https://openlibrary.org/works/OL21430137W"
+  },
+  "Shoe Dog|Phil Knight": {
+    "file": "/jackets/385f20fb4e952fae.webp",
+    "source": "https://openlibrary.org/works/OL17825802W"
+  },
+  "Skin in the Game|Nassim Nicholas Taleb": {
+    "file": "/jackets/c06c59fee1b3e4f1.webp",
+    "source": "https://openlibrary.org/works/OL17887158W"
+  },
+  "Startup Rising|Christopher Schr\u00f6der": {
+    "file": "/jackets/39e62488c24d5863.webp",
+    "source": "https://openlibrary.org/works/OL17574847W"
+  },
+  "Startups for Students|YC Startup Library": {
+    "custom": true,
+    "file": "/jackets/e7bb58c748f43700.webp"
+  },
+  "Status Anxiety|Alain de Botton": {
+    "file": "/jackets/132d7301da143b78.webp",
+    "source": "https://openlibrary.org/works/OL15152933W"
+  },
+  "Stories That Stick|Kindra Hall": {
+    "file": "/jackets/d48baa3698fd84a1.webp",
+    "source": "https://openlibrary.org/works/OL20857089W"
+  },
+  "Surrounded By Idiots|Thomas Erikson": {
+    "file": "/jackets/4a1a981ac9108987.webp",
+    "source": "https://openlibrary.org/works/OL20806514W"
+  },
+  "Tax-Free Wealth|Tom Wheelwright": {
+    "file": "/jackets/460a852f3edcf4be.webp",
+    "source": "https://openlibrary.org/works/OL20043300W"
+  },
+  "The $100 Startup|Chris Guillebeau": {
+    "file": "/jackets/5281987d47f0fc32.webp",
+    "source": "https://openlibrary.org/works/OL16499348W"
+  },
+  "The 10x Rule|Grant Cardone": {
+    "file": "/jackets/24f21ef7bf41f4aa.webp",
+    "source": "https://openlibrary.org/works/OL16238054W"
+  },
+  "The 21 Irrefutable Laws of Leadership|John C. Maxwell": {
+    "file": "/jackets/ea627bbd6c92611f.webp",
+    "source": "https://openlibrary.org/works/OL28124W"
+  },
+  "The 4 Hour Work Week|Timothy Ferriss": {
+    "file": "/jackets/c2e73def45e59727.webp",
+    "source": "https://openlibrary.org/works/OL3353439W"
+  },
+  "The 5 Types of Wealth|Sahil Bloom": {
+    "file": "/jackets/c312e7850ab80468.webp",
+    "source": "https://books.apple.com/us/book/id6502250419"
+  },
+  "The 80/20 Principle|Richard Koch": {
+    "file": "/jackets/adc30f98a06b0a5e.webp",
+    "source": "https://openlibrary.org/works/OL2722133W"
+  },
+  "The Alchemist|Paulo Coelho": {
+    "file": "/jackets/2e445cc44734453d.webp",
+    "source": "https://openlibrary.org/works/OL24793569W"
+  },
+  "The Algebra of Wealth|Scott Galloway": {
+    "file": "/jackets/4937747692df609a.webp",
+    "source": "https://openlibrary.org/works/OL43733858W"
+  },
+  "The Algorithm|John McNeill": {
+    "custom": true,
+    "file": "/jackets/624e6376f113e771.webp"
+  },
+  "The Almanack of Naval Ravikant|Eric Jorgenson": {
+    "file": "/jackets/43465314adaca02b.webp",
+    "source": "https://openlibrary.org/works/OL22255847W"
+  },
+  "The Art of Seduction|Robert Greene": {
+    "file": "/jackets/4b47085872914921.webp",
+    "source": "https://openlibrary.org/works/OL1968364W"
+  },
+  "The Bezos Letters|Steve Anderson": {
+    "file": "/jackets/b23f65c2c34b4e80.webp",
+    "source": "https://openlibrary.org/works/OL22861180W"
+  },
+  "The Book of Five Rings|Miyamoto Musashi": {
+    "file": "/jackets/bc2fc53ceffc0871.webp",
+    "source": "https://openlibrary.org/works/OL45363084W"
+  },
+  "The Boron Letters|Gary C. Halbert": {
+    "file": "/jackets/9c8a905269bc1cc4.webp",
+    "source": "https://openlibrary.org/works/OL26421702W"
+  },
+  "The Circadian Code|Satchin Panda": {
+    "file": "/jackets/ba32429d569102bd.webp",
+    "source": "https://openlibrary.org/works/OL19745204W"
+  },
+  "The Courage to be Disliked|Ichiro Kishimi & Fumitake Koga": {
+    "file": "/jackets/6805c81f18191c0f.webp",
+    "source": "https://books.apple.com/us/book/id1329478953"
+  },
+  "The Daily Laws|Robert Greene": {
+    "file": "/covers/9780593299210.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780593299210-L.jpg"
+  },
+  "The E-Myth Revisited|Michael E. Gerber": {
+    "file": "/jackets/a0af5c3b9bfe8b71.webp",
+    "source": "https://openlibrary.org/works/OL1821254W"
+  },
+  "The Everything Store|Brad Stone": {
+    "file": "/jackets/9b8dfac388bd77e5.webp",
+    "source": "https://openlibrary.org/works/OL16808249W"
+  },
+  "The Goal|Eliyahu M. Goldratt": {
+    "file": "/covers/9780884271956.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780884271956-L.jpg"
+  },
+  "The Greatest Salesman in the World|Og Mandino": {
+    "file": "/jackets/48fc2076cb2dbdc1.webp",
+    "source": "https://openlibrary.org/works/OL2642712W"
+  },
+  "The Hard Thing About Hard Things|Ben Horowitz": {
+    "file": "/jackets/cd9b3f0cc60c3683.webp",
+    "source": "https://openlibrary.org/works/OL16818208W"
+  },
+  "The House of Morgan|Ron Chernow": {
+    "file": "/jackets/a93fc8c71364445e.webp",
+    "source": "https://openlibrary.org/works/OL2665180W"
+  },
+  "The Innovator\u2019s Dilemma|Clayton M. Christensen": {
+    "file": "/covers/9781633691780.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9781633691780-L.jpg"
+  },
+  "The Intelligent Investor|Benjamin Graham": {
+    "file": "/jackets/3dc8d380eda30baa.webp",
+    "source": "https://openlibrary.org/works/OL273184W"
+  },
+  "The Kaisen Challenge|Sarah Harvey": {
+    "file": "/jackets/a0e2e30ed58700d5.webp",
+    "source": "https://openlibrary.org/works/OL20744057W"
+  },
+  "The Lean Startup|Eric Ries": {
+    "file": "/jackets/21f2e98ee9252877.webp",
+    "source": "https://openlibrary.org/works/OL16086010W"
+  },
+  "The Little Book That Beats the Market|Joel Greenblatt": {
+    "file": "/jackets/1448062e37b0877f.webp",
+    "source": "https://openlibrary.org/works/OL3354668W"
+  },
+  "The Lords of Easy Money|Christopher Leonard": {
+    "file": "/jackets/7796b972ac46bdcc.webp",
+    "source": "https://books.apple.com/us/book/id1574210727"
+  },
+  "The Millionaire Fastlane|MJ DeMarco": {
+    "file": "/covers/9780984358106.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780984358106-L.jpg"
+  },
+  "The Millionaire Next Door|Thomas J. Stanley & William D. Danko": {
+    "file": "/jackets/c1a7ad95839b5f57.webp",
+    "source": "https://openlibrary.org/works/OL1986060W"
+  },
+  "The Mind of Napoleon|Napoleon Bonaparte, J. Christopher Herold": {
+    "custom": true,
+    "file": "/jackets/b9868c14c51417b7.webp"
+  },
+  "The Monk Who Sold His Ferrari|Robin Sharma": {
+    "file": "/jackets/5400b2862b4fdd91.webp",
+    "source": "https://openlibrary.org/works/OL276492W"
+  },
+  "The Motive|Patrick Lencioni": {
+    "file": "/jackets/6a13eaef4d9fe804.webp",
+    "source": "https://openlibrary.org/works/OL34956672W"
+  },
+  "The Now Habit|Neil Fiore": {
+    "file": "/jackets/f4b111cf9386af9d.webp",
+    "source": "https://openlibrary.org/works/OL4439701W"
+  },
+  "The ONE Thing|Gary Keller & Jay Papasan": {
+    "file": "/jackets/d3abcf2125075ef2.webp",
+    "source": "https://openlibrary.org/works/OL20092720W"
+  },
+  "The Outsiders|William N. Thorndike Jr.": {
+    "file": "/covers/9781422162675.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9781422162675-L.jpg"
+  },
+  "The Personal MBA|Josh Kaufman": {
+    "file": "/covers/9781591845577.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9781591845577-L.jpg"
+  },
+  "The Replaceable Founder|Ari Weinzweig": {
+    "custom": true,
+    "file": "/jackets/28ac0d3b8b271c0c.webp"
+  },
+  "The Richest Man in Babylon|George S. Clason": {
+    "file": "/jackets/6db6573cd5706aa8.webp",
+    "source": "https://openlibrary.org/works/OL8165007W"
+  },
+  "The Sales Acceleration Formula|Mark Roberge": {
+    "file": "/jackets/b8bde4e2355d0bc1.webp",
+    "source": "https://books.apple.com/us/book/id964873359"
+  },
+  "The Sales Advantage|Dale Carnegie": {
+    "file": "/jackets/c31d1df0645f0b6a.webp",
+    "source": "https://openlibrary.org/works/OL15100077W"
+  },
+  "The Sales Development Playbook|Trish Bertuzzi": {
+    "custom": true,
+    "file": "/jackets/c6d21bf39379656a.webp"
+  },
+  "The Sales Playbook for Founders|YC Startup Library": {
+    "custom": true,
+    "file": "/jackets/5169928165619a4e.webp"
+  },
+  "The Science of Getting Rich|Wallace D. Wattles": {
+    "file": "/jackets/b561cba539a6211b.webp",
+    "source": "https://openlibrary.org/works/OL3792044W"
+  },
+  "The Score Takes Care of Itself|Bill Walsh with Steve Jamison and Craig Walsh": {
+    "file": "/jackets/44b53385702ad11f.webp",
+    "source": "https://openlibrary.org/works/OL2776380W"
+  },
+  "The Snowball|Alice Schroeder": {
+    "file": "/jackets/d6cd55adc3133397.webp",
+    "source": "https://openlibrary.org/works/OL9450331W"
+  },
+  "The Sovereign Individual|James Dale Davidson & William Rees-Mogg": {
+    "file": "/jackets/6ced34ee1bda8596.webp",
+    "source": "https://openlibrary.org/works/OL3350985W"
+  },
+  "The Startup Playbook|David Kidder": {
+    "file": "/jackets/1ed1b30733a55982.webp",
+    "source": "https://openlibrary.org/works/OL16646321W"
+  },
+  "The Startup of You|Reid Hoffman & Ben Casnocha": {
+    "file": "/covers/9780307888907.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780307888907-L.jpg"
+  },
+  "The Value of Debt in Building Wealth|Thomas J. Anderson": {
+    "file": "/jackets/ebbf9293086a2fb1.webp",
+    "source": "https://books.apple.com/us/book/id1197636918"
+  },
+  "The Way of The Superior Man|David Deida": {
+    "file": "/jackets/d5a37d99746def31.webp",
+    "source": "https://openlibrary.org/works/OL2680142W"
+  },
+  "The Way of the Wolf|Jordan Belfort": {
+    "file": "/jackets/cfa2a8688aa587b4.webp",
+    "source": "https://openlibrary.org/works/OL20168722W"
+  },
+  "The Winner Effect|Ian Robertson": {
+    "file": "/jackets/9c97a1f5bd1a1fcf.webp",
+    "source": "https://openlibrary.org/works/OL20407580W"
+  },
+  "The Work of Art|Adam Moss": {
+    "file": "/jackets/6ce65d1b0f596ff5.webp",
+    "source": "https://openlibrary.org/works/OL37624891W"
+  },
+  "Think and Grow Rich|Napoleon Hill": {
+    "file": "/jackets/f541711f0b797cce.webp",
+    "source": "https://openlibrary.org/works/OL527464W"
+  },
+  "Think like a Rocket Scientist|Ozan Varol": {
+    "file": "/jackets/19f1f1ed288492a2.webp",
+    "source": "https://openlibrary.org/works/OL20758000W"
+  },
+  "Thinking Fast and Slow|Daniel Kahneman": {
+    "file": "/jackets/eea0b244a787df60.webp",
+    "source": "https://openlibrary.org/works/OL15992072W"
+  },
+  "Thinking in Bets|Annie Duke": {
+    "file": "/jackets/0998ac366d9a4ace.webp",
+    "source": "https://openlibrary.org/works/OL19736287W"
+  },
+  "Thou Shall Prosper|Rabbi Daniel Lapin": {
+    "file": "/jackets/bcea2d962d6e2f3c.webp",
+    "source": "https://openlibrary.org/works/OL8226761W"
+  },
+  "Total Recall|Arnold Schwarzenegger": {
+    "file": "/jackets/cadcad073ce5f2ac.webp",
+    "source": "https://openlibrary.org/works/OL19907427W"
+  },
+  "Traction|Gino Wickman": {
+    "file": "/covers/9781936661831.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9781936661831-L.jpg"
+  },
+  "Traffic Secrets|Russell Brunson": {
+    "file": "/jackets/25bd783beb6abe1d.webp",
+    "source": "https://openlibrary.org/works/OL20924912W"
+  },
+  "Trillion Dollar Coach|Eric Schmidt, Jonathan Rosenberg & Alan Eagle": {
+    "file": "/jackets/65e444518df90f49.webp",
+    "source": "https://openlibrary.org/works/OL20152976W"
+  },
+  "Unlimited Power|Tony Robbins": {
+    "file": "/jackets/8f0e2567a17588cf.webp",
+    "source": "https://openlibrary.org/works/OL2715466W"
+  },
+  "Unlock Secrets|Russell Brunson": {
+    "custom": true,
+    "file": "/jackets/f13ab974c3792d54.webp"
+  },
+  "Unscripted|MJ DeMarco": {
+    "file": "/jackets/9c8b28f721e31eef.webp",
+    "source": "https://openlibrary.org/works/OL22056168W"
+  },
+  "Unshackled: Visa Opportunities for International Students and Scholars|Sharon He": {
+    "custom": true,
+    "file": "/jackets/f2ac7ea513378a81.webp"
+  },
+  "What Every Real Estate Investor Needs To Know About Cash Flow|Frank Gallinelli": {
+    "file": "/jackets/13851cfa94df02f9.webp",
+    "source": "https://openlibrary.org/works/OL5156437W"
+  },
+  "Who Moved My Cheese|Spencer Johnson": {
+    "file": "/covers/9780399144462.jpg",
+    "source": "https://covers.openlibrary.org/b/isbn/9780399144462-L.jpg"
+  },
+  "Why Startups Fail|Tom Eisenmann": {
+    "file": "/jackets/2f9804364ac1bebf.webp",
+    "source": "https://books.apple.com/us/book/id1522314086"
+  },
+  "Why We Sleep|Matthew Walker": {
+    "file": "/jackets/1d1652ba923ab7ec.webp",
+    "source": "https://openlibrary.org/works/OL20168133W"
+  },
+  "Winners|Alastair Campbell": {
+    "file": "/jackets/479da3c8d084348c.webp",
+    "source": "https://openlibrary.org/works/OL21112869W"
+  },
+  "Wisdom Takes Work|Ryan Holiday": {
+    "file": "/jackets/c093ad75cbdcee49.webp",
+    "source": "https://books.apple.com/us/book/id6743822961"
+  },
+  "Wooden on Leadership|John Wooden": {
+    "file": "/jackets/9f5a1756c5892c66.webp",
+    "source": "https://openlibrary.org/works/OL7912826W"
+  },
+  "Work With The Best|Jay Yang": {
+    "custom": true,
+    "file": "/jackets/311c4b7004d07f73.webp"
+  },
+  "You Can Just Do Things|Jay Yang": {
+    "custom": true,
+    "file": "/jackets/1dd1694456b3dce4.webp"
+  },
+  "You Can Negotiate Anything|Herb Cohen": {
+    "file": "/jackets/9f9824faf9b27383.webp",
+    "source": "https://openlibrary.org/works/OL6333875W"
+  },
+  "Zero to One|Peter Thiel": {
+    "file": "/jackets/89f2d31939a72a4f.webp",
+    "source": "https://openlibrary.org/works/OL17078706W"
+  }
+}

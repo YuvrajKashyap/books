@@ -4,7 +4,7 @@ Yuvraj’s Bookshelf is a public catalogue with a private reading room at [books
 
 ## Code and development
 
-One repository and one Vercel deployment. Vite builds the React interface in `src/`. React Router preserves book links and view state. TanStack Table powers the database layout. The cover shelf, spine shelf and timeline have custom presentations. Hono serves the HTTP API in `backend/app.ts` through the Node function in `api/index.ts`. The Vite dev server mounts that same Hono app. Shared field definitions and rotation rules live in `src/model.ts`.
+One repository and one Vercel deployment. Vite builds the React interface in `src/`. React Router preserves book links and view state. TanStack Table powers the database layout. The cover shelf, spine shelf and timeline have custom presentations. Hono serves the HTTP API in `backend/app.ts` through the Node function in `api/index.ts`. The Vite dev server mounts that same Hono app. Shared field definitions and rotation rules live in `shared/model.ts`.
 
 Use Node 24, `npm ci`, then `npm run dev`. Run `npm test` and `npm run build` before release. Vite can load local server settings from `private/books.env`. Set BOOKS_DATABASE_URL, BOOKS_OWNER_ID, SUPABASE_URL and SUPABASE_KEY. SUPABASE_KEY is the publishable key. AGENT_READ and AGENT_WRITE are optional server-only bearer credentials. Private files and environment values stay outside Git, builds and browser bundles.
 
@@ -20,7 +20,7 @@ Send an Authorization Bearer credential over HTTPS. Use the read key for researc
 
 - GET /api/library returns version, revision, books, saved views and the rotation cursor. Array order is manual shelf order. Within a category, sort To Read entries by queuePosition for the queue. Use the rotation cursor across Identity, Wealth and Behavior, skipping empty queues.
 - GET /api/archive returns the original Notion database definition, source rows and individual page responses. Linked files or resources remain references.
-- POST /api/command accepts JSON with revision (from the latest read) and action. The commands are save, remove, move, shelfMove, rotation, view, removeView and restore. Consult the command union in backend/app.ts and the schemas in src/model.ts for exact fields.
+- POST /api/command accepts JSON with revision (from the latest read) and action. The commands are save, remove, move, shelfMove, rotation, view, removeView and restore. Consult the command union in backend/app.ts and the schemas in shared/model.ts for exact fields.
 - For save, pass a complete editable book record and its existing id when updating. Omit id when adding. The server records history. Moving a book into Completed sets a missing finish date and records 100% progress. Existing undated completions stay undated.
 - For move or shelfMove, pass id and target. The book moves to the target’s previous position. move operates inside one unread queue. shelfMove updates the cover order independently.
 - For example, after reading revision 17, send `{"revision":17,"action":{"op":"move","id":"BOOK_ID","target":"TARGET_ID"}}`. A 409 means a newer revision exists. Read again and reconsider the intended change before retrying.
@@ -33,3 +33,5 @@ Library settings exports a portable versioned JSON backup with books, history, b
 Deploy to the existing yk-reading-room project. Test a staged production build before promotion. Verify the custom domain, anonymous rejection, authenticated reads, role separation, stale writes, data reconciliation, reversible edits and view rendering. Keep the original import archive when changing storage.
 
 Visitors can browse titles, authors, covers and the four categories through GET /api/shelf. This read-only catalogue uses separate public book identifiers. Reading activity, notes, queue order, backups and mutations require authorized private access. The owner signs in at /admin.
+
+The Vite client lives in frontend/, the Hono service in backend/, the deployment entry point in api/, and portable types and library rules in shared/. The public room loads more shelves as you scroll. Jacket source records live in frontend/src/shelf/jackets.json. Original library jackets are identified in the book inspector. The oak material comes from the three.js example texture collection.
