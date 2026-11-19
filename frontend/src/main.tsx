@@ -290,14 +290,15 @@ function App() {
       lock.current = false;
     }
   };
-  if (!ready && location.pathname === "/admin")
+  const ownerRoute = ["/admin", "/collection", "/queues", "/history"].includes(location.pathname);
+  if ((!ready && ownerRoute) || (session && !library && !issue))
     return (
       <div className="loading">
         <Brand />
         <p>Opening the reading room…</p>
       </div>
     );
-  if ((!session || !library) && location.pathname !== "/admin")
+  if (!session && !ownerRoute)
     return <PublicShelf />;
   if (!library || !session)
     return (
