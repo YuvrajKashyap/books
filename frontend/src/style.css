@@ -1143,3 +1143,16 @@ dialog .fields + button {
     font-size: 11px;
   }
 }
+
+@media (max-width: 640px) {
+  .queue-row .icon, .drawer .icon, .dialog-head .icon {
+    min-width: 44px;
+    min-height: 44px;
+    flex-shrink: 0;
+  }
+  .queue-title { min-width: 0; overflow-wrap: anywhere; }
+  .queue-tabs button, .mast nav a, .form-actions button { min-height: 44px; }
+  .fields input, .fields textarea, .fields select, .gate-form input,
+  .catalog-search input { font-size: 16px; }
+  .form-actions { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+}
