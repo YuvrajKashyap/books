@@ -229,3 +229,101 @@ dialog::backdrop {background:#091912a3}
   .catalogue-title h1 { font-size: clamp(29px, 8.7vw, 33px); }
   .owner-heading h1 { font-size: 33px; }
 }
+
+/* Public catalogue furniture sits outside the dimensional bookcase. */
+.reading-gallery .search-station {
+  display:flex; align-items:center; flex:1; min-width:0; max-width:510px; min-height:44px;
+  padding-inline:13px 6px; gap:6px; border:1px solid #ad9973; border-radius:3px;
+  color:#273c2e; background:linear-gradient(105deg,#f9f2dd,#e6d9bb);
+  box-shadow: inset 3px 0 #b79b63, inset 0 -2px #ccb99545, 0 2px 5px #081e1455;
+}
+.search-station:focus-within { outline:2px solid #d9bc82; outline-offset:2px; }
+.reading-gallery .search-station .catalog-search {
+  flex:1; min-width:0; max-width:none; order:0; margin:0; padding:0; border:0; background:none;
+}
+.reading-gallery .search-station .catalog-search svg {color:#72643f;flex:none}
+.reading-gallery .search-station input { color:#253c30; min-height:42px; font:500 18px var(--display); }
+.reading-gallery .search-station input::placeholder {color:#4a5343}
+.search-station .catalog-search:after {display:none}
+.search-station kbd {padding:0 6px;border:1px solid #b6a988;border-radius:2px;color:#62573d}
+.search-station output {font:500 11px "DM Sans Variable",sans-serif;white-space:nowrap;color:#5e543e}
+.search-station button {border:0;background:none;color:#4c543f;min-height:44px;min-width:44px;padding:0;justify-content:center}
+.search-station .jump-index { border-left:1px solid #bdad8e; border-radius:0 }
+.gallery-main .shelf-layout-controls .segmented {border-color:#9b885e;background:#14271e;box-shadow:inset 0 0 0 2px #223a2d}
+.gallery-main .public-selects .category-picker {border-block-end:1px solid #c1ae7b85;gap:6px}
+.gallery-main .catalog-end {border:0;margin-block:12px 16px}
+.subject-index {
+  position:relative;isolation:isolate;overflow:hidden; margin:18px 0 10px; padding:18px clamp(15px,2vw,28px);
+  color:#f4e8cb; border:1px solid #9d906a;border-radius:3px;
+  background:radial-gradient(ellipse at 80% 10%,#344c3b,transparent 77%),#182e25;
+  box-shadow:inset 0 0 0 3px #1d3228,inset 0 0 0 4px #c1a37245;
+}
+.subject-index::before {
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:url("/materials/armillary.webp") right -24px center / 330px auto no-repeat;
+  mix-blend-mode:lighten;opacity:.18;
+}
+.index-heading {display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 6px}
+.index-heading h2 {font:italic 500 clamp(26px,3vw,34px)/1.12 var(--display);margin:0;color:#f4e4c0}
+.index-heading button,.index-entries button {border:0;border-radius:0;background:none;color:inherit;min-height:44px}
+.index-heading button {font-size:12px;gap:7px;color:#e1d3b3;padding:0}
+.index-heading button span,.index-entries small {font-variant-numeric:tabular-nums}
+.index-entries {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 18px}
+.index-entries button {
+  position:relative;display:grid;grid-template-columns:17px 1fr auto;align-items:center;gap:8px;
+  padding:7px 4px;text-align:left;border-top:1px solid #a3956f91;font:500 19px/1.04 var(--display);
+}
+.index-entries button > svg {color:#d9bd86}
+.index-entries button > svg:last-child:not(:first-child) {position:absolute;left:5px;background:#314733}
+.index-entries small {font:12px "DM Sans Variable",sans-serif;color:#dfd3b7}
+.index-entries button:is(:hover,:focus-visible,[aria-pressed=true]),.index-heading button:hover {background:#bda56b1c;color:#fff0c9}
+.index-entries button[aria-pressed=true] {box-shadow:inset 0 -2px #c1a471}
+.reading-gallery dialog .dialog-head {background:#1d3529;color:#eee2c5;padding:14px 20px;margin:-24px -24px 18px;border-bottom:3px double #bea87b}
+.reading-gallery dialog .dialog-head h2 {font:500 30px/1.1 var(--display);margin:0}
+.reading-gallery dialog .dialog-head .icon {color:#ece1c4;border:1px solid #a59571;background:transparent}
+.reading-gallery .inspect-nav {border-top:3px double #bcae8f}
+@media(min-width:1500px) {
+  .reading-gallery {
+    background-image:linear-gradient(#152c22bb,#152c22df 750px,#152a22f5 1500px),
+      url('/materials/armillary.webp'),url('/materials/einstein.webp');
+    background-repeat:no-repeat;background-position:center, left -115px top 270px,right -100px top 610px;
+    background-size:100% 100%,min(28vw,470px) auto,min(27vw,460px) auto;background-color:#162a21;
+  }
+}
+@media(max-width:700px), (pointer:coarse) and (max-width:950px) and (max-height:540px) {
+  .reading-gallery .search-station {order:1;flex:none;max-width:none;margin:10px 0 12px;min-height:44px}
+  .search-station kbd {display:none}
+  .reading-gallery .pocket-caption {
+    position:relative;min-height:84px;margin:13px 0 0;padding:10px 10px 10px 16px;border-radius:2px;
+    background:linear-gradient(100deg,#f8efd7,#e6d8b7);border-left:3px solid #b2975e;
+    box-shadow:0 2px 0 -1px #b6a381,0 4px 0 -2px #e3d9bb;
+    --ink:#304332;--muted:#585944;--line:#b9a77e;
+  }
+  .reading-gallery .pocket-current .pocket-title {color:#243c2d;min-height:32px}
+  .reading-gallery .pocket-current small {font-size:10px;font-weight:600;letter-spacing:.055em}
+  .reading-gallery .pocket-steps {gap:3px}
+  .reading-gallery .pocket-steps button:hover {background-color:#ded1b1}
+  .reading-gallery .gallery-main .shelf-layout-controls {
+    grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px;padding:14px 0 3px;border:0;
+  }
+  .reading-gallery .public-selects {display:block;min-width:0}
+  .reading-gallery .public-selects .category-picker {min-height:44px;padding-left:8px}
+  .reading-gallery .public-selects select {height:44px;position:relative;padding-top:13px;z-index:1}
+  .reading-gallery .category-picker .phone-label {position:absolute;top:0;left:8px;font-size:10px;color:#ded2b6}
+  .reading-gallery .public-selects .category-picker svg {bottom:9px}
+  .reading-gallery .segmented button {min-height:44px;padding-inline:12px}
+  .subject-index {order:4;margin:12px 0 0;padding:10px 14px}
+  .subject-index::before {background-size:270px auto;opacity:.20}
+  .index-entries {grid-template-columns:1fr 1fr;gap:0 13px}
+  .index-entries button {min-height:49px;grid-template-columns:13px 1fr auto;font-size:17px;gap:5px}
+  .index-entries button > svg {width:13px}
+  .reading-gallery .owner-footnote {order:5;justify-content:flex-end;margin-top:15px;padding-top:4px;border:0}
+}
+@media(max-width:355px) {
+  .reading-gallery .segmented button {padding-inline:8px}
+  .index-entries {grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:no-preference) {
+  .index-entries button,.search-station {transition:background-color .16s,box-shadow .16s}
+  .index-entries button:active {background-color:#bda56b38}
+}

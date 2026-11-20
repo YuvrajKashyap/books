@@ -4,8 +4,8 @@ import { PrintEdition } from "./shelf/PrintEdition";
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import {useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {Link,useNavigate,useSearchParams} from 'react-router-dom';
-import {ArrowLeft,ArrowRight,BookOpen,ChevronDown,Search,X,LibraryBig,GalleryVerticalEnd} from 'lucide-react';
-import {Dialog,type ShelfBook} from './components';
+import {ArrowLeft,ArrowRight,BookOpen,ChevronDown,Search,X,LibraryBig,GalleryVerticalEnd,ListFilter,Check} from 'lucide-react';
+import {Dialog,FocusIcon,type ShelfBook} from './components';
 import {ShelfPick} from './shelf/ShelfPick';
 import {focuses} from '../../shared/categories';
 import {Hardcover} from './shelf/Hardcover';
@@ -81,9 +81,17 @@ export function PublicShelf(){
    window.addEventListener('blur',reset);
    return()=>{window.removeEventListener('keydown',key);window.removeEventListener('blur',reset);};
  },[id,navigate]);
- const matches=useMemo(()=>{
+ const searchResults=useMemo(()=>{
    const needle=query.trim().toLowerCase();
-   const found=books.filter(b=>(!focus||b.focus===focus)&&(displayTitle(b.title)+' '+b.author).toLowerCase().includes(needle));
+   return books.filter(b=>(displayTitle(b.title)+' '+b.author).toLowerCase().includes(needle));
+ },[books,query]);
+ const counts=useMemo(()=>{
+   const byCategory=new Map<string,number>();
+   for(const book of searchResults)byCategory.set(book.focus,(byCategory.get(book.focus)??0)+1);
+   return byCategory;
+ },[searchResults]);
+ const matches=useMemo(()=>{
+   const found=searchResults.filter(b=>!focus||b.focus===focus);
    const byTitle=(a:ShelfBook,b:ShelfBook)=>displayTitle(a.title).localeCompare(displayTitle(b.title),'en',{numeric:true});
    if(sort==='title') found.sort(byTitle);
    if(sort==='author') found.sort((a,b)=>a.author.localeCompare(b.author,'en')||byTitle(a,b));
@@ -93,7 +101,7 @@ export function PublicShelf(){
      return (sort==='short'?x-y:y-x)||byTitle(a,b);
    });
    return found;
- },[books,query,focus,sort]);
+ },[searchResults,focus,sort]);
  // Pack by physical width, leaving clearance for exactly one pulled book.
  const bays: ShelfBook[][] = [];
  const capacity = Math.max(115,width - (covers ? 64 : 165));
@@ -108,9 +116,34 @@ export function PublicShelf(){
  useEffect(()=>{const el=sentinel.current;if(!el||shown>=matches.length)return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setRows(n=>n+4)},{rootMargin:'500px'});io.observe(el);return()=>io.disconnect()},[shown,matches.length,phone]);
  function param(k:string,v:string){const p=new URLSearchParams(window.location.search);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true});if(k!=='pick'){setRows(4);setTurned(null)}setAngle(-12);setOpened(false)}
  const current=matches.findIndex(b=>b.id===id);
- const controls = <div className="shelf-layout-controls"><div className="segmented" aria-label="Shelf layout"><button aria-pressed={!covers} onClick={()=>param('layout','')}><LibraryBig size={15}/>Spines</button><button aria-pressed={covers} onClick={()=>param('layout','covers')}><GalleryVerticalEnd size={15}/>Covers</button></div>
- <div className="public-selects"><label className="category-picker"><span className="phone-label">Category</span><select aria-label="Category" value={focus} onChange={e=>param('category',e.target.value)}><option value="">All categories</option>{focuses.map(f=><option key={f}>{f}</option>)}</select><ChevronDown size={14}/></label>
- <label className="category-picker"><span className="phone-label">Sort by</span><select aria-label="Sort books" value={sort} onChange={e=>param('sort',e.target.value==='shelf'?'':e.target.value)}><option value="shelf">Shelf order</option><option value="title">Title A–Z</option><option value="author">Author A–Z</option><option value="short">Shortest first</option><option value="long">Longest first</option></select><ChevronDown size={14}/></label></div></div>;
+ const controls = <div className="shelf-layout-controls">
+   <div className="segmented" aria-label="Shelf layout">
+     <button aria-pressed={!covers} onClick={()=>param('layout','')}><LibraryBig size={15}/>Spines</button>
+     <button aria-pressed={covers} onClick={()=>param('layout','covers')}><GalleryVerticalEnd size={15}/>Covers</button>
+   </div>
+   <div className="public-selects">
+     {!phone && <label className="category-picker"><select aria-label="Category" value={focus} onChange={e=>param('category',e.target.value)}>
+       <option value="">All categories</option>{focuses.map(f=><option key={f} value={f}>{f}</option>)}</select><ChevronDown size={14}/></label>}
+     <label className="category-picker"><span className="phone-label">Sort by</span>
+       <select aria-label="Sort books" value={sort} onChange={e=>param('sort',e.target.value==='shelf'?'':e.target.value)}>
+         <option value="shelf">Shelf order</option><option value="title">Title A–Z</option>
+         <option value="author">Author A–Z</option><option value="short">Shortest first</option>
+         <option value="long">Longest first</option>
+       </select><ChevronDown size={14}/>
+     </label>
+   </div>
+ </div>;
+ const subjectIndex = <section className="subject-index" id="subject-index" aria-labelledby="index-title">
+   <div className="index-heading">
+     <h2 id="index-title" tabIndex={-1}>Subject index</h2>
+     <button aria-pressed={!focus} onClick={()=>param('category','')}>All subjects <span>{searchResults.length}</span></button>
+   </div>
+   <div className="index-entries">{focuses.map(f=><button key={f} aria-pressed={focus===f}
+     onClick={()=>param('category',focus===f?'':f)}>
+     <FocusIcon focus={f}/><span>{f}</span><small>{counts.get(f)??0}</small>
+     {focus===f&&<Check size={12} aria-hidden="true"/>}
+   </button>)}</div>
+ </section>;
  return <div className="reading-gallery">
  <header className="library-heading public-heading">
    <div className="library-heading-inner">
@@ -123,14 +156,21 @@ export function PublicShelf(){
    </div>
  </header>
  <main className="gallery-main">
- <div className="catalog-controls"><label className="catalog-search"><Search size={17}/><input ref={search} aria-label="Search books" placeholder="Find a title or author" value={query} onChange={e=>param('q',e.target.value)}/>{query?<button aria-label="Clear search" onClick={()=>param('q','')}><X size={14}/></button>:<kbd>/</kbd>}</label>
+ <div className="catalog-controls"><div className="search-station" role="search">
+   <label className="catalog-search"><Search size={18}/><input ref={search} aria-label="Search books" placeholder="Find a title or author" value={query} onChange={e=>param('q',e.target.value)}/></label>
+   {query && <button className="clear-query" aria-label="Clear search" onClick={()=>{param('q','');search.current?.focus();}}><X size={15}/></button>}
+   {query||focus ? <output aria-live="polite">{matches.length} {matches.length===1?'match':'matches'}</output> : <kbd>/</kbd>}
+   {phone && <button className="jump-index" aria-label="Browse categories" onClick={()=>document.getElementById('index-title')?.focus()}><ListFilter size={18}/></button>}
+ </div>
  {!phone&&controls}</div>
  <section ref={cabinet} className={phone?'pocket-section':'cabinet'} id={phone?undefined:'bookcase'} aria-label="Wooden bookshelf">
  {phone ? state==='ok'&&matches.length>0&&<PocketShelf key={JSON.stringify([query,focus,sort,covers])} books={matches} covers={covers} open={id=>param('pick',id)}/>
  : <><div className="cornice"/>{state==='ok'&&visibleBays.map((bay,i)=><BookcaseRow key={i} index={i} covers={covers} turned={turned} turn={setTurned} books={bay} open={id=>param('pick',id)}/>)}<div className="plinth"/></>}
  {state!=='ok'||!matches.length?<div className="case-message">{state==='loading'?'Opening the shelves…':state==='error'?<button onClick={()=>setRetry(n=>n+1)}>Retry loading the shelves</button>:'No matching titles.'}</div>:null}</section>
  {phone&&controls}
+ {phone&&subjectIndex}
  {phone&&<footer className="owner-footnote">Are you Yuvraj? <Link to="/admin">Sign in <ArrowRight size={12}/></Link></footer>}
- {!phone&&<div ref={sentinel} className="catalog-end">{state==='ok'&&<><span>{shown} of {matches.length} titles</span>{shown<matches.length?<button onClick={()=>setRows(n=>n+4)}>Load next shelves</button>:<a href="#bookcase">Back to the first shelf ↑</a>}</>}</div>}</main>
+ {!phone&&<div ref={sentinel} className="catalog-end">{state==='ok'&&<><span>{shown} of {matches.length} titles</span>{shown<matches.length?<button onClick={()=>setRows(n=>n+4)}>Load next shelves</button>:<a href="#bookcase">Back to the first shelf ↑</a>}</>}</div>}
+ {!phone&&state==='ok'&&subjectIndex}</main>
  {selected&&<Dialog title="From my bookshelf" onClose={()=>param('pick','')}><div className="book-inspection"><div className="inspection-stage"><div className="inspection-volume" style={{'--turn':angle+'deg'} as CSSProperties}><Hardcover book={selected} opened={opened}/></div></div><div className="inspect-controls"><label>Rotate<input type="range" aria-label="Rotate book" min="-100" max="100" value={angle} onChange={e=>setAngle(Number(e.target.value))}/></label><button onClick={()=>{setAngle(-7);setOpened(!opened)}}><BookOpen size={14}/>{opened?'Close cover':'Open cover'}</button></div><small>{selected.focus}</small><h2>{displayTitle(selected.title)}</h2><p>{selected.author}</p><PrintEdition book={selected}/>{jacketFor(selected)?.custom&&<small>Custom library jacket</small>}<div className="inspect-nav"><button disabled={current<=0} onClick={()=>param('pick',matches[current-1].id)}><ArrowLeft size={15}/>Previous</button><button disabled={current<0||current+1>=matches.length} onClick={()=>param('pick',matches[current+1].id)}>Next<ArrowRight size={15}/></button></div></div></Dialog>}</div>
 }
