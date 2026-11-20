@@ -22,9 +22,8 @@ import {
 import { Brand, Dialog } from "./components";
 import "./owner-desk.css";
 import { ScienceStudy } from "./shelf/ScienceStudy";
-import { Feature, Queues, Timeline, type Mutate } from "./Reading";
+import type { Mutate } from "./Reading";
 import { PublicShelf } from "./PublicShelf";
-import { Collection } from "./Collection";
 import { Editor } from "./Editor";
 import {
   backupSchema,
@@ -33,6 +32,8 @@ import {
   type View,
   type Library,
 } from "../../shared/model";
+const loadPages = () => import("./OwnerPages");
+const OwnerPages = lazy(loadPages);
 const BrassKnot = lazy(() => import("./BrassKnot"));
 const nav = [
   { path: "/", label: "Reading room", icon: BookOpen },
@@ -180,6 +181,7 @@ export default function OwnerApp() {
           if (active) {
             if (subject.current !== s?.user.id) {
               subject.current = s?.user.id;
+              if (s) void loadPages().catch(() => {});
               setLibrary(null);
               setSettings(false);
               setRestore(null);
@@ -343,23 +345,9 @@ export default function OwnerApp() {
         </div>
       </header>
       <main className={`reading-desk${shelfPage ? " shelf-page" : ""}`}>
-        {page === "room" || page === "collection" ? (
-          <>
-            <Collection
-              mutate={mutate}
-              books={library.books}
-              view={view}
-              setView={setView}
-              views={library.views}
-              open={open}
-            />
-            {page === "room" && <Feature library={library} open={open} />}
-          </>
-        ) : page === "queue" ? (
-          <Queues library={library} mutate={mutate} open={open} />
-        ) : (
-          <Timeline books={library.books} open={open} />
-        )}
+        <Suspense fallback={<p role="status">Opening the reading room…</p>}>
+          <OwnerPages page={page} library={library} view={view} setView={setView} open={open} mutate={mutate} />
+        </Suspense>
       </main>
       {edit &&
         (edit === "new" || selected ? (
