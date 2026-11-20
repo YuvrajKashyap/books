@@ -1,6 +1,6 @@
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import { ContinuousShelf, ShelfSpine } from "./shelf/ContinuousShelf";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -156,21 +156,25 @@ export function Collection({
     setView({ ...view, ...v });
     setLimit(36);
   }
-  const data = books.filter(
-    (b) =>
-      (!view.focus || b.focus === view.focus) &&
-      (!view.status || b.status === view.status) &&
-      [b.title, b.author, b.notes, b.format]
-        .join(" ")
-        .toLowerCase()
-        .includes(view.query.toLowerCase()),
-  );
-  if (view.sort === "Author" || view.sort === "Title") {
-    const k = view.sort === "Author" ? "author" : "title";
-    data.sort((a, b) => a[k].localeCompare(b[k]));
-  }
-  if (view.sort === "Rating")
-    data.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  const data = useMemo(() => {
+    const query = view.query.toLowerCase();
+    const filtered = books.filter(
+      (b) =>
+        (!view.focus || b.focus === view.focus) &&
+        (!view.status || b.status === view.status) &&
+        (!query || [b.title, b.author, b.notes, b.format]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)),
+    );
+    if (view.sort === "Author" || view.sort === "Title") {
+      const k = view.sort === "Author" ? "author" : "title";
+      filtered.sort((a, b) => a[k].localeCompare(b[k]));
+    }
+    if (view.sort === "Rating")
+      filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    return filtered;
+  }, [books, view.focus, view.status, view.query, view.sort]);
   const groupNames =
     view.group === "Status"
       ? ["Reading", "Completed", "To Read"]
