@@ -78,7 +78,7 @@ export function PublicShelf(){
  const visibleBays=bays.slice(0,rows);
  const shown=visibleBays.reduce((sum,bay)=>sum+bay.length,0);
  useEffect(()=>{const el=sentinel.current;if(!el||shown>=matches.length)return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setRows(n=>n+4)},{rootMargin:'500px'});io.observe(el);return()=>io.disconnect()},[shown,matches.length,phone]);
- function param(k:string,v:string){const p=new URLSearchParams(params);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true});if(k!=='pick'){setRows(4);setTurned(null)}setAngle(-12);setOpened(false)}
+ function param(k:string,v:string){const p=new URLSearchParams(window.location.search);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true});if(k!=='pick'){setRows(4);setTurned(null)}setAngle(-12);setOpened(false)}
  const current=matches.findIndex(b=>b.id===id);
  const controls = <div className="shelf-layout-controls"><div className="segmented" aria-label="Shelf layout"><button aria-pressed={!covers} onClick={()=>param('layout','')}><LibraryBig size={15}/>Spines</button><button aria-pressed={covers} onClick={()=>param('layout','covers')}><GalleryVerticalEnd size={15}/>Covers</button></div>
  <div className="public-selects"><label className="category-picker"><span className="phone-label">Category</span><select aria-label="Category" value={focus} onChange={e=>param('category',e.target.value)}><option value="">All categories</option>{focuses.map(f=><option key={f}>{f}</option>)}</select><ChevronDown size={14}/></label>
