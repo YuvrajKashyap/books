@@ -20,6 +20,7 @@ import {
   Upload,
 } from "lucide-react";
 import { Brand, Dialog } from "./components";
+import "./owner-desk.css";
 import { ScienceStudy } from "./shelf/ScienceStudy";
 import { Feature, Queues, Timeline, type Mutate } from "./Reading";
 import { PublicShelf } from "./PublicShelf";
@@ -299,7 +300,7 @@ export default function OwnerApp() {
   const selected = library.books.find((b) => b.id === edit);
   const shelfPage = (page === "room" || page === "collection") && view.layout !== "table";
   return (
-    <>
+    <div className="private-room">
       <header className={`library-heading owner-heading${shelfPage ? " shelf-page" : ""}`}>
         <div className="mast">
           <NavLink to="/" className="brand-link">
@@ -458,6 +459,6 @@ export default function OwnerApp() {
           {msg}
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -63,111 +63,119 @@ export function Editor({
             setError("The edit could not be saved. Your draft is still here.");
         }}
       >
-        <div className="fields">
-          <label className="full">
-            Title
-            <input
-              value={draft.title}
-              required
-              onChange={(e) => set("title", e.target.value)}
-            />
-          </label>
-          <label className="full">
-            Author
-            <input
-              value={draft.author}
-              onChange={(e) => set("author", e.target.value)}
-            />
-          </label>
-          <label>
-            Category
-            <select
-              value={draft.focus}
-              onChange={(e) => set("focus", e.target.value as Book["focus"])}
-            >
-              {focuses.map((f) => (
-                <option key={f}>{f}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Status
-            <select
-              value={draft.status}
-              onChange={(e) => set("status", e.target.value as Book["status"])}
-            >
-              {statuses.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Format
-            <input
-              value={draft.format}
-              onChange={(e) => set("format", e.target.value)}
-            />
-          </label>
-          <label>
-            Progress (%)
-            <input
-              type="number"
-              min="0"
-              max="100"
-              value={draft.progress ?? ""}
-              onChange={(e) =>
-                set(
-                  "progress",
-                  e.target.value === "" ? null : Number(e.target.value),
-                )
-              }
-            />
-          </label>
-          <label>
-            Finished on
-            <input
-              type="date"
-              value={draft.finished || ""}
-              onChange={(e) => set("finished", e.target.value || null)}
-            />
-          </label>
-          <label>
-            Rating
-            <select
-              value={draft.rating ?? ""}
-              onChange={(e) =>
-                set("rating", e.target.value ? Number(e.target.value) : null)
-              }
-            >
-              <option value="">Unrated</option>
-              {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((n) => (
-                <option key={n} value={n}>
-                  {n} / 5
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="full">
-            Cover ISBN (optional)
-            <input
-              inputMode="numeric"
-              pattern="[0-9]{13}"
-              placeholder="13-digit ISBN"
-              value={draft.cover}
-              onChange={(e) =>
-                set("cover", e.target.value.replace(/[- ]/g, ""))
-              }
-            />
-          </label>
-          <label className="full">
-            Reading notes
-            <textarea
-              value={draft.notes}
-              rows={5}
-              onChange={(e) => set("notes", e.target.value)}
-            />
-          </label>
-        </div>
+        <fieldset className="record-section">
+          <legend>Catalogue entry</legend>
+          <div className="fields">
+            <label className="full">
+              Title
+              <input
+                value={draft.title}
+                required
+                onChange={(e) => set("title", e.target.value)}
+              />
+            </label>
+            <label className="full">
+              Author
+              <input
+                value={draft.author}
+                onChange={(e) => set("author", e.target.value)}
+              />
+            </label>
+            <label>
+              Category
+              <select
+                value={draft.focus}
+                onChange={(e) => set("focus", e.target.value as Book["focus"])}
+              >
+                {focuses.map((f) => (
+                  <option key={f}>{f}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Format
+              <input
+                value={draft.format}
+                onChange={(e) => set("format", e.target.value)}
+              />
+            </label>
+            <label className="full">
+              Cover ISBN (optional)
+              <input
+                inputMode="numeric"
+                pattern="[0-9]{13}"
+                placeholder="13-digit ISBN"
+                value={draft.cover}
+                onChange={(e) =>
+                  set("cover", e.target.value.replace(/[- ]/g, ""))
+                }
+              />
+            </label>
+          </div>
+        </fieldset>
+        <fieldset className="record-section">
+          <legend>Reading record</legend>
+          <div className="fields">
+            <label>
+              Status
+              <select
+                value={draft.status}
+                onChange={(e) => set("status", e.target.value as Book["status"])}
+              >
+                {statuses.map((s) => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Progress (%)
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={draft.progress ?? ""}
+                onChange={(e) =>
+                  set(
+                    "progress",
+                    e.target.value === "" ? null : Number(e.target.value),
+                  )
+                }
+              />
+            </label>
+            <label>
+              Finished on
+              <input
+                type="date"
+                value={draft.finished || ""}
+                onChange={(e) => set("finished", e.target.value || null)}
+              />
+            </label>
+            <label>
+              Rating
+              <select
+                value={draft.rating ?? ""}
+                onChange={(e) =>
+                  set("rating", e.target.value ? Number(e.target.value) : null)
+                }
+              >
+                <option value="">Unrated</option>
+                {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((n) => (
+                  <option key={n} value={n}>
+                    {n} / 5
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="full">
+              Reading notes
+              <textarea
+                value={draft.notes}
+                rows={5}
+                onChange={(e) => set("notes", e.target.value)}
+              />
+            </label>
+          </div>
+        </fieldset>
         {book && (
           <details>
             <summary>History and source</summary>

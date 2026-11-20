@@ -23,7 +23,6 @@ import {
   GripVertical,
   Repeat2,
   BookOpen,
-  LibraryBig,
 } from "lucide-react";
 import { Cover, FocusIcon, Dialog } from "./components";
 import {
@@ -69,6 +68,11 @@ export function Feature({ library, open }: { library: Library; open: Open }) {
                   ? " · " + current.progress + "% read"
                   : ""}
               </span>
+              {current.progress != null && (
+                <div className="reading-gauge" aria-hidden="true">
+                  <i style={{ width: current.progress + "%" }} />
+                </div>
+              )}
               <button onClick={() => open(current.id)}>
                 Continue reading <ArrowRight size={15} />
               </button>
@@ -250,68 +254,72 @@ export function Queues({
   const move = (id: string, target: string) =>
     void mutate({ op: "move", id, target });
   return (
-    <>
-      <div className="rotation">
-        <Repeat2 size={19} />
-        <div>
-          <strong>Reading rotation</strong>
-          <small>Identity → Wealth → Behavior</small>
+    <div className="queue-desk">
+      <aside className="queue-index" aria-label="Queue controls">
+        <div className="rotation">
+          <span className="rotation-dial" data-position={library.rotation} aria-hidden="true"><i /></span>
+          <div>
+            <strong>Reading rotation</strong>
+            <small>Identity → Wealth → Behavior</small>
+          </div>
+          <label>
+            Next category
+            <select
+              value={library.rotation}
+              onChange={(e) =>
+                mutate({ op: "rotation", rotation: Number(e.target.value) })
+              }
+            >
+              {focuses.slice(0, 3).map((f, i) => (
+                <option key={f} value={i}>
+                  {f}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
-        <label>
-          Next category
-          <select
-            value={library.rotation}
-            onChange={(e) =>
-              mutate({ op: "rotation", rotation: Number(e.target.value) })
-            }
-          >
-            {focuses.slice(0, 3).map((f, i) => (
-              <option key={f} value={i}>
-                {f}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <div className="queue-tabs">
-        {focuses.map((f, i) => (
-          <button key={f} aria-pressed={tab === i} onClick={() => setTab(i)}>
-            <FocusIcon focus={f} />
-            {f}
-            <small>{queue(library.books, f).length}</small>
-          </button>
-        ))}
-      </div>
-      <div className="section-head">
-        <h2>{f}</h2>
-        <small>{tab === 3 ? "Outside rotation" : "Manual order"}</small>
-      </div>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={({ active, over }) => {
-          if (over && over.id !== active.id)
-            move(String(active.id), String(over.id));
-        }}
-      >
-        <SortableContext
-          items={lane.map((b) => b.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          {lane.map((b, i) => (
-            <QueueRow
-              key={b.id}
-              b={b}
-              i={i}
-              lane={lane}
-              move={move}
-              open={open}
-            />
+        <div className="queue-tabs">
+          {focuses.map((f, i) => (
+            <button key={f} aria-pressed={tab === i} onClick={() => setTab(i)}>
+              <FocusIcon focus={f} />
+              {f}
+              <small>{queue(library.books, f).length}</small>
+            </button>
           ))}
-        </SortableContext>
-      </DndContext>
-      {!lane.length && <p className="empty">This queue has no unread books.</p>}
-    </>
+        </div>
+      </aside>
+      <section className="queue-register" aria-label={f}>
+        <div className="section-head">
+          <h2>{f}</h2>
+          <small>{tab === 3 ? "Outside rotation" : "Manual order"}</small>
+        </div>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={({ active, over }) => {
+            if (over && over.id !== active.id)
+              move(String(active.id), String(over.id));
+          }}
+        >
+          <SortableContext
+            items={lane.map((b) => b.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {lane.map((b, i) => (
+              <QueueRow
+                key={b.id}
+                b={b}
+                i={i}
+                lane={lane}
+                move={move}
+                open={open}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
+        {!lane.length && <p className="empty">This queue has no unread books.</p>}
+      </section>
+    </div>
   );
 }
 export function Timeline({ books, open }: { books: Book[]; open: Open }) {
@@ -321,16 +329,16 @@ export function Timeline({ books, open }: { books: Book[]; open: Open }) {
   ];
   return (
     <div className="timeline">
-      {years.map((y) => (
-        <section key={y}>
-          <div className="year">
-            <LibraryBig size={18} />
-            <h2>{y}</h2>
-          </div>
-          <div>
-            {done
-              .filter((b) => (b.finished?.slice(0, 4) || "Undated") === y)
-              .map((b) => (
+      {years.map((y) => {
+        const entries = done.filter(b => (b.finished?.slice(0, 4) || "Undated") === y);
+        return (
+          <section key={y}>
+            <div className="year">
+              <h2>{y}</h2>
+              <small>{entries.length} {entries.length === 1 ? "volume" : "volumes"}</small>
+            </div>
+            <div>
+              {entries.map((b) => (
                 <button
                   key={b.id}
                   className="timeline-item"
@@ -349,9 +357,10 @@ export function Timeline({ books, open }: { books: Book[]; open: Open }) {
                   <ArrowRight size={17} />
                 </button>
               ))}
-          </div>
-        </section>
-      ))}
+            </div>
+          </section>
+        );
+      })}
       {!done.length && (
         <p className="empty">
           Finished books will appear here in reading order.
