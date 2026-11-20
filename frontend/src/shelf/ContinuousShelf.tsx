@@ -1,6 +1,7 @@
 import { memo, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import type { Book } from "../../../shared/model";
 import { bindingDepth, displayTitle } from "./artwork";
+import { ShelfPick } from "./ShelfPick";
 import { BoundVolume } from "./BoundVolume";
 import { scrollShelfWheel } from "./wheel";
 
@@ -19,12 +20,8 @@ export const ShelfSpine = memo(function ShelfSpine({ book, selected, open, turn,
   const style = { "--slot": depth + "px", "--book-left": left,
     "--book-center": left === undefined ? undefined : left + Math.round((selected ? 128 : depth) / 2) } as CSSProperties;
   return <div className={"volume-slot" + (selected ? " is-turned" : "")} data-book={book.id} style={style}>
-    <button className="volume-pick" title={title + " · " + book.author}
-      aria-label={(selected ? "Open details for " : "Turn to cover of ") + title + " by " + book.author}
-      onClick={() => selected ? open(book.id) : turn(book.id)}
-      onKeyDown={e => { if (e.key === "Escape") turn(null); }}>
-      {(painted || selected) && <BoundVolume book={book} showJacket={left === undefined || selected}/>}
-    </button>
+    <ShelfPick book={book} faceOut={selected} painted={painted || selected}
+      pick={() => selected ? open(book.id) : turn(book.id)} reshelve={() => turn(null)}/>
     {selected && <button className="volume-return" onClick={() => turn(null)} aria-label={"Reshelve " + title}>Reshelve</button>}
   </div>;
 });

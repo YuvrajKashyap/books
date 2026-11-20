@@ -5,7 +5,7 @@ import {useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {Link,useSearchParams} from 'react-router-dom';
 import {ArrowDown,ArrowLeft,ArrowRight,BookOpen,ChevronDown,KeyRound,Search,X,LibraryBig,GalleryVerticalEnd} from 'lucide-react';
 import {Dialog,type ShelfBook} from './components';
-import {BoundVolume} from './shelf/BoundVolume';
+import {ShelfPick} from './shelf/ShelfPick';
 import {focuses} from '../../shared/categories';
 import {Hardcover} from './shelf/Hardcover';
 import {bindingDepth,displayTitle,jacketFor} from './shelf/artwork';
@@ -25,12 +25,8 @@ function BookcaseRow({books,index,covers,turned,turn,open}: RowProps) {
         const title=displayTitle(b.title);
         return <div className={'volume-slot'+(revealed?' is-turned':'')} key={b.id}
           style={{'--slot':bindingDepth(b)+'px'} as CSSProperties}>
-          <button className="volume-pick" title={title+' · '+b.author}
-            aria-label={(covers||revealed?'Open details for ':'Turn to cover of ')+title+' by '+b.author}
-            onKeyDown={e=>{if(e.key==='Escape')turn(null)}}
-            onClick={()=>covers||revealed?open(b.id):turn(b.id)}>
-            <BoundVolume book={b} showJacket={covers||revealed}/>
-          </button>
+          <ShelfPick book={b} faceOut={covers || revealed}
+            pick={()=>covers || revealed ? open(b.id) : turn(b.id)} reshelve={()=>turn(null)}/>
           {revealed&&<button className="volume-return" aria-label={'Reshelve '+title} onClick={()=>turn(null)}>Reshelve</button>}
         </div>;
       })}

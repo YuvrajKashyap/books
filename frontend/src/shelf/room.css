@@ -41,7 +41,7 @@
 @media(max-width:650px){.catalog-controls{flex-wrap:wrap;gap:6px}.catalog-search{width:100%;max-width:none}.shelf-layout-controls{width:100%;justify-content:space-between;gap:6px}.gallery-volumes{height:212px}.gallery-main{padding-inline:14px}.gallery-tools>a{white-space:nowrap}.gallery-title{margin-block:21px}.shelf-layout-controls .segmented button{min-height:40px}.gallery-volumes .volume-return{min-height:32px}}
 
 /* One lens per shelf. The spine sits at z=0; the page block recedes into the bay. */
-.gallery-volumes,.owner-rack,.covers {perspective:1250px;perspective-origin:50% var(--sightline,24%)}
+.gallery-volumes,.owner-rack,.covers {perspective:1250px;perspective-origin:50% 12%}
 .gallery-volumes .volume-slot,.owner-rack .volume-slot,.covers .card-wrap,.covers .bookcard {transform-style:preserve-3d}
 .gallery-volumes .volume-pick,.owner-rack .volume-pick,.covers .cover-model {perspective:none;transform-style:preserve-3d}
 .gallery-volumes.spine-out,.owner-rack {column-gap:2px}
@@ -62,9 +62,29 @@
 .volume-slot {z-index:var(--stack,1)}
 .volume-slot:focus-within,.volume-slot.is-turned {z-index:3002}
 @media(hover:hover){.volume-slot:hover{z-index:3001}}
+/* The slot stays under the pointer while the book pulls free of its neighbours. */
+:is(.gallery-volumes.spine-out,.owner-rack) .volume-slot:not(.is-turned):has(.volume-pick:focus-visible) {
+  --peek-turn:translateZ(19px) rotateY(38deg);
+  --peek-lift:translateY(-5px) rotateX(-12deg);
+  z-index:30001;
+}
+@media (hover:hover) and (pointer:fine) {
+  :is(.gallery-volumes.spine-out,.owner-rack) .volume-slot:not(.is-turned):hover {
+    --peek-turn:translateZ(19px) rotateY(38deg);
+    --peek-lift:translateY(-5px) rotateX(-12deg);
+    z-index:30001;
+  }
+}
+:is(.gallery-volumes.spine-out,.owner-rack) .volume-slot:not(.is-turned) .volume-turn {
+  transform:var(--peek-turn,translateZ(-56px) rotateY(90deg));
+}
+:is(.gallery-volumes.spine-out,.owner-rack) .volume-slot:not(.is-turned) .volume-pivot {
+  transform:var(--peek-lift,none);
+}
+.owner-rack.continuous-shelf .volume-slot.is-turned {z-index:30000}
 .board-back {background-image:linear-gradient(90deg,#39251924,var(--buckram) 8%,#37281d33)}
 .gallery-volumes,.owner-rack {perspective:none}
-.gallery-volumes .volume-pick,.owner-rack .volume-pick {perspective:1700px;perspective-origin:var(--lens-x,50%) var(--lens-y,20%)}
+.gallery-volumes .volume-pick,.owner-rack .volume-pick {perspective:1700px;perspective-origin:var(--lens-x,50%) 12%}
 .gallery-volumes .volume-slot,.owner-rack .volume-slot {transform-style:flat}
 
 /* The rail keeps every title in the tab order and lets the browser handle touch momentum. */
@@ -73,7 +93,6 @@
 .owner-rack.continuous-shelf {flex-wrap:nowrap;scrollbar-color:#ac8965 #483425}
 .owner-rack.continuous-shelf .volume-slot {
   --lens-x:calc((var(--rail-eye, 0) - var(--book-left)) * 1px);
-  --lens-y:calc(var(--sightline, 45px) - 11px);
   --stack:calc(20000 - abs(var(--rail-eye, 0) - var(--book-center)));
 }
 .covers.continuous-shelf {display:flex;gap:14px;padding-bottom:8px;perspective:none}
