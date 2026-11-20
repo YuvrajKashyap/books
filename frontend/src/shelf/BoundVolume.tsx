@@ -1,4 +1,3 @@
-import { Matrix4 } from "three";
 import { useState, type CSSProperties } from "react";
 import { Cover, ink, type ShelfBook } from "../components";
 import { bindingDepth, displayTitle, jacketFor } from "./artwork";
@@ -8,10 +7,8 @@ import "./volume.css";
 // Project the faces into the DOM to keep jacket images sharp at any resolution.
 const width = 112, height = 171;
 function plane(w: number, h: number, x: number, y: number, z: number, rx = 0, ry = 0): CSSProperties {
-  const matrix = new Matrix4().makeRotationX(rx)
-    .multiply(new Matrix4().makeRotationY(ry)).setPosition(x, y, z);
   return { width: w, height: h, marginLeft: -w / 2, marginTop: -h / 2,
-    transform: "matrix3d(" + matrix.elements.join(",") + ")" };
+    transform: `translate3d(${x}px,${y}px,${z}px) rotateX(${rx}rad) rotateY(${ry}rad)` };
 }
 function buildFaces(depth: number) { return {
   rounding: Array.from({length:5}, (_, index) => {
