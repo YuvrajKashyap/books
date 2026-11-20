@@ -41,7 +41,16 @@ export function PublicShelf(){
  useEffect(()=>{const ac=new AbortController();setState('loading');fetch('/api/shelf',{signal:ac.signal}).then(async r=>{if(!r.ok)throw Error();const data=await r.json();setBooks((data.books as ShelfBook[]).sort(shelfOrder));setState('ok')}).catch(()=>{if(!ac.signal.aborted)setState('error')});return()=>ac.abort()},[retry]);
  const cabinet=useRef<HTMLElement>(null);
  useShelfCamera(cabinet);
- useEffect(()=>{const el=cabinet.current;if(!el)return;const ro=new ResizeObserver(()=>setWidth(el.clientWidth));ro.observe(el);return()=>ro.disconnect()},[]);
+ useEffect(()=>{
+   const el=cabinet.current;
+   if(!el)return;
+   const observer=new ResizeObserver(([entry])=>{
+     const measured=entry.contentRect.width;
+     if(measured>0)setWidth(measured);
+   });
+   observer.observe(el);
+   return()=>observer.disconnect();
+ },[]);
  const covers=params.get('layout')==='covers';
  const [phone,setPhone]=useState(()=>window.matchMedia(phoneQuery).matches);
  useEffect(()=>{const media=window.matchMedia(phoneQuery);const update=()=>setPhone(media.matches);media.addEventListener('change',update);return()=>media.removeEventListener('change',update)},[]);

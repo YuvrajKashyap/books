@@ -23,7 +23,7 @@ h1,h2,h3,.brand {font-weight:500}
   pointer-events:none;opacity:.85;
 }
 .library-heading-inner,.owner-heading .mast,.reading-desk,.reading-gallery .gallery-main {
-  width:100%;max-width:1800px;margin-inline:auto;padding-inline:var(--margin);
+  width:100%;max-width:var(--room-width,1800px);margin-inline:auto;padding-inline:var(--margin);
 }
 .library-heading-inner {position:relative}
 .public-heading .library-heading-inner {padding-block:17px 18px}
@@ -96,6 +96,20 @@ dialog::backdrop {background:#091912a3}
 .gate-intro {isolation:isolate;background:#102921}
 .gate-intro::before {width:100%;right:0;top:12%;bottom:15%;background-position:66% center;background-size:auto 82%;opacity:.27}
 .gate-form h2 {font-size:clamp(36px,4vw,54px)}
+@media(min-width:951px) {
+  .reading-gallery,.shelf-page {
+    --margin:clamp(36px,6vw,96px);
+    --cabinet-width:1176px;
+    --room-width:calc(var(--cabinet-width) + 2 * var(--margin));
+  }
+  .public-heading::before,.owner-heading.shelf-page::before {
+    right:max(6%,calc((100% - var(--cabinet-width)) / 2));
+  }
+  .catalogue-title {margin-top:4px}
+  .catalog-controls {padding-block:14px 18px}
+  .shelf-page .shelf-group {margin-block:17px 27px}
+  .shelf-page .shelf-group h2 {margin-bottom:10px}
+}
 @media(max-width:900px) {
   .collection-desk {flex-wrap:wrap;gap:8px}
   .collection-desk .section-head,.collection-desk .toolbar {width:100%}

@@ -296,9 +296,10 @@ export default function OwnerApp() {
           ? "history"
           : "room";
   const selected = library.books.find((b) => b.id === edit);
+  const shelfPage = (page === "room" || page === "collection") && view.layout !== "table";
   return (
     <>
-      <header className="library-heading owner-heading">
+      <header className={`library-heading owner-heading${shelfPage ? " shelf-page" : ""}`}>
         <div className="mast">
           <NavLink to="/" className="brand-link">
             <Brand />
@@ -338,7 +339,7 @@ export default function OwnerApp() {
           </button>
         </div>
       </header>
-      <main className="reading-desk">
+      <main className={`reading-desk${shelfPage ? " shelf-page" : ""}`}>
         {page === "room" || page === "collection" ? (
           <>
             <Collection
