@@ -168,3 +168,19 @@
   .private-room .collection-desk { padding-inline: 8px; }
   .private-room .collection-desk .section-head { flex-wrap: wrap; gap: 6px; }
 }
+
+.library-login {
+  min-height:100svh; display:grid;place-items:center;padding:30px 20px;
+  color:#f3e7cd; background:radial-gradient(ellipse at 50% 34%,#263d32 0,#12281f 39%,#0c1c17 84%);
+}
+.login-column {width:min(100%,285px);text-align:center}
+.brass-knot {width:224px;max-width:90%;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 8px 10px #071b1380)}
+.knot-space {aspect-ratio:248/172}
+.login-column h1 {font:500 clamp(39px,5vw,49px)/1 var(--display);letter-spacing:-.04em;margin:0 0 30px}
+.login-column form {display:grid;gap:15px;text-align:left}
+.login-column label {color:#d4c6a9;font-size:12px;letter-spacing:.02em}
+.login-column input {height:44px;border:0;border-bottom:1px solid #a1916f;border-radius:0;background:transparent;color:#fff3d9;font-size:16px;padding-inline:3px}
+.login-column input:focus-visible {outline:0;border-color:#f6d495;box-shadow:0 1px #dbc394}
+.login-column .primary {margin-top:7px;min-height:44px;justify-content:center;background:#e5d2a5;color:#22372b;border:1px solid #d2b781;border-radius:2px}
+.login-column > a {display:inline-flex;align-items:center;min-height:44px;color:#c8baa0;text-underline-offset:4px;font-size:12px;margin-top:8px}
+.login-column [role=alert] {color:#f2cba6;font-size:13px}

@@ -6,7 +6,7 @@ Yuvraj’s Bookshelf is a public catalogue with a private reading room at [books
 
 One repository and one Vercel deployment. Vite builds the React interface in `src/`. React Router preserves book links and view state. TanStack Table powers the database layout. The cover shelf, spine shelf and timeline have custom presentations. Hono serves the HTTP API in `backend/app.ts` through the Node function in `api/index.ts`. The Vite dev server mounts that same Hono app. Shared field definitions and rotation rules live in `shared/model.ts`.
 
-Use Node 24, `npm ci`, then `npm run dev`. Run `npm test` and `npm run build` before release. Vite can load local server settings from `private/books.env`. Set BOOKS_DATABASE_URL, BOOKS_OWNER_ID, SUPABASE_URL and SUPABASE_KEY. SUPABASE_KEY is the publishable key. AGENT_READ and AGENT_WRITE are optional server-only bearer credentials. Private files and environment values stay outside Git, builds and browser bundles.
+Use Node 24, `npm ci`, then `npm run dev`. Run `npm test` and `npm run build` before release. Vite can load local server settings from `private/books.env`. Set BOOKS_DATABASE_URL, BOOKS_OWNER_ID, BOOKS_OWNER_EMAIL (server-only address for the `yuvraj` login), SUPABASE_URL and SUPABASE_KEY. SUPABASE_KEY is the publishable key. AGENT_READ and AGENT_WRITE are optional server-only bearer credentials. Private files and environment values stay outside Git, builds and browser bundles.
 
 ## Supabase and ownership
 

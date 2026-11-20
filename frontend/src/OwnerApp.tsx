@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import {
   NavLink,
   useLocation,
@@ -9,7 +9,6 @@ import type { SupabaseClient, Session } from "@supabase/supabase-js";
 import {
   Plus,
   BookOpen,
-  LockKeyhole,
   ArrowRight,
   LibraryBig,
   Repeat2,
@@ -33,6 +32,7 @@ import {
   type View,
   type Library,
 } from "../../shared/model";
+const BrassKnot = lazy(() => import("./BrassKnot"));
 const nav = [
   { path: "/", label: "Reading room", icon: BookOpen },
   { path: "/collection", label: "Collection", icon: LibraryBig },
@@ -43,28 +43,10 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
   const [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
   return (
-    <div className="gate">
-      <div className="gate-intro">
-        <Brand />
-        <div>
-          <span className="kicker">Private library</span>
-          <h1>
-            The reading
-            <br />
-            <i>room.</i>
-          </h1>
-          <div className="gate-rule" />
-          <p>Yuvraj Kashyap’s personal collection</p>
-        </div>
-
-      </div>
-      <div className="gate-form">
-        <a href="/">← Back to the shelf</a>
-        <p>
-          <LockKeyhole size={22} />
-        </p>
-        <h2>Open your library</h2>
-        <p>Sign in to manage your collection.</p>
+    <main className="library-login">
+      <div className="login-column">
+        <Suspense fallback={<span className="brass-knot knot-space" />}><BrassKnot /></Suspense>
+        <h1>Reading room</h1>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -72,11 +54,26 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
             const fd = new FormData(e.currentTarget);
             setBusy(true);
             try {
-              const { error } = await auth.auth.signInWithPassword({
-                email: String(fd.get("email")),
-                password: String(fd.get("password")),
-              });
-              if (error) setError(error.message);
+              setError("");
+              const username = String(fd.get("username")).trim();
+              const password = String(fd.get("password"));
+              if (username.includes("@")) {
+                const result = await auth.auth.signInWithPassword({ email: username, password });
+                if (result.error) setError("Could not sign in with those details.");
+              } else {
+                const response = await fetch("/api/login", {
+                  method: "POST", headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ username, password }),
+                });
+                if (!response.ok) {
+                  setError(response.status === 429 ? "Too many attempts. Try again later."
+                    : response.status >= 500 ? "Sign-in is unavailable. Try again shortly." : "Could not sign in with those details.");
+                  return;
+                }
+                const session = await response.json();
+                const result = await auth.auth.setSession(session);
+                if (result.error) setError("Could not open the session. Try again.");
+              }
             } catch {
               setError("Unable to reach sign-in. Try again.");
             } finally {
@@ -85,8 +82,8 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
           }}
         >
           <label>
-            Email
-            <input type="email" name="email" autoComplete="username" required />
+            Username
+            <input name="username" autoComplete="username" autoCapitalize="none" spellCheck={false} defaultValue="yuvraj" required />
           </label>
           <label>
             Password
@@ -98,13 +95,14 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
             />
           </label>
           <button className="primary" disabled={!auth || busy}>
-            {busy ? "Opening…" : "Enter reading room"}
+            {busy ? "Signing in…" : "Sign in"}
             <ArrowRight size={16} />
           </button>
         </form>
         {(error || issue) && <p role="alert">{error || issue}</p>}
+        <a href="/">← Back to the shelf</a>
       </div>
-    </div>
+    </main>
   );
 }
 function download(data: unknown, name: string) {

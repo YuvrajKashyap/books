@@ -1,3 +1,4 @@
+import { ownerLogin } from "./login.js";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { bodyLimit } from "hono/body-limit";
@@ -38,6 +39,10 @@ app.get("/api/config", (c) => {
   c.header("Cache-Control", "public, max-age=60, s-maxage=300");
   return c.json({ url: env("SUPABASE_URL"), key: env("SUPABASE_KEY") });
 });
+app.post("/api/login", bodyLimit({ maxSize: 4096 }), c => ownerLogin(c, {
+  email: env("BOOKS_OWNER_EMAIL"), ownerId: env("BOOKS_OWNER_ID"),
+  url: env("SUPABASE_URL"), key: env("SUPABASE_KEY"),
+}));
 app.get("/api/shelf", async (c) => {
   const started = performance.now();
   const books = await db().begin("read only", async (tx) => {
