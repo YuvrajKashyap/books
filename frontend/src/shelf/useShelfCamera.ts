@@ -16,7 +16,7 @@ export function useShelfCamera(root: RefObject<HTMLElement | null>) {
         .filter(({ rect }) => rect.bottom >= 0 && rect.top <= height)
         .map(({ scene, rect }) => ({
           scene, rect,
-          slots: Array.from(scene.querySelectorAll<HTMLElement>(":scope > .volume-slot"), slot => ({
+          slots: scene.classList.contains("continuous-shelf") ? [] : Array.from(scene.querySelectorAll<HTMLElement>(":scope > .volume-slot"), slot => ({
             slot, bounds: slot.getBoundingClientRect(),
           })),
         }));
@@ -40,7 +40,9 @@ export function useShelfCamera(root: RefObject<HTMLElement | null>) {
     element.addEventListener("transitionend", onTransitionEnd);
     const observer = new ResizeObserver(schedule);
     observer.observe(element);
-    const children = new MutationObserver(schedule);
+    const children = new MutationObserver(records => {
+      if (records.some(({ target }) => !(target instanceof Element && target.closest(".continuous-shelf")))) schedule();
+    });
     children.observe(element, {childList:true, subtree:true});
     window.addEventListener("scroll", schedule, { passive:true });
     window.addEventListener("resize", schedule);

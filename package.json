@@ -6,7 +6,7 @@
     "start": "vite --host 127.0.0.1",
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "test": "node --experimental-strip-types --test tests/model.test.ts"
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
   "license": "ISC",
   "type": "module",

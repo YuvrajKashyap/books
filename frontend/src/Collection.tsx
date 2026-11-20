@@ -1,5 +1,6 @@
 import { useShelfCamera } from "./shelf/useShelfCamera";
-import { useRef, useState, type CSSProperties } from "react";
+import { ContinuousShelf, ShelfSpine } from "./shelf/ContinuousShelf";
+import { useRef, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -15,7 +16,7 @@ import {
   BookmarkPlus,
 } from "lucide-react";
 import { BoundVolume } from "./shelf/BoundVolume";
-import { bindingDepth, displayTitle } from "./shelf/artwork";
+import { displayTitle } from "./shelf/artwork";
 import { Dialog } from "./components";
 import {
   columns,
@@ -179,6 +180,7 @@ export function Collection({
         ? focuses
         : ["All books"];
   let remaining = limit;
+  let hiddenBooks = 0;
   const move = (id: string, target: string) =>
     mutate({ op: "shelfMove", id, target });
   return (
@@ -278,8 +280,10 @@ export function Collection({
         );
         if (g === "Completed" && view.sort === "Shelf order")
           group = completed(group);
-        const visible = group.slice(0, remaining);
-        remaining -= visible.length;
+        const continuous = (g === "To Read" || view.status === "To Read") && view.layout !== "table" && !arrange;
+        const visible = continuous ? group : group.slice(0, remaining);
+        if (!continuous) remaining -= visible.length;
+        hiddenBooks += group.length - visible.length;
         if (!visible.length) return null;
         return (
           <section key={g} className="shelf-group">
@@ -287,23 +291,15 @@ export function Collection({
               {g}
               <span>{group.length}</span>
             </h3>
-            {view.layout === "table" ? (
+            {continuous ? (
+              <ContinuousShelf key={JSON.stringify([view.query, view.focus, view.sort, view.layout, view.status])}
+                books={group} covers={view.layout === "shelf"} turned={turned} turn={setTurned} open={open}/>
+            ) : view.layout === "table" ? (
               <Table books={visible} view={view} open={open} mutate={mutate} />
             ) : view.layout === "spines" ? (
               <div className="owner-rack">
-                {visible.map(book => {
-                  const selected = turned === book.id;
-                  const title = displayTitle(book.title);
-                  return <div className={"volume-slot" + (selected ? " is-turned" : "")} key={book.id} style={{"--slot":bindingDepth(book)+"px"} as CSSProperties}>
-                    <button className="volume-pick" title={title + " · " + book.author}
-                      aria-label={(selected ? "Open details for " : "Turn to cover of ") + title + " by " + book.author}
-                      onClick={() => selected ? open(book.id) : setTurned(book.id)}
-                      onKeyDown={e => { if (e.key === "Escape") setTurned(null); }}>
-                      <BoundVolume book={book}/>
-                    </button>
-                    {selected && <button className="volume-return" onClick={() => setTurned(null)} aria-label={"Reshelve " + title}>Reshelve</button>}
-                  </div>;
-                })}
+                {visible.map(book => <ShelfSpine key={book.id} book={book} selected={turned === book.id}
+                  open={open} turn={setTurned}/> )}
               </div>
             ) : (
               <div className="covers">
@@ -364,9 +360,9 @@ export function Collection({
           <button onClick={() => setView(initialView)}>Clear filters</button>
         </div>
       )}
-      {data.length > limit && (
+      {hiddenBooks > 0 && (
         <button className="more" onClick={() => setLimit(limit + 36)}>
-          Show more books · {data.length - limit} remaining
+          Show more books · {hiddenBooks} remaining
         </button>
       )}
       {options && (

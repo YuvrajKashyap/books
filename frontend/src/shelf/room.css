@@ -66,3 +66,17 @@
 .gallery-volumes,.owner-rack {perspective:none}
 .gallery-volumes .volume-pick,.owner-rack .volume-pick {perspective:1700px;perspective-origin:var(--lens-x,50%) var(--lens-y,20%)}
 .gallery-volumes .volume-slot,.owner-rack .volume-slot {transform-style:flat}
+
+/* The rail keeps every title in the tab order and lets the browser handle touch momentum. */
+.continuous-shelf {overflow-x:auto;overflow-y:hidden;overflow-anchor:none;scrollbar-width:thin;scrollbar-color:#967454 #e1d4c4}
+.continuous-shelf:focus-visible {outline:2px solid var(--forest);outline-offset:3px}
+.owner-rack.continuous-shelf {flex-wrap:nowrap;scrollbar-color:#ac8965 #483425}
+.owner-rack.continuous-shelf .volume-slot {
+  --lens-x:calc((var(--rail-eye, 0) - var(--book-left)) * 1px);
+  --lens-y:calc(var(--sightline, 45px) - 11px);
+  --stack:calc(20000 - abs(var(--rail-eye, 0) - var(--book-center)));
+}
+.covers.continuous-shelf {display:flex;gap:14px;padding-bottom:8px;perspective:none}
+.covers.continuous-shelf .card-wrap {flex:0 0 148px;min-width:0}
+.covers.continuous-shelf .cover-model {perspective:1000px}
+.covers.continuous-shelf .bookcard {width:100%}
