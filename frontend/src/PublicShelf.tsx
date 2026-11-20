@@ -3,7 +3,7 @@ import { PrintEdition } from "./shelf/PrintEdition";
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import {useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {Link,useSearchParams} from 'react-router-dom';
-import {ArrowDown,ArrowLeft,ArrowRight,BookOpen,ChevronDown,KeyRound,Search,X,LibraryBig,GalleryVerticalEnd} from 'lucide-react';
+import {ArrowLeft,ArrowRight,BookOpen,ChevronDown,KeyRound,Search,X,LibraryBig,GalleryVerticalEnd} from 'lucide-react';
 import {Dialog,type ShelfBook} from './components';
 import {ShelfPick} from './shelf/ShelfPick';
 import {focuses} from '../../shared/categories';
@@ -79,8 +79,18 @@ export function PublicShelf(){
  const controls = <div className="shelf-layout-controls"><div className="segmented" aria-label="Shelf layout"><button aria-pressed={!covers} onClick={()=>param('layout','')}><LibraryBig size={15}/>Spines</button><button aria-pressed={covers} onClick={()=>param('layout','covers')}><GalleryVerticalEnd size={15}/>Covers</button></div>
  <div className="public-selects"><label className="category-picker"><span className="phone-label">Category</span><select aria-label="Category" value={focus} onChange={e=>param('category',e.target.value)}><option value="">All categories</option>{focuses.map(f=><option key={f}>{f}</option>)}</select><ChevronDown size={14}/></label>
  <label className="category-picker"><span className="phone-label">Sort by</span><select aria-label="Sort books" value={sort} onChange={e=>param('sort',e.target.value==='shelf'?'':e.target.value)}><option value="shelf">Shelf order</option><option value="title">Title A–Z</option><option value="author">Author A–Z</option><option value="short">Shortest first</option><option value="long">Longest first</option></select><ChevronDown size={14}/></label></div></div>;
- return <div className="reading-gallery"><header className="gallery-head"><div className="gallery-nav"><Link to="/" className="exlibris"><span className="monogram">YK</span><span>Yuvraj Kashyap</span></Link><div className="gallery-tools"><Link to="/admin"><KeyRound size={14}/><span>Owner sign-in</span></Link></div></div></header>
- <main className="gallery-main"><div className="gallery-title"><div><h1>My <i>bookshelf.</i></h1><p>{state==='ok'?books.length+(phone?' titles · Swipe to browse':' titles in my collection'):'The collection of Yuvraj Kashyap'}</p></div><a href="#bookcase" className="browse-cue"><ArrowDown size={16}/>Browse shelves</a></div>
+ return <div className="reading-gallery">
+ <header className="library-heading public-heading">
+   <div className="library-heading-inner">
+     <div className="bookplate-line"><Link to="/" className="bookplate-name" aria-label="Yuvraj Kashyap’s bookshelf">Ex libris <span>Yuvraj Kashyap</span></Link>
+       <Link to="/admin" className="owner-entry"><KeyRound size={14}/>Owner sign-in</Link>
+     </div>
+     <div className="catalogue-title"><h1><i>The</i> Bookshelf</h1>
+       {state==='ok' && <span className="volume-count">{books.length} volumes</span>}
+     </div>
+   </div>
+ </header>
+ <main className="gallery-main">
  <div className="catalog-controls"><label className="catalog-search"><Search size={17}/><input ref={search} aria-label="Search books" placeholder="Find a title or author" value={query} onChange={e=>param('q',e.target.value)}/>{query?<button aria-label="Clear search" onClick={()=>param('q','')}><X size={14}/></button>:<kbd>/</kbd>}</label>
  {!phone&&controls}</div>
  <section ref={cabinet} className={phone?'pocket-section':'cabinet'} id={phone?undefined:'bookcase'} aria-label="Wooden bookshelf">

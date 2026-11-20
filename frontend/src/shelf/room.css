@@ -153,10 +153,10 @@
   .pocket-case .brass-plate {font-size:9px;font-variant-numeric:tabular-nums}
   .pocket-rail {position:relative;width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y pinch-zoom;overflow-anchor:none}
   .pocket-rail::-webkit-scrollbar {display:none}
-  .pocket-track {position:relative;height:clamp(312px,40svh,352px)}
+  .pocket-track {position:relative;height:clamp(312px,49svh,465px)}
   .pocket-slot {position:absolute;bottom:0;top:0}
   .pocket-slot button.volume-pick {touch-action:pan-x pan-y pinch-zoom;perspective:1250px;perspective-origin:var(--lens-x,50%) -24px;border-radius:0}
-  .pocket-scale {position:absolute;left:50%;bottom:9px;width:112px;height:171px;margin-left:-56px;transform:scale3d(1.55,1.55,1.55);transform-origin:50% 100%;transform-style:preserve-3d;pointer-events:none}
+  .pocket-scale {position:absolute;left:50%;bottom:9px;width:112px;height:171px;margin-left:-56px;transform:scale3d(var(--pocket-zoom),var(--pocket-zoom),var(--pocket-zoom));transform-origin:50% 100%;transform-style:preserve-3d;pointer-events:none}
   .pocket-scale .volume-pivot {bottom:0}
   .pocket-scale .volume-turn {transform:translateZ(-56px) rotateY(90deg)}
   .face-out .pocket-scale .volume-turn {transform:translateZ(3px) rotateY(-8deg)}

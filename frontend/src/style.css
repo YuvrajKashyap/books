@@ -10,7 +10,7 @@
   --line: #d9d9cd;
   --forest: #244b3e;
   --paper: #f8f6f0;
-  --display: "Instrument Serif", Georgia, serif;
+  --display: "Cormorant Garamond", Georgia, serif;
   font-synthesis: none;
 }
 * {
@@ -881,25 +881,6 @@ dialog h3 {
   border-top: 1px solid #b0a584;
   margin: 24px 0 12px;
 }
-.gate-spines {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  border-bottom: 7px solid #ab9972;
-  overflow: hidden;
-}
-.gate-spines span {
-  writing-mode: vertical-rl;
-  flex: 1;
-  min-width: 15px;
-  display: grid;
-  place-items: end center;
-  border-radius: 3px 3px 0 0;
-  padding: 8px 2px;
-  color: #ebdab7;
-  font: 13px var(--display);
-  box-shadow: inset 3px 0 3px #0003;
-}
 .gate-form {
   align-self: center;
   justify-self: center;
@@ -1085,7 +1066,6 @@ dialog h3 {
     margin: 10px 0;
   }
   .gate-intro h1 br,
-  .gate-spines,
   .gate-rule {
     display: none;
   }

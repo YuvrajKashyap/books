@@ -5,7 +5,7 @@ import {
   type ReactNode,
   type CSSProperties,
 } from "react";
-import { BookOpen, X, Bookmark, Leaf, Layers, Compass } from "lucide-react";
+import { X, Bookmark, Leaf, Layers, Compass } from "lucide-react";
 import type { Book } from "../../shared/model";
 import { focuses } from "../../shared/categories";
 import {jacketFor} from "./shelf/artwork";
@@ -13,8 +13,8 @@ export type ShelfBook=Pick<Book,"id"|"title"|"author"|"focus"|"cover">;
 export function Brand() {
   return (
     <span className="brand">
-      <BookOpen size={27} strokeWidth={1.35} />
-      Yuvraj’s Bookshelf<span className="brand-dot">.</span>
+      <span className="bookplate-seal" aria-hidden="true">YK</span>
+      Yuvraj’s Bookshelf
     </span>
   );
 }

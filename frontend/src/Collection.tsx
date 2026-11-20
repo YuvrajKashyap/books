@@ -45,7 +45,6 @@ type Props = {
   views: View[];
   open: (id: string) => void;
   mutate: Mutate;
-  standalone: boolean;
 };
 function Table({
   books,
@@ -139,7 +138,6 @@ export function Collection({
   views,
   open,
   mutate,
-  standalone,
 }: Props) {
   const collection = useRef<HTMLElement>(null);
   useShelfCamera(collection);
@@ -185,57 +183,53 @@ export function Collection({
     mutate({ op: "shelfMove", id, target });
   return (
     <section id="collection" ref={collection}>
-      <div className="section-head">
-        {standalone ? (
-          <p>{data.length} books</p>
-        ) : (
-          <h2>
-            Your collection <small>{books.length}</small>
-          </h2>
-        )}
-        <div className="segmented">
-          {(
-            [
-              ["spines", LibraryBig, "Spines"],
-              ["shelf", GalleryVerticalEnd, "Covers"],
-              ["table", Table2, "Table"],
-            ] as const
-          ).map(([key, Icon, label]) => (
-            <button
-              key={key}
-              aria-pressed={view.layout === key}
-              onClick={() => update({ layout: key })}
-            >
-              <Icon size={15} />
-              {label}
-            </button>
-          ))}
+      <div className="collection-desk">
+        <div className="section-head">
+          <p className="desk-count" aria-live="polite">{data.length} {data.length === 1 ? "volume" : "volumes"}</p>
+          <div className="segmented">
+            {(
+              [
+                ["spines", LibraryBig, "Spines"],
+                ["shelf", GalleryVerticalEnd, "Covers"],
+                ["table", Table2, "Table"],
+              ] as const
+            ).map(([key, Icon, label]) => (
+              <button
+                key={key}
+                aria-pressed={view.layout === key}
+                onClick={() => update({ layout: key })}
+              >
+                <Icon size={15} />
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="toolbar">
-        <label className="search">
-          <Search size={17} />
-          <input
-            aria-label="Search library"
-            placeholder="Find a title, author or note"
-            value={view.query}
-            onChange={(e) => update({ query: e.target.value })}
-          />
-        </label>
-        <select
-          aria-label="Category"
-          value={view.focus}
-          onChange={(e) => update({ focus: e.target.value as View["focus"] })}
-        >
-          <option value="">All categories</option>
-          {focuses.map((v) => (
-            <option key={v}>{v}</option>
-          ))}
-        </select>
-        <button onClick={() => setOptions(true)}>
-          <SlidersHorizontal size={15} />
-          View options
-        </button>
+        <div className="toolbar">
+          <label className="search">
+            <Search size={17} />
+            <input
+              aria-label="Search library"
+              placeholder="Find a title, author or note"
+              value={view.query}
+              onChange={(e) => update({ query: e.target.value })}
+            />
+          </label>
+          <select
+            aria-label="Category"
+            value={view.focus}
+            onChange={(e) => update({ focus: e.target.value as View["focus"] })}
+          >
+            <option value="">All categories</option>
+            {focuses.map((v) => (
+              <option key={v}>{v}</option>
+            ))}
+          </select>
+          <button onClick={() => setOptions(true)}>
+            <SlidersHorizontal size={15} />
+            View options
+          </button>
+        </div>
       </div>
       <div className="pills">
         {(["", ...statuses] as const).map((s) => (

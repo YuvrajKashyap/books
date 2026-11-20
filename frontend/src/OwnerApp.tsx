@@ -54,41 +54,7 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
           <div className="gate-rule" />
           <p>Yuvraj Kashyap’s personal collection</p>
         </div>
-        <div aria-hidden="true" className="gate-spines">
-          {[
-            "I",
-            "II",
-            "III",
-            "IV",
-            "V",
-            "VI",
-            "VII",
-            "VIII",
-            "IX",
-            "X",
-            "XI",
-            "XII",
-            "XIII",
-            "XIV",
-            "XV",
-          ].map((s, i) => (
-            <span
-              key={s}
-              style={{
-                height: 80 + ((i * 31) % 115),
-                background: [
-                  "#927a46",
-                  "#a8906d",
-                  "#46594b",
-                  "#845e4f",
-                  "#c4b28d",
-                ][i % 5],
-              }}
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+
       </div>
       <div className="gate-form">
         <a href="/">← Back to the shelf</a>
@@ -96,7 +62,7 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
           <LockKeyhole size={22} />
         </p>
         <h2>Open your library</h2>
-        <p>Sign in with your Supabase owner account.</p>
+        <p>Sign in to manage your collection.</p>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -332,7 +298,7 @@ export default function OwnerApp() {
   const selected = library.books.find((b) => b.id === edit);
   return (
     <>
-      <header>
+      <header className="library-heading owner-heading">
         <div className="mast">
           <NavLink to="/" className="brand-link">
             <Brand />
@@ -354,14 +320,8 @@ export default function OwnerApp() {
             YK
           </button>
         </div>
-      </header>
-      <main>
-        <div className="page-title">
+        <div className="page-title library-heading-inner">
           <div>
-            <span className="kicker">
-              <LibraryBig size={14} />
-              Yuvraj’s library
-            </span>
             <h1>
               {page === "room"
                 ? "Reading room"
@@ -370,7 +330,6 @@ export default function OwnerApp() {
                   : page === "queue"
                     ? "Reading queues"
                     : "Reading history"}
-              <i>.</i>
             </h1>
           </div>
           <button className="primary" onClick={() => open("new")}>
@@ -378,10 +337,11 @@ export default function OwnerApp() {
             Add book
           </button>
         </div>
+      </header>
+      <main className="reading-desk">
         {page === "room" || page === "collection" ? (
           <>
             <Collection
-              standalone={page === "collection"}
               mutate={mutate}
               books={library.books}
               view={view}

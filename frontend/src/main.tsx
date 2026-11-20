@@ -4,10 +4,11 @@ import { BrowserRouter, useLocation } from "react-router-dom";
 import { PublicShelf } from "./PublicShelf";
 import { Brand } from "./components";
 import "@fontsource-variable/dm-sans/wght.css";
-import "@fontsource/instrument-serif/latin-400.css";
-import "@fontsource/instrument-serif/latin-400-italic.css";
+import "@fontsource/cormorant-garamond/latin-500.css";
+import "@fontsource/cormorant-garamond/latin-500-italic.css";
 import "./style.css";
 import "./shelf/room.css";
+import "./library.css";
 
 const OwnerApp = lazy(() => import("./OwnerApp"));
 
