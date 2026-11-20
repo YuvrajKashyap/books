@@ -103,7 +103,8 @@ app.get("/api/library", async (c) =>
       "isolation level repeatable read read only",
       async (tx) => {
         await scope(tx);
-        return { version: 1, ...(await header(tx)), books: await fields(tx) };
+        const [meta, books] = await Promise.all([header(tx), fields(tx)]);
+        return { version: 1, ...meta, books };
       },
     ),
   ),
