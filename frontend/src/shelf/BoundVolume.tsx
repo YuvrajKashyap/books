@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { memo, useState, type CSSProperties } from "react";
 import { Cover, ink, type ShelfBook } from "../components";
 import { bindingDepth, displayTitle, jacketFor } from "./artwork";
 import "./volume.css";
@@ -25,13 +25,25 @@ function buildFaces(depth: number) { return {
   fore: plane(depth-3,height-4,width/2-2,0,0,0,Math.PI/2),
   head: plane(width-3,depth-3,0,-height/2+2,0,Math.PI/2),
 }; }
-const geometries = Array.from({length:53}, (_, i) => buildFaces(i+10));
-export function BoundVolume({book,showJacket=true}:{book:ShelfBook;showJacket?:boolean}) {
+const geometries = new Map<number, ReturnType<typeof buildFaces>>();
+function geometry(depth: number) {
+  let faces = geometries.get(depth);
+  if (!faces) {
+    faces = buildFaces(depth);
+    geometries.set(depth, faces);
+  }
+  return faces;
+}
+export const BoundVolume = memo(function BoundVolume({ book, showJacket = true, preview = false }: {
+  book: ShelfBook;
+  showJacket?: boolean;
+  preview?: boolean;
+}) {
   // Keep a revealed jacket painted through the return trip to the shelf.
   const [hasShownJacket, setHasShownJacket] = useState(showJacket);
   if (showJacket && !hasShownJacket) setHasShownJacket(true);
   const jacket = jacketFor(book);
-  const faces = geometries[bindingDepth(book)-10];
+  const faces = geometry(bindingDepth(book));
   const title = displayTitle(book.title);
   return <span className="volume-pivot" aria-hidden="true" style={{scale:"1 " + (jacket?.heightScale ?? 1), "--buckram":jacket?.cloth ?? ink(book)} as CSSProperties}>
     <span className="volume-turn">
@@ -48,7 +60,7 @@ export function BoundVolume({book,showJacket=true}:{book:ShelfBook;showJacket?:b
       </span>}
       <span className="volume-plane board-front" style={{...faces.front,
         "--preview-art": jacket ? `url("${jacket.small || jacket.file}")` : undefined
-      } as CSSProperties}>{(showJacket || hasShownJacket) && <Cover book={book} shelf/>}</span>
+      } as CSSProperties}>{(showJacket || hasShownJacket) && <Cover book={book} shelf priority={preview}/>}</span>
     </span>
   </span>;
-}
+});

@@ -19,6 +19,6 @@ export function ShelfPick({ book, faceOut, painted = true, exposedEnd = false, p
     onFocus={() => setVisited(true)}
     onClick={pick}
     onKeyDown={e => { if (e.key === "Escape") reshelve(); }}>
-    {painted && <BoundVolume book={book} showJacket={faceOut || exposedEnd || visited}/>}
+    {painted && <BoundVolume book={book} preview={visited} showJacket={faceOut || exposedEnd || visited}/>}
   </button>;
 }

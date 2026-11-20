@@ -1,4 +1,4 @@
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import type { ShelfBook } from "../components";
 import { bindingDepth, displayTitle } from "./artwork";
@@ -17,7 +17,6 @@ function firstAt(ends: number[], x: number) {
   return lo;
 }
 
-const BookModel = memo(BoundVolume);
 export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; covers: boolean; open: (id: string) => void }) {
   const rail = useRef<HTMLDivElement>(null);
   const [turned, setTurned] = useState<string | null>(null);
@@ -142,7 +141,7 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
             if (face) open(book.id);
             else { requestCenter.current = i; setTurned(book.id); }
           }}>
-          <span className="pocket-scale"><BookModel book={book} showJacket={face}/></span>
+          <span className="pocket-scale"><BoundVolume book={book} showJacket={face}/></span>
         </button>
         {!covers && turned === book.id && <button className="pocket-return"
           aria-label={"Reshelve " + title} onClick={() => {requestCenter.current=i; setTurned(null);}}>Reshelve</button>}
