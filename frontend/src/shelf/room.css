@@ -41,7 +41,7 @@
 @media(max-width:650px){.catalog-controls{flex-wrap:wrap;gap:6px}.catalog-search{width:100%;max-width:none}.shelf-layout-controls{width:100%;justify-content:space-between;gap:6px}.gallery-volumes{height:212px}.gallery-main{padding-inline:14px}.gallery-tools>a{white-space:nowrap}.gallery-title{margin-block:21px}.shelf-layout-controls .segmented button{min-height:40px}.gallery-volumes .volume-return{min-height:32px}}
 
 /* Keep the eye just above the tallest jacket, independent of row and scroll position. */
-.gallery-volumes,.owner-rack,.covers {--shelf-eye-y:-24px}
+.gallery-volumes,.owner-rack,.covers {--shelf-eye-y:-72px}
 .covers .cover-model {perspective-origin:50% var(--shelf-eye-y)}
 .gallery-volumes .volume-slot,.owner-rack .volume-slot,.covers .card-wrap,.covers .bookcard {transform-style:preserve-3d}
 .gallery-volumes .volume-pick,.owner-rack .volume-pick,.covers .cover-model {transform-style:preserve-3d}
@@ -143,7 +143,7 @@
   .pocket-rail::-webkit-scrollbar {display:none}
   .pocket-track {position:relative;height:clamp(312px,40svh,352px)}
   .pocket-slot {position:absolute;bottom:0;top:0}
-  .pocket-slot button.volume-pick {touch-action:pan-x pan-y pinch-zoom;perspective:1250px;perspective-origin:var(--lens-x,50%) 0px;border-radius:0}
+  .pocket-slot button.volume-pick {touch-action:pan-x pan-y pinch-zoom;perspective:1250px;perspective-origin:var(--lens-x,50%) -24px;border-radius:0}
   .pocket-scale {position:absolute;left:50%;bottom:9px;width:112px;height:171px;margin-left:-56px;transform:scale3d(1.55,1.55,1.55);transform-origin:50% 100%;transform-style:preserve-3d;pointer-events:none}
   .pocket-scale .volume-pivot {bottom:0}
   .pocket-scale .volume-turn {transform:translateZ(-56px) rotateY(90deg)}
