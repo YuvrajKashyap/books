@@ -1,3 +1,4 @@
+import { PrintEdition } from "./shelf/PrintEdition";
 import { useState } from "react";
 import { ExternalLink, Trash2, Check } from "lucide-react";
 import { Dialog, Cover } from "./components";
@@ -37,6 +38,7 @@ export function Editor({
             <span className="kicker">{book.focus}</span>
             <h2>{book.title}</h2>
             <p>{book.author}</p>
+            <PrintEdition book={book}/>
           </div>
         </div>
       )}

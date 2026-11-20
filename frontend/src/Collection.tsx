@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useShelfCamera } from "./shelf/useShelfCamera";
+import { useRef, useState, type CSSProperties } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -14,7 +15,7 @@ import {
   BookmarkPlus,
 } from "lucide-react";
 import { BoundVolume } from "./shelf/BoundVolume";
-import { displayTitle } from "./shelf/artwork";
+import { bindingDepth, displayTitle } from "./shelf/artwork";
 import { Dialog } from "./components";
 import {
   columns,
@@ -139,6 +140,8 @@ export function Collection({
   mutate,
   standalone,
 }: Props) {
+  const collection = useRef<HTMLElement>(null);
+  useShelfCamera(collection);
   const [options, setOptions] = useState(false),
     [arrange, setArrange] = useState(false),
     [name, setName] = useState(""),
@@ -179,7 +182,7 @@ export function Collection({
   const move = (id: string, target: string) =>
     mutate({ op: "shelfMove", id, target });
   return (
-    <section id="collection">
+    <section id="collection" ref={collection}>
       <div className="section-head">
         {standalone ? (
           <p>{data.length} books</p>
@@ -291,7 +294,7 @@ export function Collection({
                 {visible.map(book => {
                   const selected = turned === book.id;
                   const title = displayTitle(book.title);
-                  return <div className={"volume-slot" + (selected ? " is-turned" : "")} key={book.id}>
+                  return <div className={"volume-slot" + (selected ? " is-turned" : "")} key={book.id} style={{"--slot":bindingDepth(book)+"px"} as CSSProperties}>
                     <button className="volume-pick" title={title + " · " + book.author}
                       aria-label={(selected ? "Open details for " : "Turn to cover of ") + title + " by " + book.author}
                       onClick={() => selected ? open(book.id) : setTurned(book.id)}

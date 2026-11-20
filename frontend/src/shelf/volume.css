@@ -14,7 +14,6 @@ button.volume-pick,button.volume-pick:hover,.cover-model {position:relative;disp
 .volume-pivot,.volume-turn {position:absolute;display:block;width:112px;height:171px;transform-style:preserve-3d}
 .volume-pivot {left:50%;margin-left:-56px;bottom:23px;transform-origin:50% 100%;transition:transform .48s cubic-bezier(.22,.8,.25,1);pointer-events:none}
 .volume-turn {inset:0;transform:rotateY(90deg);transition:transform .58s cubic-bezier(.22,.78,.2,1)}
-.volume-slot:nth-child(3n+2) .volume-pivot {scale:1 .96;transform-origin:bottom}
 .volume-slot:focus-within .volume-pivot {transform:translateY(-8px) translateZ(6px) rotateX(-22deg)}
 @media(hover:hover){.volume-slot:hover {z-index:3}.volume-slot:hover .volume-pivot {transform:translateY(-10px) translateZ(8px) rotateX(-25deg)}}
 .volume-slot.is-turned .volume-pivot {transform:translateY(-9px) translateZ(18px) rotateX(-4deg)}

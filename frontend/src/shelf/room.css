@@ -29,7 +29,7 @@
 .walnut-bay .shelf-lip {height:21px;margin-inline:-2px;border-radius:2px;box-shadow:0 6px 7px #1e140ed9,inset 0 2px 1px #d5af7a66}
 .gallery-volumes {position:relative;display:flex;align-items:end;gap:3px;padding-inline:clamp(7px,2vw,28px);height:219px}
 .gallery-volumes .volume-slot {height:100%;width:40px}
-.gallery-volumes .volume-pivot {bottom:9px;scale:1 var(--binding-scale)}
+.gallery-volumes .volume-pivot {bottom:9px}
 .gallery-volumes .volume-turn {transform:rotateY(86deg)}
 .gallery-volumes .volume-slot:before {content:'';position:absolute;bottom:3px;left:6%;width:96%;height:13px;background:radial-gradient(ellipse,#160c07d9,transparent 74%);pointer-events:none}
 .gallery-volumes .volume-slot.is-turned {width:128px}
@@ -39,3 +39,30 @@
 .gallery-volumes .volume-return {top:0;font-size:11px}
 .cloth-spine {background-image:repeating-linear-gradient(0deg,transparent 0 1px,#ffffff0a 1px 2px),linear-gradient(90deg,#0004,#fff1 28%,transparent 58%,#0005)}
 @media(max-width:650px){.catalog-controls{flex-wrap:wrap;gap:6px}.catalog-search{width:100%;max-width:none}.shelf-layout-controls{width:100%;justify-content:space-between;gap:6px}.gallery-volumes{height:212px}.gallery-main{padding-inline:14px}.gallery-tools>a{white-space:nowrap}.gallery-title{margin-block:21px}.shelf-layout-controls .segmented button{min-height:40px}.gallery-volumes .volume-return{min-height:32px}}
+
+/* One lens per shelf. The spine sits at z=0; the page block recedes into the bay. */
+.gallery-volumes,.owner-rack,.covers {perspective:1250px;perspective-origin:50% var(--sightline,24%)}
+.gallery-volumes .volume-slot,.owner-rack .volume-slot,.covers .card-wrap,.covers .bookcard {transform-style:preserve-3d}
+.gallery-volumes .volume-pick,.owner-rack .volume-pick,.covers .cover-model {perspective:none;transform-style:preserve-3d}
+.gallery-volumes.spine-out,.owner-rack {column-gap:2px}
+.gallery-volumes.spine-out .volume-slot,.owner-rack .volume-slot {width:var(--slot,25px)}
+.gallery-volumes.spine-out .volume-slot.is-turned,.owner-rack .volume-slot.is-turned {width:128px}
+.gallery-volumes.spine-out .volume-turn,.owner-rack .volume-turn {transform:translateZ(-56px) rotateY(90deg)}
+.gallery-volumes.spine-out .is-turned .volume-turn,.owner-rack .is-turned .volume-turn {transform:translateZ(13px) rotateY(-11deg)}
+.gallery-volumes.face-out .volume-turn,.covers .cover-model .volume-turn {transform:translateZ(-5px) rotateY(-6deg) rotateX(-3deg)}
+.curved-binding {background-color:var(--buckram);background-size:500% 100%;background-repeat:no-repeat}
+.curved-binding:after {content:"";position:absolute;inset:0;background:linear-gradient(rgb(22 13 8 / var(--edge-shade)),rgb(22 13 8 / var(--edge-shade))),url('/materials/binding-grain.png');background-size:auto,48px 48px;box-shadow:inset 0 1px 0 #fff5,inset 0 -1px 0 #25190c88}
+.board-front {background:var(--buckram)}
+.paper-cut,.paper-head {box-shadow:inset 0 1px 2px #624c33a6,inset 0 -1px 1px #796c52}
+.paper-head {background-image:linear-gradient(90deg,#76654966,transparent 11%,transparent 86%,#94866b40),repeating-linear-gradient(0deg,#e7dfcc 0 1px,#c8bea7 1px 1.6px,#f7f0df 1.6px 2.8px)}
+.owner-rack .volume-slot:before,.cover-model:before {content:"";position:absolute;bottom:12px;left:2%;width:96%;height:12px;background:radial-gradient(ellipse,#150b0677,transparent 72%)}
+.gallery-volumes .volume-slot:before {bottom:5px;background:radial-gradient(ellipse,#170e0ac9 0%,#170e0a79 34%,transparent 72%)}
+.covers .bookcard:hover .board-front .cover {transform:none}
+.edition-link {font-size:12px;color:var(--muted);text-underline-offset:3px}
+.volume-slot {z-index:var(--stack,1)}
+.volume-slot:focus-within,.volume-slot.is-turned {z-index:3002}
+@media(hover:hover){.volume-slot:hover{z-index:3001}}
+.board-back {background-image:linear-gradient(90deg,#39251924,var(--buckram) 8%,#37281d33)}
+.gallery-volumes,.owner-rack {perspective:none}
+.gallery-volumes .volume-pick,.owner-rack .volume-pick {perspective:1700px;perspective-origin:var(--lens-x,50%) var(--lens-y,20%)}
+.gallery-volumes .volume-slot,.owner-rack .volume-slot {transform-style:flat}
