@@ -1,50 +1,90 @@
-import { useState, type PointerEvent } from "react";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { drawLight } from "./lightDrawing";
 
-const studies = [
-  { id: "newton", name: "Isaac Newton", title: "The prism", shortName: "Newton" },
-  { id: "edison", name: "Thomas Edison", title: "The filament", shortName: "Edison" },
-  { id: "einstein", name: "Albert Einstein", title: "Bent starlight", shortName: "Einstein" },
-] as const;
-
-function initialStudy() {
-  try {
-    const stored = sessionStorage.getItem("books.scienceStudy");
-    return Math.max(0, studies.findIndex(study => study.id === stored));
-  } catch {
-    return 0;
-  }
-}
+const instruments = ["Warm the filament", "Split the light", "Bend the starlight"];
+const quiet = { instrument: -1, x: 0, y: 0 };
+type Gesture = typeof quiet;
 
 export function ScienceStudy() {
-  const [index, setIndex] = useState(initialStudy);
-  const study = studies[index];
-  const next = (index + 1) % studies.length;
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const target = useRef<Gesture>(quiet);
+  const redraw = useRef<() => void>(() => {});
+  const [pinned, setPinned] = useState<Gesture>(quiet);
+  const preview = (gesture: Gesture) => {
+    target.current = gesture;
+    redraw.current();
+  };
 
-  function turnPlate(event: PointerEvent<HTMLButtonElement>) {
-    if (event.pointerType !== "mouse" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const el = event.currentTarget, bounds = el.getBoundingClientRect();
-    el.style.setProperty("--tilt-x", ((event.clientX - bounds.left) / bounds.width * 8 - 4) + "deg");
-    el.style.setProperty("--tilt-y", (3 - (event.clientY - bounds.top) / bounds.height * 6) + "deg");
+  useEffect(() => {
+    const el = canvas.current;
+    const ctx = el?.getContext("2d");
+    if (!el || !ctx) return;
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
+    const levels = [0, 0, 0];
+    let x = 0, y = 0, frame = 0, last = 0;
+    const paint = (time: number) => {
+      frame = 0;
+      const aim = target.current;
+      const blend = motion.matches ? 1 : 1 - Math.exp(-Math.min(50, time - last || 16) / 70);
+      last = time;
+      let moving = false;
+      const approach = (from: number, to: number) => {
+        if (Math.abs(to - from) < 0.006) return to;
+        moving = true;
+        return from + (to - from) * blend;
+      };
+      levels.forEach((v, i) => { levels[i] = approach(v, Number(i === aim.instrument)); });
+      x = approach(x, aim.x);
+      y = approach(y, aim.y);
+      drawLight(ctx, el.width, el.height, levels, x, y);
+      if (moving && !motion.matches) frame = requestAnimationFrame(paint);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(paint);
+    };
+    redraw.current = schedule;
+    const resize = () => {
+      const bounds = el.getBoundingClientRect();
+      const scale = Math.min(window.devicePixelRatio || 1, 2);
+      el.width = Math.max(1, Math.round(bounds.width * scale));
+      el.height = Math.max(1, Math.round(bounds.height * scale));
+      schedule();
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(el);
+    resize();
+    motion.addEventListener("change", schedule);
+    return () => {
+      observer.disconnect();
+      motion.removeEventListener("change", schedule);
+      cancelAnimationFrame(frame);
+      redraw.current = () => {};
+    };
+  }, []);
+
+  function aim(event: PointerEvent<HTMLButtonElement>, instrument: number) {
+    if (event.pointerType === "touch" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const box = event.currentTarget.getBoundingClientRect();
+    preview({ instrument, x: 2 * (event.clientX - box.left) / box.width - 1,
+      y: 2 * (event.clientY - box.top) / box.height - 1 });
   }
 
-  return <button type="button" className="science-study" data-study={study.id} onPointerMove={turnPlate}
-    onPointerLeave={event => {
-      event.currentTarget.style.removeProperty("--tilt-x");
-      event.currentTarget.style.removeProperty("--tilt-y");
-    }}
-    onClick={() => {
-      setIndex(next);
-      try { sessionStorage.setItem("books.scienceStudy", studies[next].id); } catch { /* Storage is optional. */ }
-    }}
-    aria-label={`${study.name}, ${study.title}. Show ${studies[next].name}, ${studies[next].title}.`}>
-    <span key={study.id} className="study-print">
-      <img src={`/materials/${study.id}.webp`} alt="" width="160" height="160" />
-    </span>
-    <span className="study-label">
-      <span className="study-name"><span className="full-name">{study.name}</span><span className="short-name">{study.shortName}</span></span>
-      <span className="study-subject">{study.title}</span>
-    </span>
-    <ArrowRight className="study-arrow" size={14} aria-hidden="true"/>
-  </button>;
+  return <div className="light-study" role="group" aria-label="Studies in light">
+    <img className="study-lamp" src="/materials/edison.webp" alt="" width="88" height="88" />
+    <canvas ref={canvas} aria-hidden="true" />
+    {instruments.map((label, instrument) => <button key={label} type="button"
+      aria-label={label} aria-pressed={pinned.instrument === instrument}
+      onPointerEnter={event => aim(event, instrument)} onPointerMove={event => aim(event, instrument)}
+      onPointerLeave={() => preview(pinned)}
+      onFocus={event => { if (event.currentTarget.matches(":focus-visible")) preview({ instrument, x: .3, y: -.4 }); }}
+      onBlur={() => preview(pinned)}
+      onClick={event => {
+        const box = event.currentTarget.getBoundingClientRect();
+        const touchX = event.detail ? 2 * (event.clientX - box.left) / box.width - 1 : .4;
+        const touchY = event.detail ? 2 * (event.clientY - box.top) / box.height - 1 : -.4;
+        const next = pinned.instrument === instrument ? quiet : { instrument, x: touchX, y: touchY };
+        setPinned(next);
+        preview(next);
+      }} />)}
+  </div>;
 }
