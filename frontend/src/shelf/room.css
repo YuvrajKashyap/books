@@ -54,6 +54,8 @@
 .curved-binding {background-color:var(--buckram);background-size:500% 100%;background-repeat:no-repeat}
 .curved-binding:after {content:"";position:absolute;inset:0;background:linear-gradient(rgb(22 13 8 / var(--edge-shade)),rgb(22 13 8 / var(--edge-shade))),url('/materials/binding-grain.png');background-size:auto,48px 48px;box-shadow:inset 0 1px 0 #fff5,inset 0 -1px 0 #25190c88}
 .board-front {background:var(--buckram)}
+/* A scrolled shelf can acquire CSS hover before a pointer-enter event fires. */
+.volume-pick:is(:hover,:focus-visible) .board-front:empty {background-image:var(--preview-art);background-size:100% 100%}
 .paper-cut,.paper-head {box-shadow:inset 0 1px 2px #624c33a6,inset 0 -1px 1px #796c52}
 .paper-head {background-image:linear-gradient(90deg,#76654966,transparent 11%,transparent 86%,#94866b40),repeating-linear-gradient(0deg,#e7dfcc 0 1px,#c8bea7 1px 1.6px,#f7f0df 1.6px 2.8px)}
 .owner-rack .volume-slot:before,.cover-model:before {content:"";position:absolute;bottom:12px;left:2%;width:96%;height:12px;background:radial-gradient(ellipse,#150b0677,transparent 72%)}
@@ -63,19 +65,29 @@
 .volume-slot {z-index:var(--stack,1)}
 .volume-slot:focus-within,.volume-slot.is-turned {z-index:3002}
 @media(hover:hover){.volume-slot:hover{z-index:3001}}
-/* The slot stays under the pointer while the book pulls free of its neighbours. */
+/* Keep the hit target fixed. Limit the preview to the visible bay, including
+   the moving ends of the horizontal rail. The resting lens stays in place. */
+.gallery-volumes,.owner-rack {container-type:inline-size}
+:is(.gallery-volumes.spine-out,.owner-rack) .volume-slot {
+  --from-center:calc(var(--lens-x,0px) - var(--slot,25px) / 2);
+  --preview-x:clamp(calc(var(--from-center) - 50cqw + 76px),0px,calc(var(--from-center) + 50cqw - 76px));
+  --preview-lift:translate(var(--preview-x),-18px) rotateX(-3deg);
+  --preview-turn:translateZ(1px) rotateY(30deg);
+}
 :is(.gallery-volumes.spine-out,.owner-rack) .volume-slot:not(.is-turned):has(.volume-pick:focus-visible) {
-  --peek-turn:translateZ(19px) rotateY(38deg);
-  --peek-lift:translateY(-5px) rotateX(-12deg);
+  --peek-turn:var(--preview-turn);
+  --peek-lift:var(--preview-lift);
   z-index:30001;
 }
 @media (hover:hover) and (pointer:fine) {
   :is(.gallery-volumes.spine-out,.owner-rack) .volume-slot:not(.is-turned):hover {
-    --peek-turn:translateZ(19px) rotateY(38deg);
-    --peek-lift:translateY(-5px) rotateX(-12deg);
+    --peek-turn:var(--preview-turn);
+    --peek-lift:var(--preview-lift);
     z-index:30001;
   }
+  .gallery-volumes.face-out .volume-pick:hover .volume-pivot {transform:translateY(-7px) rotateX(-3deg)}
 }
+.gallery-volumes.face-out .volume-pick:focus-visible .volume-pivot {transform:translateY(-7px) rotateX(-3deg)}
 :is(.gallery-volumes.spine-out,.owner-rack) .volume-slot:not(.is-turned) .volume-turn {
   transform:var(--peek-turn,translateZ(-56px) rotateY(90deg));
 }

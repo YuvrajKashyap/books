@@ -49,7 +49,9 @@ export function BoundVolume({book,showJacket=true}:{book:ShelfBook;showJacket?:b
       ) : <span className="volume-plane cloth-spine" style={faces.spine}>
         <span className="spine-print">{title}</span>
       </span>}
-      <span className="volume-plane board-front" style={faces.front}>{(showJacket || hasShownJacket) && <Cover book={book} shelf/>}</span>
+      <span className="volume-plane board-front" style={{...faces.front,
+        "--preview-art": jacket ? `url("${jacket.small || jacket.file}")` : undefined
+      } as CSSProperties}>{(showJacket || hasShownJacket) && <Cover book={book} shelf/>}</span>
     </span>
   </span>;
 }
