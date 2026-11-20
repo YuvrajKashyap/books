@@ -44,7 +44,7 @@ export const viewSchema = z.object({
 export type View = z.infer<typeof viewSchema>;
 export const initialView: View = {
   name: "My collection",
-  layout: "shelf",
+  layout: "spines",
   focus: "",
   status: "",
   group: "Status",

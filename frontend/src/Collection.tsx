@@ -13,7 +13,9 @@ import {
   LibraryBig,
   BookmarkPlus,
 } from "lucide-react";
-import { BookCard, Dialog, ink } from "./components";
+import { BoundVolume } from "./shelf/BoundVolume";
+import { displayTitle } from "./shelf/artwork";
+import { Dialog } from "./components";
 import {
   columns,
   focuses,
@@ -141,12 +143,14 @@ export function Collection({
     [arrange, setArrange] = useState(false),
     [name, setName] = useState(""),
     [limit, setLimit] = useState(36);
+  const [turned, setTurned] = useState<string | null>(null);
   function update(v: Partial<View>) {
     if (
       (v.layout && v.layout !== "shelf") ||
       (v.sort && v.sort !== "Shelf order")
     )
       setArrange(false);
+    setTurned(null);
     setView({ ...view, ...v });
     setLimit(36);
   }
@@ -187,8 +191,8 @@ export function Collection({
         <div className="segmented">
           {(
             [
-              ["shelf", GalleryVerticalEnd, "Covers"],
               ["spines", LibraryBig, "Spines"],
+              ["shelf", GalleryVerticalEnd, "Covers"],
               ["table", Table2, "Table"],
             ] as const
           ).map(([key, Icon, label]) => (
@@ -283,21 +287,20 @@ export function Collection({
             {view.layout === "table" ? (
               <Table books={visible} view={view} open={open} mutate={mutate} />
             ) : view.layout === "spines" ? (
-              <div className="spines">
-                {visible.map((b, i) => (
-                  <button
-                    className="spine"
-                    style={{
-                      background: ink(b),
-                      height: 160 + ((i * 17) % 36),
-                    }}
-                    key={b.id}
-                    onClick={() => open(b.id)}
-                    aria-label={b.title + " by " + b.author}
-                  >
-                    {b.title}
-                  </button>
-                ))}
+              <div className="owner-rack">
+                {visible.map(book => {
+                  const selected = turned === book.id;
+                  const title = displayTitle(book.title);
+                  return <div className={"volume-slot" + (selected ? " is-turned" : "")} key={book.id}>
+                    <button className="volume-pick" title={title + " · " + book.author}
+                      aria-label={(selected ? "Open details for " : "Turn to cover of ") + title + " by " + book.author}
+                      onClick={() => selected ? open(book.id) : setTurned(book.id)}
+                      onKeyDown={e => { if (e.key === "Escape") setTurned(null); }}>
+                      <BoundVolume book={book}/>
+                    </button>
+                    {selected && <button className="volume-return" onClick={() => setTurned(null)} aria-label={"Reshelve " + title}>Reshelve</button>}
+                  </div>;
+                })}
               </div>
             ) : (
               <div className="covers">
@@ -323,7 +326,10 @@ export function Collection({
                         void move(id, b.id);
                     }}
                   >
-                    <BookCard book={b} open={open} />
+                    <button className="bookcard" onClick={() => open(b.id)}>
+                      <span className="cover-model"><BoundVolume book={b}/></span>
+                      <strong>{displayTitle(b.title)}</strong><small>{b.author || "Author unlisted"}</small>
+                    </button>
                     {arrange && (
                       <div className="arrange-controls">
                         <button

@@ -381,7 +381,6 @@ export default function OwnerApp() {
         </div>
         {page === "room" || page === "collection" ? (
           <>
-            {page === "room" && <Feature library={library} open={open} />}
             <Collection
               standalone={page === "collection"}
               mutate={mutate}
@@ -391,6 +390,7 @@ export default function OwnerApp() {
               views={library.views}
               open={open}
             />
+            {page === "room" && <Feature library={library} open={open} />}
           </>
         ) : page === "queue" ? (
           <Queues library={library} mutate={mutate} open={open} />
