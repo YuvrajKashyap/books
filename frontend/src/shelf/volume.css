@@ -1,8 +1,10 @@
 .owner-rack {
   --course: 229px;
+  --book-base: 18px;
+  --front-lip: 16px;
   display:flex;flex-wrap:wrap;align-content:flex-start;column-gap:4px;padding:0 18px;
   border:7px solid #65422e;border-top-width:11px;border-radius:5px;
-  background:repeating-linear-gradient(to bottom,#24150ed9 0,transparent 62px,#30190c55 calc(var(--course) - 17px),#c28d5a calc(var(--course) - 16px),#794b32 calc(var(--course) - 12px),#4b2d20 calc(var(--course) - 2px),#301a10 var(--course)),url('/materials/walnut.webp') center/auto, #794c32;
+  background:repeating-linear-gradient(to bottom,#24150ed9 0,transparent 62px,#30190c55 calc(var(--course) - 30px),#724c2e55 calc(var(--course) - 29px),#b5865655 calc(var(--course) - var(--front-lip) - 1px),#c28d5a calc(var(--course) - 16px),#794b32 calc(var(--course) - 12px),#4b2d20 calc(var(--course) - 2px),#301a10 var(--course)),url('/materials/walnut.webp') center/auto, #794c32;
   background-size:auto,720px auto;box-shadow:inset 3px 0 9px #31190888,0 3px 7px #35201322;
 }
 
@@ -12,7 +14,7 @@
 button.volume-pick,button.volume-pick:hover,.cover-model {position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;perspective:780px}
 .volume-pick:focus-visible {outline:2px solid #ebcc88;outline-offset:-3px}
 .volume-pivot,.volume-turn {position:absolute;display:block;width:112px;height:171px;transform-style:preserve-3d}
-.volume-pivot {left:50%;margin-left:-56px;bottom:23px;transform-origin:50% 100%;transition:transform .48s cubic-bezier(.22,.8,.25,1);pointer-events:none}
+.volume-pivot {left:50%;margin-left:-56px;bottom:var(--book-base,23px);transform-origin:50% 100%;transition:transform .48s cubic-bezier(.22,.8,.25,1);pointer-events:none}
 .volume-turn {inset:0;transform:rotateY(90deg);transition:transform .58s cubic-bezier(.22,.78,.2,1)}
 .volume-slot:focus-within .volume-pivot {transform:translateY(-8px) translateZ(6px) rotateX(-22deg)}
 @media(hover:hover){.volume-slot:hover {z-index:3}.volume-slot:hover .volume-pivot {transform:translateY(-10px) translateZ(8px) rotateX(-25deg)}}
