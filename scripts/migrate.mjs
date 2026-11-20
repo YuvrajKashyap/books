@@ -1,9 +1,10 @@
 import postgres from "postgres";
 import fs from "node:fs";
+import ca from "../backend/supabase-ca.json" with { type: "json" };
 const owner = process.env.BOOKS_OWNER_ID,
   db = postgres(process.env.BOOKS_DATABASE_URL, {
     prepare: false,
-    ssl: "require",
+    ssl: { ca, rejectUnauthorized: true },
   });
 const lib = JSON.parse(fs.readFileSync("private/cutover-library.json", "utf8"));
 const archive = JSON.parse(
