@@ -20,7 +20,7 @@ const faces = {
   head: plane(width-3,depth-3,0,-height/2+2,0,Math.PI/2),
   foot: plane(width-3,depth-3,0,height/2-2,0,-Math.PI/2),
 };
-export function BoundVolume({book}:{book:ShelfBook}) {
+export function BoundVolume({book,showJacket=true}:{book:ShelfBook;showJacket?:boolean}) {
   const title = displayTitle(book.title);
   return <span className="volume-pivot" aria-hidden="true" style={{"--buckram":ink(book)} as CSSProperties}>
     <span className="volume-turn">
@@ -31,7 +31,7 @@ export function BoundVolume({book}:{book:ShelfBook}) {
       <span className="volume-plane cloth-spine" style={faces.spine}>
         <span className="spine-print" style={{fontSize:title.length>35?8: title.length>22?10:12}}>{title}</span>
       </span>
-      <span className="volume-plane board-front" style={faces.front}><Cover book={book} shelf/></span>
+      <span className="volume-plane board-front" style={faces.front}>{showJacket && <Cover book={book} shelf/>}</span>
     </span>
   </span>;
 }

@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#f8f6f0"/><link rel="icon" href="/favicon.svg"/><meta name="description" content="Explore Yuvraj Kashyap’s personal book collection by title, author, and category."/><script>try{const f=localStorage.getItem("books-finish");if(["Walnut","Oak","Ebony"].includes(f))document.documentElement.dataset.finish=f;
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#f8f6f0"/><link rel="icon" href="/favicon.svg"/><meta name="description" content="Explore Yuvraj Kashyap’s personal book collection by title, author, and category."/><script>try{
 if (location.pathname === "/" && !Object.keys(localStorage).some(key => /^sb-.+-auth-token$/.test(key))) {
   const preload = (as, href) => {
     const link = document.createElement("link");
@@ -9,7 +9,5 @@ if (location.pathname === "/" && !Object.keys(localStorage).some(key => /^sb-.+-
     document.head.append(link);
   };
   preload("fetch", "/api/shelf");
-  if (!location.search && matchMedia("(max-width: 480px) and (max-resolution: 2.5dppx)").matches)
-    for (const cover of ["/shelf-covers/10f52b62c1745299.webp", "/shelf-covers/879db7e8d1554686.webp", "/shelf-covers/90f6f20bdd4173a2.webp"]) preload("image", cover);
 }
 }catch{}</script><title>Yuvraj’s Bookshelf · Yuvraj Kashyap</title></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>

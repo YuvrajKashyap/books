@@ -19,7 +19,6 @@ import {
   LogOut,
   Upload,
 } from "lucide-react";
-import {ThemePicker} from "./ThemePicker";
 import { Brand, Dialog } from "./components";
 import { Feature, Queues, Timeline, type Mutate } from "./Reading";
 import { PublicShelf } from "./PublicShelf";
@@ -91,7 +90,7 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
           ))}
         </div>
       </div>
-      <div className="gate-form"><ThemePicker/>
+      <div className="gate-form">
         <a href="/">← Back to the shelf</a>
         <p>
           <LockKeyhole size={22} />
@@ -338,7 +337,7 @@ export default function OwnerApp() {
           <NavLink to="/" className="brand-link">
             <Brand />
           </NavLink>
-          <ThemePicker/>
+          
           <nav>
             {nav.map(({ path, label, icon: Icon }) => (
               <NavLink key={path} end to={path}>
