@@ -1,9 +1,10 @@
 import { PocketShelf } from "./shelf/PocketShelf";
+import { ScienceStudy } from "./shelf/ScienceStudy";
 import { PrintEdition } from "./shelf/PrintEdition";
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import {useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
-import {Link,useSearchParams} from 'react-router-dom';
-import {ArrowLeft,ArrowRight,BookOpen,ChevronDown,KeyRound,Search,X,LibraryBig,GalleryVerticalEnd} from 'lucide-react';
+import {Link,useNavigate,useSearchParams} from 'react-router-dom';
+import {ArrowLeft,ArrowRight,BookOpen,ChevronDown,Search,X,LibraryBig,GalleryVerticalEnd} from 'lucide-react';
 import {Dialog,type ShelfBook} from './components';
 import {ShelfPick} from './shelf/ShelfPick';
 import {focuses} from '../../shared/categories';
@@ -34,6 +35,7 @@ function BookcaseRow({books,index,covers,turned,turn,open}: RowProps) {
   </div>;
 }
 export function PublicShelf(){
+ const navigate=useNavigate();
  const [books,setBooks]=useState<ShelfBook[]>([]),[state,setState]=useState<'loading'|'ok'|'error'>('loading'),[retry,setRetry]=useState(0),[rows,setRows]=useState(4),[width,setWidth]=useState(()=>window.innerWidth),[turned,setTurned]=useState<string|null>(null);
  const [params,setParams]=useSearchParams(),[opened,setOpened]=useState(false),[angle,setAngle]=useState(-12);
  const sentinel=useRef<HTMLDivElement>(null),search=useRef<HTMLInputElement>(null);
@@ -53,11 +55,32 @@ export function PublicShelf(){
  },[]);
  const covers=params.get('layout')==='covers';
  const [phone,setPhone]=useState(()=>window.matchMedia(phoneQuery).matches);
- useEffect(()=>{const media=window.matchMedia(phoneQuery);const update=()=>setPhone(media.matches);media.addEventListener('change',update);return()=>media.removeEventListener('change',update)},[]);
+ useEffect(()=>{const media=window.matchMedia(phoneQuery);const update=()=>setPhone(media.matches);media.addEventListener('change',update);update();return()=>media.removeEventListener('change',update)},[]);
  const sort=params.get('sort')||'shelf';
 
 
- useEffect(()=>{function key(e:KeyboardEvent){if(e.key==='/'&&!id&&!(e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)){e.preventDefault();search.current?.focus()}}window.addEventListener('keydown',key);return()=>window.removeEventListener('keydown',key)},[id]);
+ useEffect(()=>{
+   const word='secret';
+   let matched=0;
+   const reset=()=>{matched=0;};
+   function key(e:KeyboardEvent){
+     const target=e.target;
+     if(id || e.defaultPrevented || e.ctrlKey || e.altKey || e.metaKey || e.isComposing ||
+       (target instanceof HTMLElement && (target.isContentEditable || target.closest('input,textarea,select,[role="textbox"]')))){
+       reset();
+       return;
+     }
+     if(e.repeat)return;
+     if(e.key==='/'){e.preventDefault();search.current?.focus();reset();return;}
+     if(e.key==='Shift')return;
+     const letter=e.key.toLowerCase();
+     matched=letter===word[matched] ? matched+1 : Number(letter===word[0]);
+     if(matched===word.length){reset();navigate('/admin');}
+   }
+   window.addEventListener('keydown',key);
+   window.addEventListener('blur',reset);
+   return()=>{window.removeEventListener('keydown',key);window.removeEventListener('blur',reset);};
+ },[id,navigate]);
  const matches=useMemo(()=>{
    const needle=query.trim().toLowerCase();
    const found=books.filter(b=>(!focus||b.focus===focus)&&(displayTitle(b.title)+' '+b.author).toLowerCase().includes(needle));
@@ -91,12 +114,12 @@ export function PublicShelf(){
  return <div className="reading-gallery">
  <header className="library-heading public-heading">
    <div className="library-heading-inner">
-     <div className="bookplate-line"><Link to="/" className="bookplate-name" aria-label="Yuvraj Kashyap’s bookshelf">Ex libris <span>Yuvraj Kashyap</span></Link>
-       <Link to="/admin" className="owner-entry"><KeyRound size={14}/>Owner sign-in</Link>
-     </div>
-     <div className="catalogue-title"><h1><i>The</i> Bookshelf</h1>
+     <div className="catalogue-identity"><Link to="/" className="bookplate-name" aria-label="Yuvraj Kashyap’s bookshelf">Yuvraj Kashyap</Link>
+       <div className="catalogue-title"><h1><i>The</i> Bookshelf</h1>
        {state==='ok' && <span className="volume-count">{books.length} volumes</span>}
+       </div>
      </div>
+     <ScienceStudy/>
    </div>
  </header>
  <main className="gallery-main">
@@ -107,6 +130,7 @@ export function PublicShelf(){
  : <><div className="cornice"/>{state==='ok'&&visibleBays.map((bay,i)=><BookcaseRow key={i} index={i} covers={covers} turned={turned} turn={setTurned} books={bay} open={id=>param('pick',id)}/>)}<div className="plinth"/></>}
  {state!=='ok'||!matches.length?<div className="case-message">{state==='loading'?'Opening the shelves…':state==='error'?<button onClick={()=>setRetry(n=>n+1)}>Retry loading the shelves</button>:'No matching titles.'}</div>:null}</section>
  {phone&&controls}
+ {phone&&<footer className="owner-footnote">Are you Yuvraj? <Link to="/admin">Sign in <ArrowRight size={12}/></Link></footer>}
  {!phone&&<div ref={sentinel} className="catalog-end">{state==='ok'&&<><span>{shown} of {matches.length} titles</span>{shown<matches.length?<button onClick={()=>setRows(n=>n+4)}>Load next shelves</button>:<a href="#bookcase">Back to the first shelf ↑</a>}</>}</div>}</main>
  {selected&&<Dialog title="From my bookshelf" onClose={()=>param('pick','')}><div className="book-inspection"><div className="inspection-stage"><div className="inspection-volume" style={{'--turn':angle+'deg'} as CSSProperties}><Hardcover book={selected} opened={opened}/></div></div><div className="inspect-controls"><label>Rotate<input type="range" aria-label="Rotate book" min="-100" max="100" value={angle} onChange={e=>setAngle(Number(e.target.value))}/></label><button onClick={()=>{setAngle(-7);setOpened(!opened)}}><BookOpen size={14}/>{opened?'Close cover':'Open cover'}</button></div><small>{selected.focus}</small><h2>{displayTitle(selected.title)}</h2><p>{selected.author}</p><PrintEdition book={selected}/>{jacketFor(selected)?.custom&&<small>Custom library jacket</small>}<div className="inspect-nav"><button disabled={current<=0} onClick={()=>param('pick',matches[current-1].id)}><ArrowLeft size={15}/>Previous</button><button disabled={current<0||current+1>=matches.length} onClick={()=>param('pick',matches[current+1].id)}>Next<ArrowRight size={15}/></button></div></div></Dialog>}</div>
 }

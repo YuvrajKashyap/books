@@ -20,6 +20,7 @@ import {
   Upload,
 } from "lucide-react";
 import { Brand, Dialog } from "./components";
+import { ScienceStudy } from "./shelf/ScienceStudy";
 import { Feature, Queues, Timeline, type Mutate } from "./Reading";
 import { PublicShelf } from "./PublicShelf";
 import { Collection } from "./Collection";
@@ -313,6 +314,10 @@ export default function OwnerApp() {
               </NavLink>
             ))}
           </nav>
+          <button className="primary" onClick={() => open("new")}>
+            <Plus size={17} />
+            Add book
+          </button>
           <button
             className="avatar"
             aria-label="Library settings"
@@ -333,10 +338,7 @@ export default function OwnerApp() {
                     : "Reading history"}
             </h1>
           </div>
-          <button className="primary" onClick={() => open("new")}>
-            <Plus size={17} />
-            Add book
-          </button>
+          <ScienceStudy />
         </div>
       </header>
       <main className={`reading-desk${shelfPage ? " shelf-page" : ""}`}>

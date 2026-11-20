@@ -16,7 +16,7 @@
 }
 h1,h2,h3,.brand {font-weight:500}
 .library-heading {position:relative;isolation:isolate;overflow:hidden;color:var(--vellum);background:#102921;border:0;border-bottom:3px double #b79a64}
-.library-heading::before,.gate-intro::before {
+.gate-intro::before {
   content:"";position:absolute;z-index:-1;top:0;bottom:0;right:6%;width:min(61%,730px);
   background:url('/materials/armillary.webp') no-repeat 66% 47% / cover;
   mask-image:linear-gradient(90deg,transparent,#000 21%,#000 84%,transparent);
@@ -26,14 +26,11 @@ h1,h2,h3,.brand {font-weight:500}
   width:100%;max-width:var(--room-width,1800px);margin-inline:auto;padding-inline:var(--margin);
 }
 .library-heading-inner {position:relative}
-.public-heading .library-heading-inner {padding-block:17px 18px}
-.bookplate-line,.catalogue-title {display:flex;align-items:center;gap:16px}
-.bookplate-line {justify-content:space-between}
-.bookplate-name {text-decoration:none;display:inline-flex;align-items:center;gap:11px;color:var(--gilt);font:italic 500 16px/1 var(--display)}
-.bookplate-name::after {content:"";height:1px;width:36px;background:#af925a;order:1}
-.bookplate-name span {order:2;font:600 10px/1.3 "DM Sans Variable",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#e8ddc2}
-.owner-entry {display:inline-flex;align-items:center;gap:8px;padding:7px 11px;color:var(--vellum);border:1px solid #99835480;border-radius:3px;background:#102921e6;font-size:12px;text-decoration:none}
-.owner-entry:hover {border-color:var(--gilt);background:#213d31}
+.public-heading .library-heading-inner {display:flex;align-items:center;justify-content:space-between;gap:18px;padding-block:13px}
+.catalogue-title {display:flex;align-items:center}
+.bookplate-name {display:inline-flex;align-items:center;gap:10px;color:var(--gilt);font:600 10px/1.3 "DM Sans Variable",sans-serif;letter-spacing:.21em;text-transform:uppercase;text-decoration:none}
+.bookplate-name::before {content:"";width:28px;height:3px;border-block:1px solid #aa925e}
+.bookplate-name:hover {color:var(--vellum)}
 .catalogue-title {gap:19px}
 .catalogue-title h1,.owner-heading h1 {margin:0;color:var(--vellum);font:500 clamp(46px,5vw,77px)/1.02 var(--display);letter-spacing:-.048em}
 .catalogue-title h1 i {color:#e1c58e;font-weight:500}
@@ -65,6 +62,7 @@ h1,h2,h3,.brand {font-weight:500}
 .owner-heading nav a {font-size:12px;color:#e5e4cf;border-radius:2px}
 .owner-heading nav a:hover,.owner-heading nav .active {color:#ffefd0;background:#344d3e}
 .owner-heading nav .active {box-shadow:inset 0 -2px #c6a36b}
+.owner-heading .mast .primary {font-size:12px;padding:7px 12px}
 .owner-heading .avatar {background:#132e25;color:var(--gilt);border:1px solid #b69c67;font:italic 500 17px var(--display)}
 .owner-heading .page-title {margin-block:0;padding-block:12px 16px}
 .owner-heading h1 {font-size:clamp(42px,4.3vw,64px)}
@@ -96,14 +94,71 @@ dialog::backdrop {background:#091912a3}
 .gate-intro {isolation:isolate;background:#102921}
 .gate-intro::before {width:100%;right:0;top:12%;bottom:15%;background-position:66% center;background-size:auto 82%;opacity:.27}
 .gate-form h2 {font-size:clamp(36px,4vw,54px)}
+/* The three prints share a mount; only the instrument, credit and light change. */
+.library-heading {
+  background:radial-gradient(ellipse at 75% 110%,#283f32 0,transparent 46%),linear-gradient(110deg,#102921 30%,#142e26 80%,#10251f);
+}
+.science-study {
+  position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(92px,1fr) auto 24px;
+  align-items:center;gap:18px;width:clamp(280px,33vw,430px);height:116px;flex:none;
+  padding:0 4px 0 15px;color:var(--vellum);background:none;border:0;border-radius:3px;text-align:left;
+}
+.science-study::before {
+  content:"";position:absolute;z-index:-1;inset:9% 0 5% -9%;pointer-events:none;
+  background-image:linear-gradient(#c8b78014 1px,transparent 1px),linear-gradient(90deg,#c8b78014 1px,transparent 1px);
+  background-size:22px 22px;mask-image:radial-gradient(ellipse at 49% 50%,black,transparent 70%);
+}
+button.science-study:hover,button.science-study:focus-visible {background:transparent}
+.study-print {position:relative;display:grid;place-items:center;height:100%;min-height:0;mix-blend-mode:lighten}
+.study-print img {
+  display:block;position:absolute;height:124%;width:auto;max-width:112%;object-fit:contain;pointer-events:none;
+  mask-image:radial-gradient(ellipse closest-side,#000 60%,transparent 100%);
+  transform:perspective(430px) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg));
+  transition:transform .22s ease-out,filter .22s ease-out;
+}
+.study-label {display:flex;align-items:flex-start;flex-direction:column;gap:6px}
+.study-name {color:#dbc196;font-size:10px;line-height:1.1;letter-spacing:.14em;text-transform:uppercase}
+.study-subject {font:italic 500 clamp(22px,2vw,30px)/1 var(--display);letter-spacing:-.025em;white-space:nowrap}
+.study-name .short-name {display:none}
+.study-arrow {width:24px;height:24px;padding:4px;border:1px solid #c0a87777;border-radius:50%;color:var(--gilt)}
+.science-study:hover .study-arrow,.science-study:focus-visible .study-arrow {border-color:var(--gilt);background:#3b4a34}
+.science-study:hover .study-print img,.science-study:focus-visible .study-print img {filter:brightness(1.22)}
+.study-print::before {
+  content:"";position:absolute;pointer-events:none;opacity:.35;transition:opacity .3s ease-out;
+}
+.science-study[data-study=newton] .study-print::before {
+  left:-14%;width:56%;height:1px;top:53%;
+  background:linear-gradient(90deg,transparent,#f5dca3);transform:rotate(-3deg);transform-origin:right;
+}
+.science-study[data-study=edison] .study-print::before {
+  inset:0;background:radial-gradient(ellipse,#dba44966,transparent 68%);
+}
+.science-study[data-study=einstein] .study-print::before {
+  inset:12% 4%;border-block:1px solid #c6b37d75;border-radius:50%;transform:rotate(-13deg);
+}
+.science-study:is(:hover,:focus-visible) .study-print::before {opacity:1}
+.reading-gallery .case-message {background:#20372c;color:var(--vellum)}
+.owner-heading .page-title {padding-block:5px}
+.owner-heading .science-study {height:82px}
+.owner-heading .science-study .study-print img {height:116%}
+.catalog-search,.collection-desk .search {position:relative}
+.catalog-search::after,.collection-desk .search::after {
+  content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--metal);
+  transform-origin:left;transform:scaleX(0);pointer-events:none;transition:transform .18s ease-out;
+}
+.catalog-search:focus-within::after,.collection-desk .search:focus-within::after {transform:scaleX(1)}
+.owner-footnote {order:4;display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:26px;color:#c6c6b3;font-size:12px}
+.owner-footnote a {display:inline-flex;align-items:center;min-height:44px;gap:5px;color:#e8d7ab;text-underline-offset:3px}
+@media(prefers-reduced-motion:no-preference) {
+  .study-print {animation:develop-print .38s ease-out both}
+  @keyframes develop-print {from {opacity:.25;transform:translateY(3px)} to {opacity:1;transform:none}}
+  .owner-heading nav a,.segmented button,.reading-desk .pills button {transition:color .15s,background-color .15s}
+}
 @media(min-width:951px) {
   .reading-gallery,.shelf-page {
     --margin:clamp(36px,6vw,96px);
     --cabinet-width:1176px;
     --room-width:calc(var(--cabinet-width) + 2 * var(--margin));
-  }
-  .public-heading::before,.owner-heading.shelf-page::before {
-    right:max(6%,calc((100% - var(--cabinet-width)) / 2));
   }
   .catalogue-title {margin-top:4px}
   .catalog-controls {padding-block:14px 18px}
@@ -116,16 +171,31 @@ dialog::backdrop {background:#091912a3}
   .collection-desk .toolbar .search {border-left:0;padding-left:0}
 }
 @media(max-width:700px), (pointer:coarse) and (max-width:950px) and (max-height:540px) {
-  .public-heading .library-heading-inner {padding-block:10px 13px}
-  .library-heading::before {right:-28px;width:61%;background-size:350px auto;background-position:74% 50%;opacity:.55}
-  .catalogue-title {gap:11px}
+  .public-heading .library-heading-inner {gap:8px;padding-block:9px 11px}
+  .catalogue-title {flex-wrap:wrap}
+  .catalogue-identity .volume-count {flex-basis:100%}
+  .catalogue-identity .volume-count::before {display:none}
+  .bookplate-name {font-size:9px;letter-spacing:.14em;gap:7px}
+  .bookplate-name::before {width:14px}
+  .science-study,.owner-heading .science-study {
+    grid-template-columns:1fr 18px;grid-template-rows:minmax(0,1fr) 20px;gap:0 3px;
+    width:91px;height:86px;padding:0 2px;
+  }
+  .study-print {grid-column:1/-1;width:100%}
+  .study-print img,.owner-heading .science-study .study-print img {height:120%;width:auto;max-width:100%}
+  .study-label {justify-self:end;gap:0}
+  .study-subject,.study-name .full-name {display:none}
+  .study-name .short-name {display:inline}
+  .study-name {font-size:8px;letter-spacing:.1em}
+  .study-arrow {width:16px;height:16px;padding:2px}
+  .owner-heading .mast .primary {margin-left:auto}
+  .owner-heading .mast .avatar {margin-left:0}
+  .owner-heading .page-title {gap:6px}
+
+  .catalogue-title {gap:2px 8px}
   .catalogue-title h1 {font-size:clamp(39px,10.6vw,60px)}
   .volume-count {font-size:16px;gap:7px}
   .volume-count::before {width:11px}
-  .owner-entry {min-height:36px;font-size:11px;padding:5px 8px}
-  .bookplate-name {font-size:14px;gap:7px}
-  .bookplate-name span {font-size:9px;letter-spacing:.12em}
-  .bookplate-name::after {width:19px}
   .gallery-main .catalog-search {background:#1d332b;border:0;border-bottom:1px solid #7f816b;margin:0 0 9px;min-height:44px}
   .pocket-caption {margin:4px 0 3px;min-height:76px}
   .pocket-current .pocket-title {color:var(--vellum);font-weight:500}
