@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import {
+  Link,
   NavLink,
   useLocation,
   useSearchParams,
@@ -100,7 +101,7 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
           </button>
         </form>
         {(error || issue) && <p role="alert">{error || issue}</p>}
-        <a href="/">← Back to the shelf</a>
+        <Link to="/">← Back to the shelf</Link>
       </div>
     </main>
   );
@@ -167,11 +168,12 @@ export default function OwnerApp() {
       active = true;
     (async () => {
       try {
-        const r = await fetch("/api/config");
+        const [r, { createClient }] = await Promise.all([
+          fetch("/api/config"), import("@supabase/supabase-js"),
+        ]);
         if (!r.ok) throw Error();
         const cfg = await r.json();
-        const { createClient } = await import("@supabase/supabase-js");
-        const client = createClient(cfg.url, cfg.key);
+        const client = createClient(cfg.url, cfg.key, { auth: { detectSessionInUrl: false } });
         if (!active) return;
         setAuth(client);
         const sub = client.auth.onAuthStateChange((_e, s) => {
@@ -264,7 +266,7 @@ export default function OwnerApp() {
     }
   };
   const ownerRoute = ["/admin", "/collection", "/queues", "/history"].includes(location.pathname);
-  if ((!ready && ownerRoute) || (session && !library && !issue))
+  if (!ready || (session && !library && !issue))
     return (
       <div className="loading">
         <Brand />
