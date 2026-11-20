@@ -80,3 +80,53 @@
 .covers.continuous-shelf .card-wrap {flex:0 0 148px;min-width:0}
 .covers.continuous-shelf .cover-model {perspective:1000px}
 .covers.continuous-shelf .bookcard {width:100%}
+
+.public-selects {display:flex;align-items:center;gap:15px}
+.phone-label {display:none}
+
+@media (max-width:700px), (pointer:coarse) and (max-width:950px) and (max-height:540px) {
+  .gallery-main {display:flex;flex-direction:column;padding:0 18px 36px}
+  .gallery-nav {height:56px;padding-inline:18px}
+  .gallery-title {order:0;margin:23px 0 12px}
+  .gallery-title h1 {font-size:clamp(54px,14vw,76px)}
+  .gallery-title p {margin-top:7px}
+  .gallery-main .browse-cue,.catalog-search kbd {display:none}
+  .gallery-main .catalog-controls {display:contents}
+  .catalog-controls .catalog-search {order:1;flex:none;width:auto;max-width:none;min-height:44px;border-block:1px solid var(--line);margin:0 0 18px}
+  .catalog-search input {font-size:16px}
+  .catalog-search button,.gallery-tools>a {min-height:44px}
+  .pocket-section {order:2;min-width:0}
+  .gallery-main .shelf-layout-controls {order:3;display:grid;grid-template-columns:1fr;gap:10px;width:auto;padding:14px 0 0;border-top:1px solid var(--line)}
+  .shelf-layout-controls .segmented {justify-self:start}
+  .shelf-layout-controls .segmented button {min-height:44px;padding-inline:16px}
+  .public-selects {display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px}
+  .public-selects .category-picker {display:grid;position:relative;gap:0;min-width:0;max-width:none;width:100%;align-content:center;min-height:52px;padding:4px 0;border-bottom:1px solid var(--line)}
+  .phone-label {display:block;font-size:11px;color:var(--muted)}
+  .public-selects select {grid-column:1;font-size:14px;width:100%;min-height:26px;padding:0 17px 0 0}
+  .public-selects .category-picker svg {position:absolute;right:0;bottom:11px;pointer-events:none}
+  .pocket-case {margin-inline:-10px;overflow:hidden}
+  .pocket-case .cornice {height:11px}
+  .pocket-case .walnut-bay {padding-inline:7px;--grain-y:0px}
+  .pocket-case .walnut-bay:before,.pocket-case .walnut-bay:after {width:7px;pointer-events:none}
+  .pocket-case .bay-floor {bottom:0;height:28px}
+  .pocket-case .shelf-lip {height:23px;--grain-y:0px}
+  .pocket-case .shelf-lip:before {content:"";position:absolute;top:-5px;left:calc(50% - 4px);border-inline:4px solid transparent;border-bottom:4px solid #ccad70;pointer-events:none}
+  .pocket-case .brass-plate {font-size:9px;font-variant-numeric:tabular-nums}
+  .pocket-rail {position:relative;width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y pinch-zoom;overflow-anchor:none}
+  .pocket-rail::-webkit-scrollbar {display:none}
+  .pocket-track {position:relative;height:clamp(312px,40svh,352px)}
+  .pocket-slot {position:absolute;bottom:0;top:0}
+  .pocket-slot button.volume-pick {touch-action:pan-x pan-y pinch-zoom;perspective:1250px;perspective-origin:var(--lens-x) 30%;border-radius:0}
+  .pocket-scale {position:absolute;left:50%;bottom:9px;width:112px;height:171px;margin-left:-56px;transform:scale3d(1.55,1.55,1.55);transform-origin:50% 100%;transform-style:preserve-3d;pointer-events:none}
+  .pocket-scale .volume-pivot {bottom:0}
+  .pocket-scale .volume-turn {transform:translateZ(-56px) rotateY(90deg)}
+  .face-out .pocket-scale .volume-turn {transform:translateZ(3px) rotateY(-8deg)}
+  .pocket-slot:before {content:'';position:absolute;bottom:3px;left:0;width:100%;height:13px;background:radial-gradient(ellipse,#1c0e07a8,transparent 72%)}
+  .pocket-caption {display:flex;min-height:88px;align-items:center;justify-content:space-between;gap:10px;margin:5px 0 7px}
+  .pocket-current {min-width:0}.pocket-current small {font-size:10px;letter-spacing:.055em;color:var(--muted)}
+  .pocket-current .pocket-title {display:block;text-align:left;font:clamp(23px,6.2vw,32px)/1.07 var(--display);padding:3px 0;border:0;background:none;color:var(--ink)}
+  .pocket-title svg {margin-left:4px;color:var(--muted)}.pocket-current p {font-size:12px;color:var(--muted);margin:2px 0}
+  .pocket-return {position:absolute;top:0;left:50%;transform:translateX(-50%);min-height:44px;padding:0 12px;background:transparent;color:#fff5e4;border:0;font-size:12px;text-shadow:0 1px 3px #21180b}
+  .pocket-steps {display:flex;gap:2px;flex:none}.pocket-steps button {width:44px;height:44px;border-radius:50%;display:grid;place-items:center;padding:0;background:none;border:1px solid var(--line)}
+  .pocket-section>.case-message {color:var(--ink);min-height:150px}
+}
