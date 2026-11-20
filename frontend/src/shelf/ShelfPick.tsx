@@ -3,10 +3,11 @@ import type { ShelfBook } from "../components";
 import { displayTitle } from "./artwork";
 import { BoundVolume } from "./BoundVolume";
 
-export function ShelfPick({ book, faceOut, painted = true, pick, reshelve }: {
+export function ShelfPick({ book, faceOut, painted = true, exposedEnd = false, pick, reshelve }: {
   book: ShelfBook;
   faceOut: boolean;
   painted?: boolean;
+  exposedEnd?: boolean;
   pick: () => void;
   reshelve: () => void;
 }) {
@@ -18,6 +19,6 @@ export function ShelfPick({ book, faceOut, painted = true, pick, reshelve }: {
     onFocus={() => setVisited(true)}
     onClick={pick}
     onKeyDown={e => { if (e.key === "Escape") reshelve(); }}>
-    {painted && <BoundVolume book={book} showJacket={faceOut || visited}/>}
+    {painted && <BoundVolume book={book} showJacket={faceOut || exposedEnd || visited}/>}
   </button>;
 }

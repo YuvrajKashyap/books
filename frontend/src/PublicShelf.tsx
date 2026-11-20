@@ -20,12 +20,12 @@ type RowProps = {
 function BookcaseRow({books,index,covers,turned,turn,open}: RowProps) {
   return <div className="bay walnut-bay" style={{'--grain-y':-index*29+'px'} as CSSProperties}>
     <div className="bay-floor"/><div className={'gallery-volumes '+(covers?'face-out':'spine-out')}>
-      {books.map(b=>{
+      {books.map((b, position)=>{
         const revealed = !covers && b.id===turned;
         const title=displayTitle(b.title);
         return <div className={'volume-slot'+(revealed?' is-turned':'')} key={b.id}
           style={{'--slot':bindingDepth(b)+'px'} as CSSProperties}>
-          <ShelfPick book={b} faceOut={covers || revealed}
+          <ShelfPick book={b} faceOut={covers || revealed} exposedEnd={position === books.length - 1}
             pick={()=>covers || revealed ? open(b.id) : turn(b.id)} reshelve={()=>turn(null)}/>
           {revealed&&<button className="volume-return" aria-label={'Reshelve '+title} onClick={()=>turn(null)}>Reshelve</button>}
         </div>;

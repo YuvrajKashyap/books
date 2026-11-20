@@ -11,16 +11,17 @@ type BookProps = {
   open: (id: string) => void;
   turn: (id: string | null) => void;
   painted?: boolean;
+  exposedEnd?: boolean;
   left?: number;
 };
 
-export const ShelfSpine = memo(function ShelfSpine({ book, selected, open, turn, painted = true, left }: BookProps) {
+export const ShelfSpine = memo(function ShelfSpine({ book, selected, open, turn, painted = true, exposedEnd, left }: BookProps) {
   const title = displayTitle(book.title);
   const depth = bindingDepth(book);
   const style = { "--slot": depth + "px", "--book-left": left,
     "--book-center": left === undefined ? undefined : left + Math.round((selected ? 128 : depth) / 2) } as CSSProperties;
   return <div className={"volume-slot" + (selected ? " is-turned" : "")} data-book={book.id} style={style}>
-    <ShelfPick book={book} faceOut={selected} painted={painted || selected}
+    <ShelfPick book={book} faceOut={selected} exposedEnd={exposedEnd} painted={painted || selected}
       pick={() => selected ? open(book.id) : turn(book.id)} reshelve={() => turn(null)}/>
     {selected && <button className="volume-return" onClick={() => turn(null)} aria-label={"Reshelve " + title}>Reshelve</button>}
   </div>;
@@ -106,13 +107,13 @@ export function ContinuousShelf({ books, covers, turned, open, turn }: Props) {
       const overflow = slot.getBoundingClientRect().right - el.getBoundingClientRect().left - el.clientLeft - el.clientWidth;
       if (overflow > 0 && overflow < 140) el.scrollBy({ left: Math.ceil(overflow) });
     }}>
-    {books.map(book => {
+    {books.map((book, index) => {
       if (covers) return <ShelfCover key={book.id} book={book} open={open} painted={painted.has(book.id)}/>;
       const position = left;
       const selected = turned === book.id;
       left += (selected ? 128 : bindingDepth(book)) + 2;
       return <ShelfSpine key={book.id} book={book} open={open} turn={turn} selected={selected}
-        left={position} painted={painted.has(book.id)}/>;
+        left={position} exposedEnd={index === books.length - 1} painted={painted.has(book.id)}/>;
     })}
   </div>;
 }

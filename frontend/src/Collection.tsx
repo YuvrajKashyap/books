@@ -298,8 +298,8 @@ export function Collection({
               <Table books={visible} view={view} open={open} mutate={mutate} />
             ) : view.layout === "spines" ? (
               <div className="owner-rack">
-                {visible.map(book => <ShelfSpine key={book.id} book={book} selected={turned === book.id}
-                  open={open} turn={setTurned}/> )}
+                {visible.map((book, index) => <ShelfSpine key={book.id} book={book} selected={turned === book.id}
+                  exposedEnd={index === visible.length - 1} open={open} turn={setTurned}/> )}
               </div>
             ) : (
               <div className="covers">
