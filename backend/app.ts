@@ -63,7 +63,7 @@ app.get("/api/shelf", async (c) => {
   });
   // On CDN hits this describes the cache fill, not the current request.
   c.header("Server-Timing", `catalogue;dur=${(performance.now() - started).toFixed(1)};desc="Origin catalogue transaction and mapping"`);
-  c.header("Cache-Control", "public, max-age=30, s-maxage=60");
+  c.header("Cache-Control", "public, max-age=30, s-maxage=30, stale-while-revalidate=30");
   return c.json({ books });
 });
 app.use("/api/*", async (c, next) => {
