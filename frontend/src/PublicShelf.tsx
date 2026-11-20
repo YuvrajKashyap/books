@@ -2,7 +2,7 @@ import { PocketShelf } from "./shelf/PocketShelf";
 import { ScienceStudy } from "./shelf/ScienceStudy";
 import { PrintEdition } from "./shelf/PrintEdition";
 import { useShelfCamera } from "./shelf/useShelfCamera";
-import {useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
+import {memo,useCallback,useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {Link,useNavigate,useSearchParams} from 'react-router-dom';
 import {ArrowLeft,ArrowRight,BookOpen,ChevronDown,Search,X,LibraryBig,GalleryVerticalEnd,ListFilter,Check} from 'lucide-react';
 import {Dialog,FocusIcon,type ShelfBook} from './components';
@@ -18,7 +18,7 @@ type RowProps = {
   books: ShelfBook[]; index: number; covers: boolean; turned: string | null;
   turn: (id: string | null) => void; open: (id: string) => void;
 };
-function BookcaseRow({books,index,covers,turned,turn,open}: RowProps) {
+const BookcaseRow = memo(function BookcaseRow({books,index,covers,turned,turn,open}: RowProps) {
   return <div className="bay walnut-bay" style={{'--grain-y':-index*29+'px'} as CSSProperties}>
     <div className="bay-floor"/><div className={'gallery-volumes '+(covers?'face-out':'spine-out')}>
       {books.map((b, position)=>{
@@ -33,7 +33,7 @@ function BookcaseRow({books,index,covers,turned,turn,open}: RowProps) {
       })}
     </div><div className="shelf-lip"><span className="brass-plate">SHELF {String(index+1).padStart(2,'0')}</span></div>
   </div>;
-}
+});
 export function PublicShelf(){
  const navigate=useNavigate();
  const [books,setBooks]=useState<ShelfBook[]>([]),[state,setState]=useState<'loading'|'ok'|'error'>('loading'),[retry,setRetry]=useState(0),[rows,setRows]=useState(4),[width,setWidth]=useState(()=>window.innerWidth),[turned,setTurned]=useState<string|null>(null);
@@ -103,18 +103,27 @@ export function PublicShelf(){
    return found;
  },[searchResults,focus,sort]);
  // Pack by physical width, leaving clearance for exactly one pulled book.
- const bays: ShelfBook[][] = [];
- const capacity = Math.max(115,width - (covers ? 64 : 165));
- let occupied = 0;
- for (const book of phone ? [] : matches) {
-   const pitch = covers ? 124 : bindingDepth(book) + 2;
-   if (!bays.length || occupied + pitch > capacity) { bays.push([]); occupied = 0; }
-   bays[bays.length-1].push(book); occupied += pitch;
- }
+ const bays = useMemo(() => {
+   const packed: ShelfBook[][] = [];
+   if (phone) return packed;
+   const capacity = Math.max(115, width - (covers ? 64 : 165));
+   let occupied = 0;
+   for (const book of matches) {
+     const pitch = covers ? 124 : bindingDepth(book) + 2;
+     if (!packed.length || occupied + pitch > capacity) {
+       packed.push([]);
+       occupied = 0;
+     }
+     packed[packed.length - 1].push(book);
+     occupied += pitch;
+   }
+   return packed;
+ }, [phone, matches, width, covers]);
  const visibleBays=bays.slice(0,rows);
  const shown=visibleBays.reduce((sum,bay)=>sum+bay.length,0);
  useEffect(()=>{const el=sentinel.current;if(!el||shown>=matches.length)return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setRows(n=>n+4)},{rootMargin:'500px'});io.observe(el);return()=>io.disconnect()},[shown,matches.length,phone]);
- function param(k:string,v:string){const p=new URLSearchParams(window.location.search);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true});if(k!=='pick'){setRows(4);setTurned(null)}setAngle(-12);setOpened(false)}
+ const param=useCallback((k:string,v:string)=>{const p=new URLSearchParams(window.location.search);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true});if(k!=='pick'){setRows(4);setTurned(null)}setAngle(-12);setOpened(false)},[setParams]);
+ const openBook=useCallback((id:string)=>param('pick',id),[param]);
  const current=matches.findIndex(b=>b.id===id);
  const controls = <div className="shelf-layout-controls">
    <div className="segmented" aria-label="Shelf layout">
@@ -164,8 +173,8 @@ export function PublicShelf(){
  </div>
  {!phone&&controls}</div>
  <section ref={cabinet} className={phone?'pocket-section':'cabinet'} id={phone?undefined:'bookcase'} aria-label="Wooden bookshelf">
- {phone ? state==='ok'&&matches.length>0&&<PocketShelf key={JSON.stringify([query,focus,sort,covers])} books={matches} covers={covers} open={id=>param('pick',id)}/>
- : <><div className="cornice"/>{state==='ok'&&visibleBays.map((bay,i)=><BookcaseRow key={i} index={i} covers={covers} turned={turned} turn={setTurned} books={bay} open={id=>param('pick',id)}/>)}<div className="plinth"/></>}
+ {phone ? state==='ok'&&matches.length>0&&<PocketShelf key={JSON.stringify([query,focus,sort,covers])} books={matches} covers={covers} open={openBook}/>
+ : <><div className="cornice"/>{state==='ok'&&visibleBays.map((bay,i)=><BookcaseRow key={i} index={i} covers={covers} turned={turned && bay.some(b=>b.id===turned) ? turned : null} turn={setTurned} books={bay} open={openBook}/>)}<div className="plinth"/></>}
  {state!=='ok'||!matches.length?<div className="case-message">{state==='loading'?'Opening the shelves…':state==='error'?<button onClick={()=>setRetry(n=>n+1)}>Retry loading the shelves</button>:'No matching titles.'}</div>:null}</section>
  {phone&&controls}
  {phone&&subjectIndex}
