@@ -2436,8 +2436,11 @@
   "Work With The Best|Jay Yang": {
     "cloth": "#1f78bc",
     "depth": 34,
+    "edition": "https://jayyanginspires.com/work-with-the-best/work-with-the-best.pdf",
+    "editionLabel": "author’s PDF",
     "file": "/jackets/237dfda6f14f8588.webp",
     "heightScale": 1.061,
+    "pages": 248,
     "small": "/shelf-covers/fc09009af2e66f0c.webp",
     "source": "https://jayyanginspires.com/images/wwtb-cover.jpeg",
     "spine": "/bindings/eb5125dd54445a36.webp"
