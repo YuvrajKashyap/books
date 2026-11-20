@@ -4,6 +4,7 @@ import { HTTPException } from "hono/http-exception";
 import { bodyLimit } from "hono/body-limit";
 import { timingSafeEqual, createHash, randomUUID } from "node:crypto";
 import postgres from "postgres";
+import ca from "./supabase-ca.json" with { type: "json" };
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import {
@@ -19,7 +20,7 @@ const env = (name: string) => process.env[name]?.trim() || "";
 let pool: ReturnType<typeof postgres>;
 const db = () =>
   (pool ??= postgres(env("BOOKS_DATABASE_URL"), {
-    ssl: "require",
+    ssl: { ca, rejectUnauthorized: true },
     max: 2,
     prepare: false,
     idle_timeout: 20,
