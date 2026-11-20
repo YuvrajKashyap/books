@@ -27,6 +27,9 @@ test("the public shelf preload remains covered by the production script policy",
   const policy = headers.find((header: {key: string}) => header.key === "Content-Security-Policy").value;
   const scripts = policy.split(";").map((rule: string) => rule.trim()).find((rule: string) => rule.startsWith("script-src "));
   assert.equal(inline.length, 1);
+  const jackets = JSON.parse(readFileSync("frontend/src/shelf/jackets.json", "utf8"));
+  assert.ok(inline[0][1].includes(JSON.stringify(jackets["Shoe Dog|Phil Knight"].spine)));
+
   const hash = createHash("sha256").update(inline[0][1]).digest("base64");
   assert.ok(scripts.split(" ").includes("'sha256-" + hash + "'"));
   assert.doesNotMatch(scripts, /unsafe-inline|unsafe-eval/);

@@ -1,10 +1,10 @@
 import { useEffect, type RefObject } from "react";
 
 // Horizontal parallax follows each slot within its row. CSS fixes the vertical eye line.
-export function useShelfCamera(root: RefObject<HTMLElement | null>) {
+export function useShelfCamera(root: RefObject<HTMLElement | null>, enabled = true) {
   useEffect(() => {
     const element = root.current;
-    if (!element) return;
+    if (!element || !enabled) return;
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -47,5 +47,5 @@ export function useShelfCamera(root: RefObject<HTMLElement | null>) {
       element.removeEventListener("transitionend", onTransitionEnd);
       window.removeEventListener("resize", schedule);
     };
-  }, [root]);
+  }, [root, enabled]);
 }

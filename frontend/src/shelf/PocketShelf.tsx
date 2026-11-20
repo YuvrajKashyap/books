@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import type { ShelfBook } from "../components";
-import { bindingDepth, displayTitle } from "./artwork";
+import { bindingDepth, displayTitle, jacketFor, smallShelfCover } from "./artwork";
+import { useRailDrag } from "./useRailDrag";
 import { BoundVolume } from "./BoundVolume";
 
 const gutter = 3;
@@ -19,10 +20,13 @@ function firstAt(ends: number[], x: number) {
 
 export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; covers: boolean; open: (id: string) => void }) {
   const rail = useRef<HTMLDivElement>(null);
+  useRailDrag(rail);
+  const track = useRef<HTMLDivElement>(null);
   const [turned, setTurned] = useState<string | null>(null);
   const [{width, height}, setSize] = useState({width:0, height:0});
   const zoom = Math.max(1.5, Math.min(2.12, (height - 48) / 188));
-  const [position, setPosition] = useState(0);
+  const [view, setView] = useState({ band: 0, active: 0 });
+  const lastView = useRef(view);
   const frame = useRef(0);
   const anchor = useRef(0);
   const requestCenter = useRef<number | null>(0);
@@ -40,10 +44,37 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
   const { ends, length, loop, inset, copies } = layout;
   const start = (i: number) => i === 0 ? 0 : ends[i - 1];
   const center = (i: number) => (start(i) + ends[i] - gutter) / 2;
-  const eye = position + width / 2;
-  const local = Math.max(0, eye - inset);
-  const active = firstAt(ends, loop ? local % length : local);
+  const { active, band } = view;
+  const position = band * pad;
   const current = books[active];
+  const syncView = useCallback((scroll: number) => {
+    const eye = scroll + width / 2;
+    track.current?.style.setProperty("--pocket-eye", String(eye));
+    const local = Math.max(0, eye - inset);
+    const active = firstAt(ends, loop ? local % length : local);
+    const band = Math.floor(scroll / pad);
+    if (active === lastView.current.active && band === lastView.current.band) return;
+    lastView.current = { active, band };
+    setView(lastView.current);
+  }, [width, inset, ends, loop, length]);
+
+  // Warm one jacket when the reader pauses on a spine. The same responsive
+  // asset is reused on tap. Give the spines first use of the connection.
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    if (covers || turned === current.id || connection?.saveData) return;
+    const jacket = jacketFor(current);
+    if (!jacket) return;
+    let preview: HTMLImageElement;
+    const timer = window.setTimeout(() => {
+      if (document.hidden) return;
+      preview = new Image();
+      preview.fetchPriority = "low";
+      preview.src = jacket.small && matchMedia(smallShelfCover).matches ? jacket.small : jacket.file;
+      void preview.decode().catch(() => {});
+    }, 160);
+    return () => clearTimeout(timer);
+  }, [covers, current, turned]);
 
   useLayoutEffect(() => {
     const el = rail.current!;
@@ -68,8 +99,8 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
     if (!width || i === null) return;
     requestCenter.current = null;
     el.scrollLeft = inset + (loop ? length : 0) + center(i) - width / 2;
-    setPosition(el.scrollLeft);
-  }, [layout]);
+    syncView(el.scrollLeft);
+  }, [layout, syncView]);
 
   // Move to the identical middle copy after momentum stops. No finger
   // tracking or synthetic inertia on touch devices.
@@ -82,13 +113,13 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
       const copy = Math.floor((el.scrollLeft + width / 2) / length);
       if (copy !== 1) {
         el.scrollLeft += (1 - copy) * length;
-        setPosition(el.scrollLeft);
+        syncView(el.scrollLeft);
       }
     }
     function scrolled() {
       if (!frame.current) frame.current = requestAnimationFrame(() => {
         frame.current = 0;
-        setPosition(el.scrollLeft);
+        syncView(el.scrollLeft);
       });
       window.clearTimeout(timer);
       timer = window.setTimeout(settle, 160);
@@ -110,12 +141,13 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
       el.removeEventListener("touchcancel", touchEnd);
       window.clearTimeout(timer);
     };
-  }, [length, loop, width]);
+  }, [length, loop, width, syncView]);
   useLayoutEffect(() => { anchor.current = active; }, [active]);
 
   function move(direction: number) {
     const el = rail.current!;
-    const index = active + direction;
+    const local = Math.max(0, el.scrollLeft + width / 2 - inset);
+    const index = firstAt(ends, loop ? local % length : local) + direction;
     if (!loop && (index < 0 || index >= books.length)) return;
     const next = (index + books.length) % books.length;
     const copy = loop ? Math.floor(local / length) + Math.floor(index / books.length) : 0;
@@ -124,24 +156,22 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
   }
 
   const slots = [];
-  for (let copy = 0; copy < copies; copy++) {
+  for (let copy = 0; width > 0 && copy < copies; copy++) {
     const base = inset + copy * length;
-    if (base > position + width + pad || base + length < position - pad) continue;
+    if (base > position + width + 2 * pad || base + length < position - pad) continue;
     const first = firstAt(ends, position - pad - base);
-    for (let i = first; i < books.length && base + start(i) < position + width + pad; i++) {
+    for (let i = first; i < books.length && base + start(i) < position + width + 2 * pad; i++) {
       const book = books[i], title = displayTitle(book.title);
       const face = covers || book.id === turned;
       const left = base + start(i);
-      const distance = eye - (base + center(i));
       slots.push(<div key={copy + ":" + book.id} className={"pocket-slot" + (face ? " face-out" : "")}
-        style={{ left, width:ends[i] - start(i) - gutter, zIndex:face ? 1000 : 800 - Math.min(790, Math.round(Math.abs(distance))),
-          "--lens-x": (eye - left) + "px" } as CSSProperties}>
+        style={{ left, width:ends[i] - start(i) - gutter, "--slot-left": left, "--slot-center": base + center(i) } as CSSProperties}>
         <button className="volume-pick" aria-label={(face ? "Open details for " : "Turn to cover of ") + title + " by " + book.author}
           onClick={() => {
             if (face) open(book.id);
             else { requestCenter.current = i; setTurned(book.id); }
           }}>
-          <span className="pocket-scale"><BoundVolume book={book} showJacket={face}/></span>
+          <span className="pocket-scale"><BoundVolume book={book} showJacket={face} preview={!covers && face}/></span>
         </button>
         {!covers && turned === book.id && <button className="pocket-return"
           aria-label={"Reshelve " + title} onClick={() => {requestCenter.current=i; setTurned(null);}}>Reshelve</button>}
@@ -153,7 +183,7 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
       <div className="cornice"/><div className="bay walnut-bay"><div className="bay-floor"/>
         <div className="pocket-rail" ref={rail} tabIndex={0} role="region" aria-label="Swipe through the bookshelf"
           onKeyDown={e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); move(e.key === "ArrowLeft" ? -1 : 1); } }}>
-          <div className="pocket-track" style={{width:inset * 2 + length * copies, "--pocket-zoom":zoom} as CSSProperties}>{slots}</div>
+          <div className="pocket-track" ref={track} style={{width:inset * 2 + length * copies, "--pocket-zoom":zoom} as CSSProperties}>{slots}</div>
         </div>
       </div>
       <div className="shelf-lip"><span className="brass-plate">{String(active + 1).padStart(3,"0")} / {String(books.length).padStart(3,"0")}</span></div>

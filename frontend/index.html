@@ -9,5 +9,8 @@ if (location.pathname === "/" && !Object.keys(localStorage).some(key => /^sb-.+-
     document.head.append(link);
   };
   preload("fetch", "/api/shelf");
+  if (!location.search && matchMedia("(max-width: 700px)").matches) {
+    preload("image", "/bindings/cb8e8cb8d192177b.webp");
+  }
 }
 }catch{}</script><title>Yuvraj’s Bookshelf · Yuvraj Kashyap</title></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>

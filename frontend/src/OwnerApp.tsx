@@ -299,6 +299,11 @@ export default function OwnerApp() {
         : location.pathname === "/history"
           ? "history"
           : "room";
+  const navLinks = nav.map(({ path, label, icon: Icon }) => (
+    <NavLink key={path} end to={path}>
+      <Icon size={15} />{label}
+    </NavLink>
+  ));
   const selected = library.books.find((b) => b.id === edit);
   const shelfPage = (page === "room" || page === "collection") && view.layout !== "table";
   return (
@@ -309,13 +314,8 @@ export default function OwnerApp() {
             <Brand />
           </NavLink>
           
-          <nav>
-            {nav.map(({ path, label, icon: Icon }) => (
-              <NavLink key={path} end to={path}>
-                <Icon size={15} />
-                {label}
-              </NavLink>
-            ))}
+          <nav aria-label="Reading room navigation">
+            {navLinks}
           </nav>
           <button className="primary" onClick={() => open("new")}>
             <Plus size={17} />
@@ -442,6 +442,7 @@ export default function OwnerApp() {
           </button>
         </Dialog>
       )}
+      <nav className="phone-room-nav" aria-label="Reading room navigation">{navLinks}</nav>
       {msg && (
         <div className="toast" role="status">
           {msg}

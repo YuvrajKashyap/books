@@ -1,6 +1,7 @@
 export function displayTitle(title: string) {
   return title.replace(/<\/?b>/gi, "").replace(/\\\$/g, "$").trim();
 }
+export const smallShelfCover = "(max-width: 480px) and (max-resolution: 2.5dppx)";
 export type Jacket = {file:string;small?:string;spine?:string;depth?:number;pages?:number;edition?:string;editionLabel?:string;heightScale?:number;cloth?:string;source?:string; custom?:boolean};
 import manifest from "./jackets.json";
 export function jacketFor(book:{title:string;author:string;cover:string}):Jacket|undefined {

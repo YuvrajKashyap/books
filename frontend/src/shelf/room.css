@@ -169,3 +169,12 @@
   .pocket-steps {display:flex;gap:2px;flex:none}.pocket-steps button {width:44px;height:44px;border-radius:50%;display:grid;place-items:center;padding:0;background:none;border:1px solid var(--line)}
   .pocket-section>.case-message {color:var(--ink);min-height:150px}
 }
+
+.pocket-slot {
+  --offset: calc(var(--pocket-eye, 0) - var(--slot-center));
+  --lens-x: calc((var(--pocket-eye, 0) - var(--slot-left)) * 1px);
+  z-index: calc(800 - min(790, round(nearest, max(var(--offset), calc(-1 * var(--offset))), 1)));
+}
+.pocket-slot.face-out { z-index: 1000; }
+.pocket-rail, .continuous-shelf { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.continuous-shelf { touch-action: pan-x pan-y pinch-zoom; overscroll-behavior-x: contain; }

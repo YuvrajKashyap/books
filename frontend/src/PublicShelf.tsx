@@ -41,21 +41,21 @@ export function PublicShelf(){
  const sentinel=useRef<HTMLDivElement>(null),search=useRef<HTMLInputElement>(null);
  const query=params.get('q')||'',focus=params.get('category')||'',id=params.get('pick'),selected=books.find(b=>b.id===id);
  useEffect(()=>{const ac=new AbortController();setState('loading');fetch('/api/shelf',{signal:ac.signal}).then(async r=>{if(!r.ok)throw Error();const data=await r.json();setBooks((data.books as ShelfBook[]).sort(shelfOrder));setState('ok')}).catch(()=>{if(!ac.signal.aborted)setState('error')});return()=>ac.abort()},[retry]);
+ const [phone,setPhone]=useState(()=>window.matchMedia(phoneQuery).matches);
+ useEffect(()=>{const media=window.matchMedia(phoneQuery);const update=()=>setPhone(media.matches);media.addEventListener('change',update);update();return()=>media.removeEventListener('change',update)},[]);
  const cabinet=useRef<HTMLElement>(null);
- useShelfCamera(cabinet);
+ useShelfCamera(cabinet, !phone);
  useEffect(()=>{
    const el=cabinet.current;
-   if(!el)return;
+   if(!el || phone)return;
    const observer=new ResizeObserver(([entry])=>{
      const measured=entry.contentRect.width;
      if(measured>0)setWidth(measured);
    });
    observer.observe(el);
    return()=>observer.disconnect();
- },[]);
+ },[phone]);
  const covers=params.get('layout')==='covers';
- const [phone,setPhone]=useState(()=>window.matchMedia(phoneQuery).matches);
- useEffect(()=>{const media=window.matchMedia(phoneQuery);const update=()=>setPhone(media.matches);media.addEventListener('change',update);update();return()=>media.removeEventListener('change',update)},[]);
  const sort=params.get('sort')||'shelf';
 
 

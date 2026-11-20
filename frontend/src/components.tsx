@@ -8,7 +8,7 @@ import {
 import { X, Bookmark, Leaf, Layers, Compass } from "lucide-react";
 import type { Book } from "../../shared/model";
 import { focuses } from "../../shared/categories";
-import {jacketFor} from "./shelf/artwork";
+import {jacketFor,smallShelfCover} from "./shelf/artwork";
 export type ShelfBook=Pick<Book,"id"|"title"|"author"|"focus"|"cover">;
 export function Brand() {
   return (
@@ -94,7 +94,7 @@ export function Cover({ book: b, shelf = false, priority = false }: { book: Shel
     >
       {src ? (
         <picture style={{ display: "contents" }}>
-          {shelf && jacket?.small && src === jacket.file && !failed.includes(jacket.small) && <source media="(max-width: 480px) and (max-resolution: 2.5dppx)" srcSet={jacket.small} />}
+          {shelf && jacket?.small && src === jacket.file && !failed.includes(jacket.small) && <source media={smallShelfCover} srcSet={jacket.small} />}
         <img
           alt=""
           src={src}

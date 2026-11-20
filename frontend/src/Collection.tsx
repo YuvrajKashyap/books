@@ -1,6 +1,6 @@
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import { ContinuousShelf, ShelfSpine } from "./shelf/ContinuousShelf";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -29,6 +29,11 @@ import {
   type View,
 } from "../../shared/model";
 import type { Mutate } from "./Reading";
+const phoneLayout = window.matchMedia("(max-width: 700px)");
+const onPhoneChange = (notify: () => void) => {
+  phoneLayout.addEventListener("change", notify);
+  return () => phoneLayout.removeEventListener("change", notify);
+};
 const labels = {
   author: "Author",
   focus: "Category",
@@ -139,6 +144,7 @@ export function Collection({
   open,
   mutate,
 }: Props) {
+  const phone = useSyncExternalStore(onPhoneChange, () => phoneLayout.matches);
   const collection = useRef<HTMLElement>(null);
   useShelfCamera(collection);
   const [options, setOptions] = useState(false),
@@ -183,6 +189,13 @@ export function Collection({
         : ["All books"];
   let remaining = limit;
   let hiddenBooks = 0;
+  const categoryPicker = (
+    <select aria-label="Category" value={view.focus}
+      onChange={e => update({ focus: e.target.value as View["focus"] })}>
+      <option value="">All categories</option>
+      {focuses.map(f => <option key={f}>{f}</option>)}
+    </select>
+  );
   const move = (id: string, target: string) =>
     mutate({ op: "shelfMove", id, target });
   return (
@@ -219,19 +232,10 @@ export function Collection({
               onChange={(e) => update({ query: e.target.value })}
             />
           </label>
-          <select
-            aria-label="Category"
-            value={view.focus}
-            onChange={(e) => update({ focus: e.target.value as View["focus"] })}
-          >
-            <option value="">All categories</option>
-            {focuses.map((v) => (
-              <option key={v}>{v}</option>
-            ))}
-          </select>
+          {!phone && categoryPicker}
           <button onClick={() => setOptions(true)}>
             <SlidersHorizontal size={15} />
-            View options
+            {phone ? "Filters" : "View options"}
           </button>
         </div>
       </div>
@@ -245,6 +249,7 @@ export function Collection({
             {s || "All books"}
           </button>
         ))}
+        {phone && view.focus && <button onClick={() => update({focus: ""})} aria-label={"Clear category " + view.focus}>{view.focus} ×</button>}
         {views.length > 0 && (
           <select
             aria-label="Open saved view"
@@ -278,7 +283,7 @@ export function Collection({
         );
         if (g === "Completed" && view.sort === "Shelf order")
           group = completed(group);
-        const continuous = (g === "To Read" || view.status === "To Read") && view.layout !== "table" && !arrange;
+        const continuous = (g === "To Read" || view.status === "To Read" || (phone && group.length > 7 && view.layout === "spines")) && view.layout !== "table" && !arrange;
         const visible = continuous ? group : group.slice(0, remaining);
         if (!continuous) remaining -= visible.length;
         hiddenBooks += group.length - visible.length;
@@ -291,7 +296,7 @@ export function Collection({
             </h2>
             {continuous ? (
               <ContinuousShelf key={JSON.stringify([view.query, view.focus, view.sort, view.layout, view.status])}
-                books={group} covers={view.layout === "shelf"} turned={turned} turn={setTurned} open={open}/>
+                label={g} books={group} covers={view.layout === "shelf"} turned={turned} turn={setTurned} open={open}/>
             ) : view.layout === "table" ? (
               <Table books={visible} view={view} open={open} mutate={mutate} />
             ) : view.layout === "spines" ? (
@@ -364,8 +369,9 @@ export function Collection({
         </button>
       )}
       {options && (
-        <Dialog title="View options" onClose={() => setOptions(false)}>
+        <Dialog title={phone ? "Filters & view" : "View options"} onClose={() => setOptions(false)}>
           <div className="fields">
+            {phone && <label>Category{categoryPicker}</label>}
             <label>
               Group by
               <select

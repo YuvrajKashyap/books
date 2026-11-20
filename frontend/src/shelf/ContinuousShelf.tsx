@@ -3,6 +3,7 @@ import type { Book } from "../../../shared/model";
 import { bindingDepth, displayTitle } from "./artwork";
 import { ShelfPick } from "./ShelfPick";
 import { BoundVolume } from "./BoundVolume";
+import { useRailDrag } from "./useRailDrag";
 import { scrollShelfWheel } from "./wheel";
 
 type BookProps = {
@@ -37,11 +38,12 @@ const ShelfCover = memo(function ShelfCover({ book, open, painted }: Pick<BookPr
 });
 
 type Props = Pick<BookProps, "open" | "turn"> & {
-  books: Book[]; covers: boolean; turned: string | null;
+  label: string; books: Book[]; covers: boolean; turned: string | null;
 };
 
-export function ContinuousShelf({ books, covers, turned, open, turn }: Props) {
+export function ContinuousShelf({ label, books, covers, turned, open, turn }: Props) {
   const rack = useRef<HTMLDivElement>(null);
+  useRailDrag(rack);
   const [painted, setPainted] = useState<Set<string>>(() => new Set());
   const membership = JSON.stringify(books.map(b => b.id));
 
@@ -92,7 +94,7 @@ export function ContinuousShelf({ books, covers, turned, open, turn }: Props) {
 
   let left = 0;
   return <div className={(covers ? "covers" : "owner-rack") + " continuous-shelf"} ref={rack}
-    role="region" aria-label="To Read horizontal bookshelf" tabIndex={0}
+    role="region" aria-label={label + " horizontal bookshelf"} tabIndex={0}
     onKeyDown={e => {
       if (e.target !== e.currentTarget) return;
       if (e.key === "Home" || e.key === "End") {
