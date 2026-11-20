@@ -2,10 +2,13 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { getRequestListener } from "@hono/node-server";
 import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import api from "./backend/app.js";
 export default defineConfig({
   root: "frontend",
   build: {outDir:"../dist",emptyOutDir:true},
+  server: { fs: { allow: ["frontend", "shared", "node_modules"].map(dir =>
+    fileURLToPath(new URL("./" + dir, import.meta.url))) } },
   plugins: [
     react(),
     {
