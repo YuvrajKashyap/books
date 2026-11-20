@@ -281,10 +281,10 @@ export function Collection({
         if (!visible.length) return null;
         return (
           <section key={g} className="shelf-group">
-            <h3>
+            <h2>
               {g}
               <span>{group.length}</span>
-            </h3>
+            </h2>
             {continuous ? (
               <ContinuousShelf key={JSON.stringify([view.query, view.focus, view.sort, view.layout, view.status])}
                 books={group} covers={view.layout === "shelf"} turned={turned} turn={setTurned} open={open}/>

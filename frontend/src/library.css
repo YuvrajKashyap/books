@@ -57,7 +57,7 @@ h1,h2,h3,.brand {font-weight:500}
 .catalog-end {border-top:1px solid #64705b;padding-top:14px}
 .catalog-end button,.pocket-steps button {background:transparent;color:var(--ink)}
 .catalog-end button:hover,.pocket-steps button:hover {background:var(--inset)}
-.owner-heading .mast {height:51px;position:relative;border-bottom:1px solid #8d825747}
+.owner-heading .mast {height:51px;position:relative;background:linear-gradient(#102921ed,#102921cb);border-bottom:1px solid #8d825747}
 .brand {gap:10px;font:500 25px/1 var(--display);letter-spacing:-.035em}
 .owner-heading .brand {color:var(--vellum)}
 .bookplate-seal {display:inline-grid;place-items:center;width:29px;height:30px;border:3px double currentColor;color:var(--metal);border-radius:46% 46% 38% 38%;font:italic 500 15px/1 var(--display);letter-spacing:-2px;padding-right:2px}
@@ -83,9 +83,9 @@ h1,h2,h3,.brand {font-weight:500}
 .reading-desk .pills button {background:transparent;border-color:transparent;border-radius:2px}
 .reading-desk .pills button[aria-pressed=true] {color:var(--forest);background:#e4e3cf;border-color:#c6ccb2}
 .reading-desk .shelf-group {margin:12px 0 20px}
-.reading-desk .shelf-group h3 {display:flex;gap:10px;align-items:baseline;margin-bottom:7px;font:500 24px/1.05 var(--display);letter-spacing:-.02em}
-.shelf-group h3 span {margin:0;font:12px/1 "DM Sans Variable",sans-serif}
-.shelf-group h3::after {content:"";margin-left:4px;align-self:center;width:52px;border-top:1px solid #b5a780}
+.reading-desk .shelf-group h2 {display:flex;gap:10px;align-items:baseline;margin-bottom:7px;font:500 24px/1.05 var(--display);letter-spacing:-.02em}
+.shelf-group h2 span {margin:0;font:12px/1 "DM Sans Variable",sans-serif}
+.shelf-group h2::after {content:"";margin-left:4px;align-self:center;width:52px;border-top:1px solid #b5a780}
 .rotation,.feature,.next {border-radius:4px}
 .rotation,.next {background:#e7e6d4}
 .queue-title,.timeline-item {border-radius:2px}
@@ -129,6 +129,6 @@ dialog::backdrop {background:#091912a3}
   .collection-desk .toolbar {display:grid;grid-template-columns:1fr auto;gap:6px}
   .collection-desk .search {grid-column:1/-1}
   .collection-desk .toolbar input {font-size:16px}
-  .reading-desk .shelf-group h3 {font-size:22px}
+  .reading-desk .shelf-group h2 {font-size:22px}
   .gate-intro::before {inset:0 0 0 auto;width:64%;background-size:auto 115%}
 }

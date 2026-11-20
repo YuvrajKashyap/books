@@ -420,12 +420,12 @@ main {
 .shelf-group {
   margin: 16px 0 26px;
 }
-.shelf-group h3 {
+.shelf-group h2 {
   font: 600 12px "DM Sans Variable";
   letter-spacing: 0.04em;
   margin: 0 0 12px;
 }
-.shelf-group h3 span {
+.shelf-group h2 span {
   color: var(--muted);
   font-size: 11px;
   margin-left: 8px;
