@@ -1,29 +1,10 @@
-import { startTransition, useEffect, useOptimistic, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { startTransition, useEffect, useOptimistic, useRef, useState, type KeyboardEvent } from "react";
 import { flushSync } from "react-dom";
-import { ArrowLeft, ArrowRight, BookOpen, ChevronDown } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Dialog, type ShelfBook } from "../components";
-import { Hardcover } from "./Hardcover";
-import { BookSynopsis } from "./BookSynopsis";
-import { PrintEdition } from "./PrintEdition";
+import { BookEntry } from "./BookEntry";
 import { displayTitle, jacketFor } from "./artwork";
 import { canWarmReader, readNote, warmNote } from "./bookNote";
-
-function BookPortrait({ book }: { book: ShelfBook }) {
-  const [angle, setAngle] = useState(-12);
-  const [opened, setOpened] = useState(false);
-  return <div className="inspection-portrait">
-    <div className="inspection-stage">
-      <div className="inspection-volume" style={{ "--turn": angle + "deg" } as CSSProperties}>
-        <Hardcover book={book} opened={opened} priority/>
-      </div>
-    </div>
-    <details className="portrait-tools">
-      <summary>Inspect cover <ChevronDown size={13} aria-hidden="true"/></summary>
-      <label>Rotate<input type="range" aria-label="Rotate book" min="-100" max="100" value={angle} onChange={e => setAngle(Number(e.target.value))}/></label>
-      <button onClick={() => { setAngle(-7); setOpened(!opened); }}><BookOpen size={14}/>{opened ? "Close cover" : "Open cover"}</button>
-    </details>
-  </div>;
-}
 
 type Props = { book: ShelfBook; books: ShelfBook[]; index: number; select: (id: string) => void; close: () => void };
 export function BookInspection({ book: linkedBook, books, index: linkedIndex, select, close }: Props) {
@@ -70,12 +51,7 @@ export function BookInspection({ book: linkedBook, books, index: linkedIndex, se
   return <Dialog className="book-dialog" title={displayTitle(book.title)} onClose={close} onKeyDown={turnPage}>
     <article key={book.id} className="book-inspection" aria-label={displayTitle(book.title)}
       onLoad={event => { if (event.target instanceof HTMLImageElement) prepareJacket(direction.current > 0 ? next : previous); }}>
-      <div className="inspection-layout">
-        <BookPortrait book={book}/>
-        <p className="inspection-byline">{book.author}</p>
-        <BookSynopsis id={book.id} expandedBooks={expandedBooks}/>
-        <div className="inspection-imprint"><small>{book.focus}</small><PrintEdition book={book}/>{jacketFor(book)?.custom && <small>Custom library jacket</small>}</div>
-      </div>
+      <BookEntry book={book} expandedBooks={expandedBooks}/>
     </article>
     <nav className="inspect-nav" aria-label="Browse books">
       <button disabled={!previous} title={previous && displayTitle(previous.title)}

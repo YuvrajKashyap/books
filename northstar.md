@@ -15,4 +15,6 @@ The room should feel like a personal library shaped by curiosity. Let light, mat
 
 Choose the smallest interaction that delivers a real benefit. Put visual and engineering effort into browsing, returning to context, and editing with confidence.
 
+Opening a book places its full 3D jacket at the top center. Drag the book to inspect it and tap the jacket to open or close it. The brief synopsis sits underneath, followed by the longer synopsis and author background on request. The category and edition link finish the entry. The public shelf and the owner’s book details share this reading experience.
+
 Visitors can browse titles, authors, covers and the four categories through GET /api/shelf. This read-only catalogue uses separate public book identifiers. Reading activity, notes, queue order, backups and mutations require authorized private access. The owner signs in at /admin.

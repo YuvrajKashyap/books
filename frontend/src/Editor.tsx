@@ -1,7 +1,8 @@
-import { PrintEdition } from "./shelf/PrintEdition";
 import { useState } from "react";
 import { ExternalLink, Trash2, Check } from "lucide-react";
-import { Dialog, Cover } from "./components";
+import { Dialog } from "./components";
+import { BookEntry } from "./shelf/BookEntry";
+import { displayTitle } from "./shelf/artwork";
 import { freshBook, bookFields, focuses, statuses, type Book } from "../../shared/model";
 import type { Mutate } from "./Reading";
 export function Editor({
@@ -28,19 +29,11 @@ export function Editor({
   return (
     <Dialog
       drawer
-      title={book ? "Book details" : "Add a book"}
+      title={book ? displayTitle(book.title) : "Add a book"}
       onClose={onClose}
     >
       {book && (
-        <div className="editor-heading">
-          <Cover book={book} />
-          <div>
-            <span className="kicker">{book.focus}</span>
-            <h2>{book.title}</h2>
-            <p>{book.author}</p>
-            <PrintEdition book={book}/>
-          </div>
-        </div>
+        <BookEntry book={book} owner/>
       )}
       <form
         onSubmit={async (e) => {

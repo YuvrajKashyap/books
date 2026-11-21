@@ -1,4 +1,5 @@
 import { ownerLogin } from "./login.js";
+import { publicBookKey } from "../shared/public-book-key.js";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { bodyLimit } from "hono/body-limit";
@@ -52,7 +53,7 @@ app.get("/api/shelf", async (c) => {
       await tx`select id,title,author,focus,cover from books.titles order by lower(title),id`;
     return rows.map(({ id, title, author, focus, cover }) => ({
       id: createHash("sha256")
-        .update("books-public:" + id)
+        .update(publicBookKey(id))
         .digest("hex")
         .slice(0, 32),
       title,
