@@ -286,7 +286,7 @@ dialog::backdrop {background:#091912a3}
 .reading-gallery dialog.book-dialog .dialog-head { margin:0; gap:12px; }
 .reading-gallery dialog.book-dialog .dialog-head h2 { text-wrap:balance; font-size:clamp(25px,3.4vw,36px); }
 .reading-gallery dialog.book-dialog .icon { flex-shrink:0; width:44px; height:44px; }
-@media (min-width: 541px) { .reading-gallery dialog.book-dialog { height:min(480px,90dvh); } }
+@media (min-width: 541px) { .reading-gallery dialog.book-dialog { min-height:min(434px,90dvh); } }
 .book-inspection { contain:layout paint; overflow-y:auto; overscroll-behavior:contain; padding:clamp(16px,3vw,30px); }
 .inspection-layout {
   display:grid; grid-template-columns:minmax(130px,.62fr) minmax(0,1.38fr); column-gap:clamp(18px,3vw,34px);

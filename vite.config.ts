@@ -4,7 +4,7 @@ import { getRequestListener } from "@hono/node-server";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import api from "./backend/app.js";
-import { bookNotes } from "./build/book-notes";
+import { bookNotes } from "./build/book-notes.ts";
 export default defineConfig({
   root: "frontend",
   build: {outDir:"../dist",emptyOutDir:true},
