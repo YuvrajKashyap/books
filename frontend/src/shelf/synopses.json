@@ -3,7 +3,8 @@
     "id": "077f0196a69b74a2f35b32522f20c3dc",
     "brief": "What happens to cash between a customer's first purchase and their next one?",
     "synopsis": "Hormozi arranges offers in the order a customer encounters them. He works through introductory deals, upgrades and recurring purchases to show how two businesses with the same product can collect cash at very different speeds.",
-    "author": "Alex Hormozi built Gym Launch with his wife, Leila. Paying to acquire gym customers before their fees came in made the timing of cash a practical concern."
+    "author": "Alex Hormozi built Gym Launch with his wife, Leila. Paying to acquire gym customers before their fees came in made the timing of cash a practical concern.",
+    "source": "https://www.acquisition.com/training/money/context"
   },
   "100M Leads|Alex Hormozi": {
     "id": "56e9975e5c3566e66f9e12b35057764e",
@@ -55,9 +56,10 @@
   },
   "A Brief History of Time|Stephen Hawking": {
     "id": "e7a4028ca80465f194c7c4cbbcaa3bd5",
-    "brief": "What can black holes tell us about the beginning of time?",
-    "synopsis": "Hawking builds from familiar ideas of space and motion toward an uneasy meeting between gravity and quantum mechanics. Black holes give him a place where both theories have something to say.",
-    "author": "Stephen Hawking studied cosmology and black holes at Cambridge. He wrote for readers curious about the questions physicists ask who did not have the mathematics to read the research papers."
+    "brief": "Can time have a beginning, and what could tell us if it did?",
+    "synopsis": "Hawking follows what happens when gravity brings matter to extremes, first in collapsing stars and then in theories of the early universe. Black holes give him a concrete puzzle. Quantum theory suggests they can give off radiation.",
+    "author": "Stephen Hawking studied cosmology and black holes at Cambridge. He wrote for readers curious about the questions physicists ask who did not have the mathematics to read the research papers.",
+    "source": "https://www.penguinrandomhouse.com/books/77010/a-brief-history-of-time-by-stephen-hawking/"
   },
   "A Causal Test of the Strength of Weak Ties|Science / LinkedIn study": {
     "id": "9dc84316d0ba55625086380ad08bd7cc",
@@ -122,7 +124,7 @@
   },
   "As We Speak|Peter Meyers & Shann Nix": {
     "id": "815ac77114816f1dc1ab7488045e0d27",
-    "brief": "A speaking coach's guide to what an audience actually hears.",
+    "brief": "How much of a carefully prepared speech gets through to the person listening?",
     "synopsis": "Meyers and Nix divide the work of speaking between content, delivery and the state of mind a speaker brings into the room. A well-written speech can still fail if listeners cannot follow its movement.",
     "author": "Peter Meyers trained performers and public speakers. Journalist and broadcaster Shann Nix brought experience speaking to people who could turn the dial at any moment."
   },
@@ -134,13 +136,14 @@
   },
   "Atomic Habits|James Clear": {
     "id": "841781f20af8660b08eb7f73db7d0388",
-    "brief": "Clear explains how to make a small habit easier to repeat tomorrow.",
-    "synopsis": "A habit begins with a cue and ends with a reward. Clear uses that sequence to show why leaving a guitar on a stand can change practice more reliably than a fresh promise to practise.",
-    "author": "James Clear developed the book through years of writing about habits. His account of rebuilding routines after a severe baseball injury gives the opening chapter its personal stakes."
+    "brief": "Why is it easier to practice guitar when the instrument is already out of its case?",
+    "synopsis": "Clear follows a habit through the cue that starts it and the reward that brings you back. Moving a guitar into view changes the odds of picking it up tomorrow, even if your intentions stay much the same.",
+    "author": "James Clear developed the book through years of writing about habits. His account of rebuilding routines after a severe baseball injury gives the opening chapter its personal stakes.",
+    "source": "https://jamesclear.com/atomic-habits-summary"
   },
   "Bad Blood|John Carreyrou": {
     "id": "0e853cc24db7462c482efb145470f680",
-    "brief": "Inside Theranos, a blood-testing promise outgrew the machine meant to deliver it.",
+    "brief": "The blood tests Theranos promised investors were a long way from the tests its machines could run.",
     "synopsis": "Employees, patients and investors saw different pieces of the company. Carreyrou traces how secrecy kept them apart and how former staff helped establish what the technology could actually do.",
     "author": "John Carreyrou broke the Theranos investigation for The Wall Street Journal in 2015. The book gave him room to reconstruct events that preceded his first story."
   },
@@ -213,7 +216,7 @@
   },
   "Capital Returns|Edward Chancellor": {
     "id": "1077db8e609a63c71df0a1cec15ca5c0",
-    "brief": "An industry's profits can begin to fall just when its prospects look brightest.",
+    "brief": "Today's best margins can pay for the factories that destroy tomorrow's.",
     "synopsis": "Marathon Asset Management's investment letters follow capital into popular industries and back out of neglected ones. New factories and fresh competition can destroy the margins that attracted investors in the first place.",
     "author": "Financial historian Edward Chancellor edited the collection. The investment arguments are the work of Marathon's managers, written as they assessed businesses for their portfolios."
   },
@@ -231,7 +234,7 @@
   },
   "Company of One|Paul Jarvis": {
     "id": "abd0ac346240e98ec56ab6b6f7d0174d",
-    "brief": "Jarvis asks what a business owner gains by staying small on purpose.",
+    "brief": "How much business does an independent business owner actually want?",
     "synopsis": "He examines decisions about staffing, recurring costs and how much revenue counts as enough. Growth becomes a choice with a price the owner can calculate.",
     "author": "Paul Jarvis ran an independent design business. The book came out of his experience making a living from client work without building a conventional agency."
   },
@@ -267,9 +270,10 @@
   },
   "Deep Work|Cal Newport": {
     "id": "129610066cf6572b734aa5dc9c992c49",
-    "brief": "Newport asks what work becomes possible when interruptions stop.",
-    "synopsis": "The book distinguishes sustained concentration from the administrative tasks that crowd it out. Newport describes how writers, scholars and programmers arrange their days to protect demanding work.",
-    "author": "Cal Newport is a computer scientist. His own research requires long stretches of uninterrupted thought, and he wrote the book while digital communication was taking up more of the working day."
+    "brief": "What gets done in an uninterrupted morning that never gets done between emails?",
+    "synopsis": "Newport looks at how scholars and programmers protect time for difficult work. He describes several workable schedules, including a regular daily block for people who cannot disappear for weeks at a stretch.",
+    "author": "Cal Newport is a computer scientist. His own research requires long stretches of uninterrupted thought, and he wrote the book while digital communication was taking up more of the working day.",
+    "source": "https://calnewport.com/writing/"
   },
   "Devil Take the Hindmost|Edward Chancellor": {
     "id": "03eaaf2e828648fd3418198f476ba486",
@@ -297,9 +301,10 @@
   },
   "Do Things That Don’t Scale|Paul Graham": {
     "id": "0da930c6bc58340375c1aa03b497b9f4",
-    "brief": "Why should a startup founder do work that could never serve a million customers?",
-    "synopsis": "Graham argues that personally recruiting and helping the first users teaches founders what to build. He draws on early companies that did an extraordinary amount by hand before automating any of it.",
-    "author": "Paul Graham co-founded Y Combinator. He wrote this 2013 essay after seeing founders hesitate to do small, laborious things that could get their companies started."
+    "brief": "Stripe's founders used to install the software on a willing customer's laptop themselves.",
+    "synopsis": "For a startup with a handful of users, personal attention does two jobs. It wins an early customer and lets the founders see exactly where that customer gets stuck. Graham describes what they learn by doing this work by hand.",
+    "author": "Paul Graham co-founded Y Combinator. He wrote this 2013 essay after seeing founders hesitate to do small, laborious things that could get their companies started.",
+    "source": "https://www.paulgraham.com/ds.html"
   },
   "DotCom Secrets|Russell Brunson": {
     "id": "3fab3ee3f52d15facec7c49d0643b8ff",
@@ -413,7 +418,7 @@
   },
   "Good to Great|Jim Collins": {
     "id": "83464b79cb556755f38b85ce1a2f73dd",
-    "brief": "Collins studies companies that made a sustained improvement in stock performance after years of ordinary results.",
+    "brief": "What changed inside companies whose returns broke away after years of ordinary results?",
     "synopsis": "His team matched these firms with comparison companies and looked for differences in leadership and operations. The cases led to terms such as the hedgehog concept, a way to narrow a company's focus.",
     "author": "Jim Collins led the research after coauthoring Built to Last. The historical selection of companies matters when reading the findings as lessons for a different business."
   },
@@ -431,7 +436,7 @@
   },
   "How Asia Works|Joe Studwell": {
     "id": "84aec21e07b508cfedde8d5d14054b19",
-    "brief": "Why did some East Asian economies industrialize while others stalled?",
+    "brief": "Why did government-backed factories thrive in some East Asian economies and languish in others?",
     "synopsis": "Studwell compares land reform, manufacturing policy and the use of bank credit across countries. The test he follows is whether protected firms eventually had to sell goods that could compete abroad.",
     "author": "Joe Studwell spent years reporting on Asian economies. The comparative form lets him examine policies that looked similar on paper but produced very different results."
   },
@@ -570,9 +575,10 @@
   },
   "Meditations|Marcus Aurelius": {
     "id": "632186a7542f6cb29071df45c2f78707",
-    "brief": "Private reminders by a Roman emperor trying to govern his reactions as carefully as his empire.",
+    "brief": "A Roman emperor reminds himself how to face an irritating person, a bad day and his own death.",
     "synopsis": "Marcus returns to irritation, distraction and the knowledge that his life is short. The repetitions make sense as exercises he needed to do again, even after he knew the argument.",
-    "author": "Marcus Aurelius wrote these notes to himself during his reign. Some passages are associated with military campaigns, and the work has the intimacy of a notebook he never prepared for publication."
+    "author": "Marcus Aurelius kept these notes for himself during his reign. Some passages name places on campaign. Their repetitions make sense in a private notebook. He was rehearsing judgments he would need again tomorrow.",
+    "source": "https://www.penguinrandomhouse.com/books/6367/meditations-by-marcus-aurelius/"
   },
   "Mind Over Money|Brad Klontz & Ted Klontz": {
     "id": "492b804a4995c21c387f9fd79b20c118",
@@ -619,8 +625,9 @@
   "More Money Than Trust|Graham Duncan": {
     "id": "cab922258f01064a8fc01e665fd8832f",
     "brief": "Graham Duncan's subject is the trust involved in letting someone else manage money.",
-    "synopsis": "An allocator can move capital quickly. Judging how another person thinks and behaves under pressure takes longer. The precise essay or talk filed under this title has yet to be identified.",
-    "author": "Duncan co-founded East Rock Capital and has written about selecting investment managers. His work puts him on the side of the person deciding whom to entrust with capital."
+    "synopsis": "This shelf title has no confirmed publication match. In a related essay, Duncan describes calling references and comparing firsthand accounts to understand the person on the other side of an investment.",
+    "author": "Duncan co-founded East Rock Capital and has written about selecting investment managers. His work puts him on the side of the person deciding whom to entrust with capital.",
+    "source": "https://grahamduncan.blog/whats-going-on-here/"
   },
   "Nail it Then Scale it|Nathan Furr & Paul Ahlstrom": {
     "id": "63b540d610a0f50e0131c53ad21db179",
@@ -642,7 +649,7 @@
   },
   "Never Split the Difference|Chris Voss": {
     "id": "5d51e53bb9f4a325c10b769953e6991f",
-    "brief": "A hostage negotiator explains how to keep someone talking when the stakes make compromise difficult.",
+    "brief": "A former FBI hostage negotiator explains how he got strangers under pressure to keep talking.",
     "synopsis": "Mirroring someone's last words and naming an emotion are ways of hearing more before making an offer. Voss follows actual negotiations and then applies their lessons to less extreme disputes.",
     "author": "Chris Voss negotiated kidnappings for the FBI. He wrote with journalist Tahl Raz after moving into teaching negotiation to business audiences."
   },
@@ -672,7 +679,7 @@
   },
   "Open|Andre Agassi": {
     "id": "3a1c6a53de15ca5212a9336a49336132",
-    "brief": "Agassi tells the story of a tennis career he was trained for before he could choose it.",
+    "brief": "Andre Agassi could hit a tennis ball for hours before he was old enough to choose the game.",
     "synopsis": "His father's ball machine, years on tour and a hard-won return to competition give the memoir its shape. Private ambivalence runs through some of its most public victories.",
     "author": "Andre Agassi wrote after retiring from professional tennis. He worked closely with writer J. R. Moehringer to reconstruct the experiences behind the scores."
   },
@@ -708,9 +715,10 @@
   },
   "Poor Charlie's Almanack|Charles T. Munger (edited by Peter D. Kaufman)": {
     "id": "d7de861aa023931ae839c61ccd330ac5",
-    "brief": "Munger's talks show how he borrowed ideas across disciplines to think about businesses and human error.",
+    "brief": "Charlie Munger borrows from psychology and probability to explain why smart people make expensive mistakes.",
     "synopsis": "The collection mixes speeches with biographical material and commentary. Munger returns to the ways incentives and several ordinary biases can combine to produce an extraordinary mistake.",
-    "author": "Charlie Munger was Berkshire Hathaway's vice chairman and Warren Buffett's longtime investing partner. Peter Kaufman edited the collection, preserving much of Munger's speaking voice."
+    "author": "Munger spent decades making investment decisions alongside Warren Buffett at Berkshire Hathaway. Peter Kaufman edited these talks, keeping the jokes and digressions that made Munger sound like himself.",
+    "source": "https://press.stripe.com/poor-charlies-almanack"
   },
   "Pre-Suasion: A Revolutionary Way to Influence and Persuade|Robert Cialdini": {
     "id": "dba2adde5d715fc45a11f93e11f77061",
@@ -781,7 +789,7 @@
   },
   "Rework|Jason Fried & David Heinemeier Hansson": {
     "id": "34a1ccb6a8c6c8ff7f9e1dda06a6eb26",
-    "brief": "Short essays question how much of running a business truly requires a plan, a meeting or a new hire.",
+    "brief": "Two software founders question the meeting, the hiring plan and the product nobody has asked for yet.",
     "synopsis": "Fried and Hansson favor releasing a smaller product and learning from people who actually use it. The essays return to how easily a growing company can spend time coordinating work that nobody needs.",
     "author": "The authors ran 37signals, the software company behind Basecamp. They wrote while building products with a small team and financing the business through customers."
   },
@@ -843,8 +851,9 @@
   "Shoe Dog|Phil Knight": {
     "id": "01d7921133453d726d5962e346186879",
     "brief": "Before Nike had a name, Phil Knight was selling Japanese running shoes from the trunk of his car.",
-    "synopsis": "A new shipment could sell out and still leave Knight short of money for the next one. He follows those early orders through factory disputes, bank meetings and the formation of the team that built Nike.",
-    "author": "Knight ran track at Oregon under Bill Bowerman, who became his business partner. He wrote the memoir decades later, choosing to spend most of it in the years before Nike went public."
+    "synopsis": "At Blue Ribbon Sports, selling out of shoes could leave Knight too broke to order more. He recalls the runners who joined him, the banker who doubted him and the Japanese supplier whose shoes they would eventually have to replace.",
+    "author": "Knight ran track at Oregon under Bill Bowerman, who became his business partner. He wrote the memoir decades later, choosing to spend most of it in the years before Nike went public.",
+    "source": "https://www.simonandschuster.com/books/Shoe-Dog/Phil-Knight/9781501135927"
   },
   "Skin in the Game|Nassim Nicholas Taleb": {
     "id": "bea79634806d99d2aa16e69a9f153fda",
@@ -988,9 +997,10 @@
   },
   "The Daily Laws|Robert Greene": {
     "id": "b22ec82e44ea6466d33bbf219f075aad",
-    "brief": "A year's worth of short readings from Greene on power, practice and human behavior.",
+    "brief": "A short reading for each day of the year, drawn from Greene's work on ambition, power and human nature.",
     "synopsis": "Each day pairs an observation with a prompt. Monthly themes hold the sequence together, letting readers revisit an idea in small portions rather than reading a historical case in one sitting.",
-    "author": "Robert Greene assembled the book after writing several longer works on power and mastery. It draws from those books and from the advice readers asked him for afterward."
+    "author": "Robert Greene assembled the book after writing several longer works on power and mastery. It draws from those books and from the advice readers asked him for afterward.",
+    "source": "https://www.penguinrandomhouse.com/books/673666/the-daily-laws-by-robert-greene/"
   },
   "The E-Myth Revisited|Michael E. Gerber": {
     "id": "901cab3f6c31e6b147ea59008f1f6e75",
@@ -1006,7 +1016,7 @@
   },
   "The Goal|Eliyahu M. Goldratt": {
     "id": "964700b90a738b84fd817eeae28c799f",
-    "brief": "A factory manager has a few months to save his plant and has to find what really limits its output.",
+    "brief": "A factory keeps every machine busy and still can't ship its orders on time.",
     "synopsis": "Orders are late even though every department is trying to stay busy. Through a series of questions, Alex Rogo learns why improving one machine may do nothing for the plant as a whole.",
     "author": "Eliyahu Goldratt developed the theory of constraints. He wrote the novel with Jeff Cox so readers could reason through the plant's problems before being handed a management rule."
   },
@@ -1108,7 +1118,7 @@
   },
   "The Outsiders|William N. Thorndike Jr.": {
     "id": "f5f5e691ab2d6fe1a119f89ad73edc9d",
-    "brief": "Eight chief executives made unusually consequential choices about where to put their companies' money.",
+    "brief": "Eight CEOs made their mark through quiet decisions about where the next dollar should go.",
     "synopsis": "Thorndike studies buybacks, acquisitions, dividends and reinvestment across very different businesses. The comparisons treat allocation of cash as a central part of the chief executive's job.",
     "author": "William Thorndike founded the investment firm Housatonic Partners. He approached the executives as an investor trying to explain long-run returns that ordinary management profiles missed."
   },
@@ -1241,7 +1251,7 @@
   },
   "Thinking in Bets|Annie Duke": {
     "id": "bfdbf47668439839bd89e396d6128f78",
-    "brief": "Duke uses poker to show why a good outcome is a poor test of a single decision.",
+    "brief": "A good poker player can play the right hand and still lose the pot.",
     "synopsis": "A well-played hand can lose. She applies that lesson to estimating probabilities, reviewing decisions and talking with people who can challenge a confident opinion.",
     "author": "Annie Duke played professional poker after studying cognitive psychology. At the table, the information a player never gets to see is often as important as the cards they do."
   },
