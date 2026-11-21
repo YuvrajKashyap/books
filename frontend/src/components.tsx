@@ -38,6 +38,7 @@ export function Dialog({
   return (
     <dialog
       ref={ref}
+      aria-label={title}
       className={drawer ? "drawer" : ""}
       onCancel={(e) => {
         e.preventDefault();

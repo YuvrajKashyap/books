@@ -1,6 +1,7 @@
 import { PocketShelf } from "./shelf/PocketShelf";
 import { ScienceStudy } from "./shelf/ScienceStudy";
 import { PrintEdition } from "./shelf/PrintEdition";
+import { BookSynopsis } from "./shelf/BookSynopsis";
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import {memo,useCallback,useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {Link,useNavigate,useSearchParams} from 'react-router-dom';
@@ -181,5 +182,20 @@ export function PublicShelf(){
  {phone&&<footer className="owner-footnote">Are you Yuvraj? <Link to="/admin">Sign in <ArrowRight size={12}/></Link></footer>}
  {!phone&&<div ref={sentinel} className="catalog-end">{state==='ok'&&<><span>{shown} of {matches.length} titles</span>{shown<matches.length?<button onClick={()=>setRows(n=>n+4)}>Load next shelves</button>:<a href="#bookcase">Back to the first shelf ↑</a>}</>}</div>}
  {!phone&&state==='ok'&&subjectIndex}</main>
- {selected&&<Dialog title="From my bookshelf" onClose={()=>param('pick','')}><div className="book-inspection"><div className="inspection-stage"><div className="inspection-volume" style={{'--turn':angle+'deg'} as CSSProperties}><Hardcover book={selected} opened={opened}/></div></div><div className="inspect-controls"><label>Rotate<input type="range" aria-label="Rotate book" min="-100" max="100" value={angle} onChange={e=>setAngle(Number(e.target.value))}/></label><button onClick={()=>{setAngle(-7);setOpened(!opened)}}><BookOpen size={14}/>{opened?'Close cover':'Open cover'}</button></div><small>{selected.focus}</small><h2>{displayTitle(selected.title)}</h2><p>{selected.author}</p><PrintEdition book={selected}/>{jacketFor(selected)?.custom&&<small>Custom library jacket</small>}<div className="inspect-nav"><button disabled={current<=0} onClick={()=>param('pick',matches[current-1].id)}><ArrowLeft size={15}/>Previous</button><button disabled={current<0||current+1>=matches.length} onClick={()=>param('pick',matches[current+1].id)}>Next<ArrowRight size={15}/></button></div></div></Dialog>}</div>
+ {selected && <Dialog title={displayTitle(selected.title)} onClose={() => param('pick','')}>
+   <div className="book-inspection">
+     <div className="inspection-stage"><div className="inspection-volume" style={{'--turn':angle+'deg'} as CSSProperties}><Hardcover book={selected} opened={opened}/></div></div>
+     <div className="inspect-controls">
+       <label>Rotate<input type="range" aria-label="Rotate book" min="-100" max="100" value={angle} onChange={e=>setAngle(Number(e.target.value))}/></label>
+       <button onClick={()=>{setAngle(-7);setOpened(!opened)}}><BookOpen size={14}/>{opened?'Close cover':'Open cover'}</button>
+     </div>
+     <p className="inspection-byline">{selected.author}</p>
+     <BookSynopsis key={selected.id} title={selected.title} author={selected.author}/>
+     <div className="inspection-imprint"><small>{selected.focus}</small><PrintEdition book={selected}/>{jacketFor(selected)?.custom&&<small>Custom library jacket</small>}</div>
+     <div className="inspect-nav">
+       <button disabled={current<=0} onClick={()=>param('pick',matches[current-1].id)}><ArrowLeft size={15}/>Previous</button>
+       <button disabled={current<0||current+1>=matches.length} onClick={()=>param('pick',matches[current+1].id)}>Next<ArrowRight size={15}/></button>
+     </div>
+   </div>
+ </Dialog>}</div>
 }
