@@ -8,7 +8,7 @@
       "destination": "/api/index"
     },
     {
-      "source": "/((?!api/|assets/|covers/|shelf-covers/|bindings/|jackets/|materials/|favicon.svg).*)",
+      "source": "/((?!api/|assets/|covers/|shelf-covers/|bindings/|jackets/|materials/|icons/|favicon\\.(?:svg|ico)$|apple-touch-icon\\.png$|site\\.webmanifest$).*)",
       "destination": "/index.html"
     }
   ],
