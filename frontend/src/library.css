@@ -283,6 +283,14 @@ dialog::backdrop {background:#091912a3}
 .reading-gallery dialog .dialog-head .icon {color:#ece1c4;border:1px solid #a59571;background:transparent}
 .reading-gallery dialog.book-dialog { width:min(750px,94vw); padding:0; max-height:min(92dvh,850px); overflow:hidden; }
 .reading-gallery dialog.book-dialog[open] { display:grid; grid-template-rows:auto minmax(0,1fr) auto; }
+/* Keep the shelf in its original scroll position. An opaque desk lets the
+   browser leave the hundreds of 3D book faces out of each reader frame. */
+.reading-gallery:has(> .book-dialog[open]) > :is(.library-heading,.gallery-main) { visibility:hidden; }
+html:has(.book-dialog[open]) { overflow:hidden; scrollbar-gutter:stable; background-color:#14291f; }
+.reading-gallery dialog.book-dialog::backdrop {
+  background:radial-gradient(ellipse at 50% 40%,#233d31ee,#10261cf7),
+    url('/materials/walnut.webp') center / 850px 620px, #192e24;
+}
 .reading-gallery dialog.book-dialog .dialog-head { margin:0; gap:12px; }
 .reading-gallery dialog.book-dialog .dialog-head h2 { text-wrap:balance; font-size:clamp(25px,3.4vw,36px); }
 .reading-gallery dialog.book-dialog .icon { flex-shrink:0; width:44px; height:44px; }
@@ -308,7 +316,7 @@ dialog::backdrop {background:#091912a3}
 .book-synopsis details { grid-area:note; }
 .inspection-imprint { grid-area:imprint; align-self:end; }
 .reading-gallery .inspect-nav { margin:0; padding:6px clamp(12px,3vw,26px); border-top:3px double #bcae8f; background:#f5eedf; }
-.inspect-nav button { min-height:44px; padding:5px 9px; background:transparent; border-color:transparent; }
+.inspect-nav button { min-height:44px; padding:5px 9px; background:transparent; border-color:transparent; touch-action:manipulation; }
 .inspection-position { font:italic 500 17px/1 var(--display); color:#665a44; }
 .inspection-position .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
 .book-inspection .inspection-byline {

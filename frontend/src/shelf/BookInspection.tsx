@@ -28,8 +28,13 @@ function BookPortrait({ book }: { book: ShelfBook }) {
 type Props = { book: ShelfBook; books: ShelfBook[]; index: number; select: (id: string) => void; close: () => void };
 export function BookInspection({ book: linkedBook, books, index: linkedIndex, select, close }: Props) {
   const [book, showBook] = useOptimistic(linkedBook);
+  const [expandedBooks] = useState(() => new Set<string>());
+  const direction = useRef<1 | -1>(1);
   const index = book === linkedBook ? linkedIndex : books.indexOf(book);
+  const previous = index > 0 ? books[index - 1] : undefined;
+  const next = index >= 0 ? books[index + 1] : undefined;
   function browse(target: ShelfBook) {
+    direction.current = target === previous ? -1 : 1;
     // Commit the reader while handling the button or arrow key. The router
     // replaces the shareable URL in the same transition.
     flushSync(() => startTransition(() => {
@@ -37,11 +42,9 @@ export function BookInspection({ book: linkedBook, books, index: linkedIndex, se
       select(target.id);
     }));
   }
-  const previous = index > 0 ? books[index - 1] : undefined;
-  const next = index >= 0 ? books[index + 1] : undefined;
   const preparedJacket = useRef<HTMLImageElement | null>(null);
-  function prepareNextJacket() {
-    const file = next && jacketFor(next)?.file;
+  function prepareJacket(target: ShelfBook | undefined) {
+    const file = target && jacketFor(target)?.file;
     if (!file || !canWarmReader() || preparedJacket.current?.getAttribute("src") === file) return;
     const image = new Image();
     image.fetchPriority = "low";
@@ -66,18 +69,22 @@ export function BookInspection({ book: linkedBook, books, index: linkedIndex, se
   }
   return <Dialog className="book-dialog" title={displayTitle(book.title)} onClose={close} onKeyDown={turnPage}>
     <article key={book.id} className="book-inspection" aria-label={displayTitle(book.title)}
-      onLoad={event => { if (event.target instanceof HTMLImageElement) prepareNextJacket(); }}>
+      onLoad={event => { if (event.target instanceof HTMLImageElement) prepareJacket(direction.current > 0 ? next : previous); }}>
       <div className="inspection-layout">
         <BookPortrait book={book}/>
         <p className="inspection-byline">{book.author}</p>
-        <BookSynopsis id={book.id}/>
+        <BookSynopsis id={book.id} expandedBooks={expandedBooks}/>
         <div className="inspection-imprint"><small>{book.focus}</small><PrintEdition book={book}/>{jacketFor(book)?.custom && <small>Custom library jacket</small>}</div>
       </div>
     </article>
     <nav className="inspect-nav" aria-label="Browse books">
-      <button disabled={!previous} onClick={() => previous && browse(previous)}><ArrowLeft size={15}/>Previous</button>
+      <button disabled={!previous} title={previous && displayTitle(previous.title)}
+        onFocus={() => prepareJacket(previous)} onPointerEnter={e => { if (e.pointerType === "mouse") prepareJacket(previous); }}
+        onClick={() => previous && browse(previous)}><ArrowLeft size={15}/>Previous</button>
       {index >= 0 && <span className="inspection-position" aria-live="polite" aria-atomic="true"><span className="sr-only">{displayTitle(book.title)}, </span>{index + 1} of {books.length}</span>}
-      <button disabled={!next} onClick={() => next && browse(next)}>Next<ArrowRight size={15}/></button>
+      <button disabled={!next} title={next && displayTitle(next.title)}
+        onFocus={() => prepareJacket(next)} onPointerEnter={e => { if (e.pointerType === "mouse") prepareJacket(next); }}
+        onClick={() => next && browse(next)}>Next<ArrowRight size={15}/></button>
     </nav>
   </Dialog>;
 }

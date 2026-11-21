@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cachedNote, readNote } from "./bookNote";
 
-export function BookSynopsis({ id }: { id: string }) {
+export function BookSynopsis({ id, expandedBooks }: { id: string; expandedBooks: Set<string> }) {
   const [note, setNote] = useState(() => cachedNote(id));
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -19,7 +19,10 @@ export function BookSynopsis({ id }: { id: string }) {
   if (!note) return null;
   return <div className="book-synopsis">
     <p className="synopsis-lead">{note.brief}</p>
-    <details>
+    <details open={expandedBooks.has(id)} onToggle={event => {
+      if (event.currentTarget.open) expandedBooks.add(id);
+      else expandedBooks.delete(id);
+    }}>
       <summary><span className="when-closed">Show more</span><span className="when-open">Show less</span><ChevronDown aria-hidden="true" size={14}/></summary>
       <div className="synopsis-body">
         <p>{note.synopsis}</p>

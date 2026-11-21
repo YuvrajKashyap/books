@@ -1,5 +1,5 @@
 import {
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -34,9 +34,11 @@ export function Dialog({
   className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     el?.showModal();
+    // Close while the dialog is still mounted so the browser can return
+    // keyboard focus to the control that opened it.
     return () => el?.close();
   }, []);
   return (
