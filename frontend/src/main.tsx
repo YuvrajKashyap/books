@@ -11,6 +11,8 @@ import "./shelf/room.css";
 import "./library.css";
 
 const OwnerApp = lazy(() => import("./OwnerApp"));
+const measureSynopsis = location.pathname === "/" && new URLSearchParams(location.search).get("measure") === "synopsis";
+if (measureSynopsis) void import("./shelf/measureSynopsis").then(probe => probe.measure());
 
 function sessionMayExist() {
   try {
@@ -30,7 +32,7 @@ function Entry() {
     window.addEventListener("storage", changed);
     return () => window.removeEventListener("storage", changed);
   }, [ownerRoute]);
-  if (!owner && !ownerRoute) return <PublicShelf />;
+  if (!ownerRoute && (!owner || measureSynopsis)) return <PublicShelf />;
   return <Suspense fallback={<div className="loading"><Brand /><p>Opening the reading room…</p></div>}><OwnerApp /></Suspense>;
 }
 
