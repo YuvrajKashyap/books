@@ -22,8 +22,12 @@ export function readNote(id: string, priority: RequestPriority = "auto") {
   return request;
 }
 
-export function warmNote(id: string) {
+export function canWarmReader() {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
-  if (document.hidden || connection?.saveData || connection?.effectiveType?.includes("2g")) return;
+  return !document.hidden && !connection?.saveData && !connection?.effectiveType?.includes("2g");
+}
+
+export function warmNote(id: string) {
+  if (!canWarmReader()) return;
   void readNote(id, "low").catch(() => {});
 }

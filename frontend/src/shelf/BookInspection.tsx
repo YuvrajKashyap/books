@@ -1,11 +1,12 @@
-import { useEffect, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { startTransition, useEffect, useOptimistic, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { flushSync } from "react-dom";
 import { ArrowLeft, ArrowRight, BookOpen, ChevronDown } from "lucide-react";
 import { Dialog, type ShelfBook } from "../components";
 import { Hardcover } from "./Hardcover";
 import { BookSynopsis } from "./BookSynopsis";
 import { PrintEdition } from "./PrintEdition";
 import { displayTitle, jacketFor } from "./artwork";
-import { readNote, warmNote } from "./bookNote";
+import { canWarmReader, readNote, warmNote } from "./bookNote";
 
 function BookPortrait({ book }: { book: ShelfBook }) {
   const [angle, setAngle] = useState(-12);
@@ -25,9 +26,29 @@ function BookPortrait({ book }: { book: ShelfBook }) {
 }
 
 type Props = { book: ShelfBook; books: ShelfBook[]; index: number; select: (id: string) => void; close: () => void };
-export function BookInspection({ book, books, index, select, close }: Props) {
+export function BookInspection({ book: linkedBook, books, index: linkedIndex, select, close }: Props) {
+  const [book, showBook] = useOptimistic(linkedBook);
+  const index = book === linkedBook ? linkedIndex : books.indexOf(book);
+  function browse(target: ShelfBook) {
+    // Commit the reader while handling the button or arrow key. The router
+    // replaces the shareable URL in the same transition.
+    flushSync(() => startTransition(() => {
+      showBook(target);
+      select(target.id);
+    }));
+  }
   const previous = index > 0 ? books[index - 1] : undefined;
   const next = index >= 0 ? books[index + 1] : undefined;
+  const preparedJacket = useRef<HTMLImageElement | null>(null);
+  function prepareNextJacket() {
+    const file = next && jacketFor(next)?.file;
+    if (!file || !canWarmReader() || preparedJacket.current?.getAttribute("src") === file) return;
+    const image = new Image();
+    image.fetchPriority = "low";
+    image.src = file;
+    preparedJacket.current = image;
+    void image.decode().catch(() => {});
+  }
   useEffect(() => {
     let active = true;
     readNote(book.id).then(() => {
@@ -41,10 +62,11 @@ export function BookInspection({ book, books, index, select, close }: Props) {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey ||
         (event.target instanceof HTMLElement && event.target.closest("input,textarea,select,[contenteditable=true]"))) return;
     const target = event.key === "ArrowLeft" ? previous : event.key === "ArrowRight" ? next : undefined;
-    if (target) { event.preventDefault(); select(target.id); }
+    if (target) { event.preventDefault(); browse(target); }
   }
   return <Dialog className="book-dialog" title={displayTitle(book.title)} onClose={close} onKeyDown={turnPage}>
-    <article key={book.id} className="book-inspection" aria-label={displayTitle(book.title)}>
+    <article key={book.id} className="book-inspection" aria-label={displayTitle(book.title)}
+      onLoad={event => { if (event.target instanceof HTMLImageElement) prepareNextJacket(); }}>
       <div className="inspection-layout">
         <BookPortrait book={book}/>
         <p className="inspection-byline">{book.author}</p>
@@ -53,9 +75,9 @@ export function BookInspection({ book, books, index, select, close }: Props) {
       </div>
     </article>
     <nav className="inspect-nav" aria-label="Browse books">
-      <button disabled={!previous} onClick={() => previous && select(previous.id)}><ArrowLeft size={15}/>Previous</button>
+      <button disabled={!previous} onClick={() => previous && browse(previous)}><ArrowLeft size={15}/>Previous</button>
       {index >= 0 && <span className="inspection-position" aria-live="polite" aria-atomic="true"><span className="sr-only">{displayTitle(book.title)}, </span>{index + 1} of {books.length}</span>}
-      <button disabled={!next} onClick={() => next && select(next.id)}>Next<ArrowRight size={15}/></button>
+      <button disabled={!next} onClick={() => next && browse(next)}>Next<ArrowRight size={15}/></button>
     </nav>
   </Dialog>;
 }
