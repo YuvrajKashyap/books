@@ -281,7 +281,35 @@ dialog::backdrop {background:#091912a3}
 .reading-gallery dialog .dialog-head {background:#1d3529;color:#eee2c5;padding:14px 20px;margin:-24px -24px 18px;border-bottom:3px double #bea87b}
 .reading-gallery dialog .dialog-head h2 {font:500 30px/1.1 var(--display);margin:0}
 .reading-gallery dialog .dialog-head .icon {color:#ece1c4;border:1px solid #a59571;background:transparent}
-.reading-gallery .inspect-nav {border-top:3px double #bcae8f}
+.reading-gallery dialog:has(.book-inspection) { width:min(750px,94vw); padding:0; max-height:min(92dvh,850px); overflow:hidden; }
+.reading-gallery dialog[open]:has(.book-inspection) { display:grid; grid-template-rows:auto minmax(0,1fr) auto; }
+.reading-gallery dialog:has(.book-inspection) .dialog-head { margin:0; gap:12px; }
+.reading-gallery dialog:has(.book-inspection) .dialog-head h2 { text-wrap:balance; font-size:clamp(25px,3.4vw,36px); }
+.reading-gallery dialog:has(.book-inspection) .icon { flex-shrink:0; width:44px; height:44px; }
+.book-inspection { overflow-y:auto; overscroll-behavior:contain; padding:clamp(16px,3vw,30px); }
+.inspection-layout {
+  display:grid; grid-template-columns:minmax(130px,.62fr) minmax(0,1.38fr); column-gap:clamp(18px,3vw,34px);
+  grid-template-rows:auto auto auto 1fr; align-items:start;
+  grid-template-areas:"art byline" "art lead" "art note" "art imprint";
+}
+.inspection-portrait { grid-area:art; min-width:0; }
+.book-inspection .inspection-stage { padding:24px 8px; background:radial-gradient(ellipse at 40% 24%,#fffbef,#e9e0cd); border-block:1px solid #d4c6a9; }
+.book-inspection .inspection-volume { width:65%; }
+.portrait-tools summary { display:flex; align-items:center; justify-content:center; gap:4px; min-height:44px; cursor:pointer; color:#52624c; font-size:12px; }
+.portrait-tools summary::-webkit-details-marker { display:none; }
+.portrait-tools[open] summary svg { transform:rotate(180deg); }
+.portrait-tools label { display:grid; gap:3px; font-size:12px; }
+.portrait-tools input,.portrait-tools button { width:100%; min-width:0; min-height:44px; }
+.portrait-tools button { padding:4px; font-size:12px; }
+.book-synopsis { display:contents; }
+.inspection-byline { grid-area:byline; }
+.synopsis-lead,.synopsis-loading { grid-area:lead; }
+.book-synopsis details { grid-area:note; }
+.inspection-imprint { grid-area:imprint; align-self:end; }
+.reading-gallery .inspect-nav { margin:0; padding:6px clamp(12px,3vw,26px); border-top:3px double #bcae8f; background:#f5eedf; }
+.inspect-nav button { min-height:44px; padding:5px 9px; background:transparent; border-color:transparent; }
+.inspection-position { font:italic 500 17px/1 var(--display); color:#665a44; }
+.inspection-position .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
 .book-inspection .inspection-byline {
   margin: 0 0 7px; color: #5f5a48; font-size: 14px;
 }
@@ -306,11 +334,13 @@ dialog::backdrop {background:#091912a3}
 .inspection-imprint { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; color: #68614e; }
 .inspection-imprint :is(small,.edition-link) { margin: 0; font-size: 12px; }
 .book-inspection .synopsis-loading { color: var(--muted); font-size: 14px; }
-@media (max-width: 520px) {
-  .book-inspection .inspection-stage { padding: 16px 10px; }
-  .book-inspection .inspect-controls { margin: 5px 0 12px; gap: 6px; }
-  .book-inspection .inspect-controls input { width: clamp(46px,17vw,84px); }
-  .book-inspection .inspect-controls button { min-height: 44px; padding: 5px 9px; white-space: nowrap; font-size: 13px; }
+@media (max-width: 540px) {
+  .reading-gallery dialog:has(.book-inspection) { width:min(96vw,470px); }
+  .inspection-layout { grid-template-columns:clamp(78px,25vw,115px) minmax(0,1fr); column-gap:14px; grid-template-rows:auto auto auto auto; grid-template-areas:"art byline" "art lead" "note note" "imprint imprint"; }
+  .book-inspection .inspection-byline { align-self:end; }
+  .book-inspection .inspection-volume { width:80%; }
+  .book-inspection .inspection-stage { padding:14px 5px; }
+  .reading-gallery .inspect-nav { padding-bottom:max(6px,env(safe-area-inset-bottom)); }
 }
 @media(min-width:1500px) {
   .reading-gallery {

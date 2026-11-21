@@ -1,15 +1,13 @@
 import { PocketShelf } from "./shelf/PocketShelf";
 import { ScienceStudy } from "./shelf/ScienceStudy";
-import { PrintEdition } from "./shelf/PrintEdition";
-import { BookSynopsis } from "./shelf/BookSynopsis";
+import { BookInspection } from "./shelf/BookInspection";
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import {memo,useCallback,useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
-import {Link,useNavigate,useSearchParams} from 'react-router-dom';
-import {ArrowLeft,ArrowRight,BookOpen,ChevronDown,Search,X,LibraryBig,GalleryVerticalEnd,ListFilter,Check} from 'lucide-react';
-import {Dialog,FocusIcon,type ShelfBook} from './components';
+import {Link,useLocation,useNavigate,useSearchParams} from 'react-router-dom';
+import {ArrowRight,ChevronDown,Search,X,LibraryBig,GalleryVerticalEnd,ListFilter,Check} from 'lucide-react';
+import {FocusIcon,type ShelfBook} from './components';
 import {ShelfPick} from './shelf/ShelfPick';
 import {focuses} from '../../shared/categories';
-import {Hardcover} from './shelf/Hardcover';
 import {bindingDepth,displayTitle,jacketFor} from './shelf/artwork';
 
 const phoneQuery = '(max-width: 700px), (pointer: coarse) and (max-width: 950px) and (max-height: 540px)';
@@ -38,7 +36,8 @@ const BookcaseRow = memo(function BookcaseRow({books,index,covers,turned,turn,op
 export function PublicShelf(){
  const navigate=useNavigate();
  const [books,setBooks]=useState<ShelfBook[]>([]),[state,setState]=useState<'loading'|'ok'|'error'>('loading'),[retry,setRetry]=useState(0),[rows,setRows]=useState(4),[width,setWidth]=useState(()=>window.innerWidth),[turned,setTurned]=useState<string|null>(null);
- const [params,setParams]=useSearchParams(),[opened,setOpened]=useState(false),[angle,setAngle]=useState(-12);
+ const [params,setParams]=useSearchParams();
+ const location=useLocation();
  const sentinel=useRef<HTMLDivElement>(null),search=useRef<HTMLInputElement>(null);
  const query=params.get('q')||'',focus=params.get('category')||'',id=params.get('pick'),selected=books.find(b=>b.id===id);
  useEffect(()=>{const ac=new AbortController();setState('loading');fetch('/api/shelf',{signal:ac.signal}).then(async r=>{if(!r.ok)throw Error();const data=await r.json();setBooks((data.books as ShelfBook[]).sort(shelfOrder));setState('ok')}).catch(()=>{if(!ac.signal.aborted)setState('error')});return()=>ac.abort()},[retry]);
@@ -123,8 +122,21 @@ export function PublicShelf(){
  const visibleBays=bays.slice(0,rows);
  const shown=visibleBays.reduce((sum,bay)=>sum+bay.length,0);
  useEffect(()=>{const el=sentinel.current;if(!el||shown>=matches.length)return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setRows(n=>n+4)},{rootMargin:'500px'});io.observe(el);return()=>io.disconnect()},[shown,matches.length,phone]);
- const param=useCallback((k:string,v:string)=>{const p=new URLSearchParams(window.location.search);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true});if(k!=='pick'){setRows(4);setTurned(null)}setAngle(-12);setOpened(false)},[setParams]);
- const openBook=useCallback((id:string)=>param('pick',id),[param]);
+ const param=useCallback((k:string,v:string)=>{const p=new URLSearchParams(window.location.search);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true,preventScrollReset:true});if(k!=='pick'){setRows(4);setTurned(null)}},[setParams]);
+ const openBook=useCallback((id:string)=>{
+   const search=new URLSearchParams(window.location.search);
+   search.set('pick',id);
+   navigate({search:search.toString()},{state:{fromBookshelf:true},preventScrollReset:true});
+ },[navigate]);
+ function selectBook(id:string) {
+   const search=new URLSearchParams(params);
+   search.set('pick',id);
+   setParams(search,{replace:true,state:location.state,preventScrollReset:true});
+ }
+ function closeBook() {
+   if(location.state?.fromBookshelf) navigate(-1);
+   else param('pick','');
+ }
  const current=matches.findIndex(b=>b.id===id);
  const controls = <div className="shelf-layout-controls">
    <div className="segmented" aria-label="Shelf layout">
@@ -182,20 +194,5 @@ export function PublicShelf(){
  {phone&&<footer className="owner-footnote">Are you Yuvraj? <Link to="/admin">Sign in <ArrowRight size={12}/></Link></footer>}
  {!phone&&<div ref={sentinel} className="catalog-end">{state==='ok'&&<><span>{shown} of {matches.length} titles</span>{shown<matches.length?<button onClick={()=>setRows(n=>n+4)}>Load next shelves</button>:<a href="#bookcase">Back to the first shelf ↑</a>}</>}</div>}
  {!phone&&state==='ok'&&subjectIndex}</main>
- {selected && <Dialog title={displayTitle(selected.title)} onClose={() => param('pick','')}>
-   <div className="book-inspection">
-     <div className="inspection-stage"><div className="inspection-volume" style={{'--turn':angle+'deg'} as CSSProperties}><Hardcover book={selected} opened={opened}/></div></div>
-     <div className="inspect-controls">
-       <label>Rotate<input type="range" aria-label="Rotate book" min="-100" max="100" value={angle} onChange={e=>setAngle(Number(e.target.value))}/></label>
-       <button onClick={()=>{setAngle(-7);setOpened(!opened)}}><BookOpen size={14}/>{opened?'Close cover':'Open cover'}</button>
-     </div>
-     <p className="inspection-byline">{selected.author}</p>
-     <BookSynopsis key={selected.id} id={selected.id}/>
-     <div className="inspection-imprint"><small>{selected.focus}</small><PrintEdition book={selected}/>{jacketFor(selected)?.custom&&<small>Custom library jacket</small>}</div>
-     <div className="inspect-nav">
-       <button disabled={current<=0} onClick={()=>param('pick',matches[current-1].id)}><ArrowLeft size={15}/>Previous</button>
-       <button disabled={current<0||current+1>=matches.length} onClick={()=>param('pick',matches[current+1].id)}>Next<ArrowRight size={15}/></button>
-     </div>
-   </div>
- </Dialog>}</div>
+ {selected && <BookInspection book={selected} books={matches} index={current} select={selectBook} close={closeBook}/>}</div>
 }

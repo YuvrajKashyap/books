@@ -23,11 +23,13 @@ export function Dialog({
   onClose,
   children,
   drawer = false,
+  onKeyDown,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   drawer?: boolean;
+  onKeyDown?: React.KeyboardEventHandler<HTMLDialogElement>;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -39,6 +41,7 @@ export function Dialog({
     <dialog
       ref={ref}
       aria-label={title}
+      onKeyDown={onKeyDown}
       className={drawer ? "drawer" : ""}
       onCancel={(e) => {
         e.preventDefault();
