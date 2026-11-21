@@ -4,6 +4,7 @@ import type { ShelfBook } from "../components";
 import { bindingDepth, displayTitle, jacketFor, smallShelfCover } from "./artwork";
 import { useRailDrag } from "./useRailDrag";
 import { BoundVolume } from "./BoundVolume";
+import { warmNote } from "./bookNote";
 
 const gutter = 3;
 const pad = 130;
@@ -169,7 +170,7 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
         <button className="volume-pick" aria-label={(face ? "Open details for " : "Turn to cover of ") + title + " by " + book.author}
           onClick={() => {
             if (face) open(book.id);
-            else { requestCenter.current = i; setTurned(book.id); }
+            else { warmNote(book.id); requestCenter.current = i; setTurned(book.id); }
           }}>
           <span className="pocket-scale"><BoundVolume book={book} showJacket={face} preview={!covers && face}/></span>
         </button>

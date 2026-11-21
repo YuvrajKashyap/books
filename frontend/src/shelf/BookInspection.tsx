@@ -1,10 +1,11 @@
-import { useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useEffect, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, ChevronDown } from "lucide-react";
 import { Dialog, type ShelfBook } from "../components";
 import { Hardcover } from "./Hardcover";
 import { BookSynopsis } from "./BookSynopsis";
 import { PrintEdition } from "./PrintEdition";
 import { displayTitle, jacketFor } from "./artwork";
+import { readNote, warmNote } from "./bookNote";
 
 function BookPortrait({ book }: { book: ShelfBook }) {
   const [angle, setAngle] = useState(-12);
@@ -27,13 +28,22 @@ type Props = { book: ShelfBook; books: ShelfBook[]; index: number; select: (id: 
 export function BookInspection({ book, books, index, select, close }: Props) {
   const previous = index > 0 ? books[index - 1] : undefined;
   const next = index >= 0 ? books[index + 1] : undefined;
+  useEffect(() => {
+    let active = true;
+    readNote(book.id).then(() => {
+      if (!active) return;
+      if (next) warmNote(next.id);
+      if (previous) warmNote(previous.id);
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [book.id, next, previous]);
   function turnPage(event: KeyboardEvent<HTMLDialogElement>) {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey ||
         (event.target instanceof HTMLElement && event.target.closest("input,textarea,select,[contenteditable=true]"))) return;
     const target = event.key === "ArrowLeft" ? previous : event.key === "ArrowRight" ? next : undefined;
     if (target) { event.preventDefault(); select(target.id); }
   }
-  return <Dialog title={displayTitle(book.title)} onClose={close} onKeyDown={turnPage}>
+  return <Dialog className="book-dialog" title={displayTitle(book.title)} onClose={close} onKeyDown={turnPage}>
     <article key={book.id} className="book-inspection" aria-label={displayTitle(book.title)}>
       <div className="inspection-layout">
         <BookPortrait book={book}/>

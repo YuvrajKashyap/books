@@ -5,12 +5,12 @@ const requests = new Map<string, Promise<Note | null>>();
 
 export const cachedNote = (id: string) => notes.get(id);
 
-export function readNote(id: string) {
+export function readNote(id: string, priority: RequestPriority = "auto") {
   const cached = notes.get(id);
   if (cached !== undefined) return Promise.resolve(cached);
   const pending = requests.get(id);
   if (pending) return pending;
-  const request = fetch(__BOOK_NOTES_PATH__ + encodeURIComponent(id) + ".json")
+  const request = fetch(__BOOK_NOTES_PATH__ + encodeURIComponent(id) + ".json", { priority })
     .then(async response => {
       if (!response.ok && response.status !== 404) throw new Error("Synopsis unavailable");
       const note: Note | null = response.ok ? await response.json() : null;
@@ -20,4 +20,10 @@ export function readNote(id: string) {
     .finally(() => requests.delete(id));
   requests.set(id, request);
   return request;
+}
+
+export function warmNote(id: string) {
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  if (document.hidden || connection?.saveData || connection?.effectiveType?.includes("2g")) return;
+  void readNote(id, "low").catch(() => {});
 }

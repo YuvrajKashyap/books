@@ -1,12 +1,6 @@
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import { ContinuousShelf, ShelfSpine } from "./shelf/ContinuousShelf";
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
-import {
-  getCoreRowModel,
-  useReactTable,
-  flexRender,
-  type ColumnDef,
-} from "@tanstack/react-table";
+import { lazy, Suspense, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -24,7 +18,6 @@ import {
   statuses,
   initialView,
   completed,
-  bookFields,
   type Book,
   type View,
 } from "../../shared/model";
@@ -51,91 +44,8 @@ type Props = {
   open: (id: string) => void;
   mutate: Mutate;
 };
-function Table({
-  books,
-  view,
-  open,
-  mutate,
-}: Pick<Props, "books" | "view" | "open" | "mutate">) {
-  const defs: ColumnDef<Book>[] = [
-    {
-      accessorKey: "title",
-      header: "Book",
-      cell: (c) => (
-        <button className="tabletitle" onClick={() => open(c.row.original.id)}>
-          {c.row.original.title}
-        </button>
-      ),
-    },
-    ...columns.map((k) => ({
-      accessorKey: k,
-      header: labels[k],
-      cell: ({ row }: { row: { original: Book } }) => {
-        const b = row.original,
-          value = b[k];
-        if (k === "status")
-          return (
-            <select
-              aria-label={"Status for " + b.title}
-              value={b.status}
-              onChange={(e) =>
-                mutate({
-                  op: "save",
-                  id: b.id,
-                  book: { ...bookFields.parse(b), status: e.target.value },
-                })
-              }
-            >
-              {statuses.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-          );
-        return value === null || value === ""
-          ? "—"
-          : k === "progress"
-            ? value + "%"
-            : String(value);
-      },
-    })),
-  ];
-  const table = useReactTable({
-    data: books,
-    columns: defs,
-    getCoreRowModel: getCoreRowModel(),
-    state: {
-      columnVisibility: Object.fromEntries(view.hidden.map((k) => [k, false])),
-    },
-  });
-  return (
-    <div className="table-wrap">
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((g) => (
-            <tr key={g.id}>
-              {g.headers.map((h) => (
-                <th key={h.id}>
-                  {flexRender(h.column.columnDef.header, h.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.original.id}>
-              {row.getVisibleCells().map((c) => (
-                <td key={c.id}>
-                  {flexRender(c.column.columnDef.cell, c.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+const loadTable = () => import("./LibraryTable");
+const LibraryTable = lazy(loadTable);
 export function Collection({
   books,
   view,
@@ -214,6 +124,8 @@ export function Collection({
               <button
                 key={key}
                 aria-pressed={view.layout === key}
+                onFocus={key === "table" ? () => { void loadTable().catch(() => {}); } : undefined}
+                onPointerEnter={key === "table" ? e => { if (e.pointerType === "mouse") void loadTable().catch(() => {}); } : undefined}
                 onClick={() => update({ layout: key })}
               >
                 <Icon size={15} />
@@ -298,7 +210,9 @@ export function Collection({
               <ContinuousShelf key={JSON.stringify([view.query, view.focus, view.sort, view.layout, view.status])}
                 label={g} books={group} covers={view.layout === "shelf"} turned={turned} turn={setTurned} open={open}/>
             ) : view.layout === "table" ? (
-              <Table books={visible} view={view} open={open} mutate={mutate} />
+              <Suspense fallback={<p role="status">Opening table…</p>}>
+                <LibraryTable books={visible} view={view} open={open} mutate={mutate} labels={labels}/>
+              </Suspense>
             ) : view.layout === "spines" ? (
               <div className="owner-rack">
                 {visible.map((book, index) => <ShelfSpine key={book.id} book={book} selected={turned === book.id}

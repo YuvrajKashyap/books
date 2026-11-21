@@ -1,6 +1,7 @@
 import { PocketShelf } from "./shelf/PocketShelf";
 import { ScienceStudy } from "./shelf/ScienceStudy";
 import { BookInspection } from "./shelf/BookInspection";
+import { readNote, warmNote } from "./shelf/bookNote";
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import {memo,useCallback,useEffect,useMemo,useRef,useState,type CSSProperties} from 'react';
 import {Link,useLocation,useNavigate,useSearchParams} from 'react-router-dom';
@@ -12,6 +13,7 @@ import {bindingDepth,displayTitle,jacketFor} from './shelf/artwork';
 
 const phoneQuery = '(max-width: 700px), (pointer: coarse) and (max-width: 950px) and (max-height: 540px)';
 const frontRow=['Shoe Dog','Atomic Habits','A Brief History of Time','Meditations','Deep Work','The Daily Laws','Poor Charlie\'s Almanack'];
+const titleOrder = new Intl.Collator("en", { numeric: true });
 function shelfOrder(a:ShelfBook,b:ShelfBook){const rank=(x:ShelfBook)=>{const i=frontRow.indexOf(x.title);return i<0?100:i};return rank(a)-rank(b)||a.title.localeCompare(b.title)}
 type RowProps = {
   books: ShelfBook[]; index: number; covers: boolean; turned: string | null;
@@ -26,7 +28,7 @@ const BookcaseRow = memo(function BookcaseRow({books,index,covers,turned,turn,op
         return <div className={'volume-slot'+(revealed?' is-turned':'')} key={b.id}
           style={{'--slot':bindingDepth(b)+'px'} as CSSProperties}>
           <ShelfPick book={b} faceOut={covers || revealed} exposedEnd={position === books.length - 1}
-            pick={()=>covers || revealed ? open(b.id) : turn(b.id)} reshelve={()=>turn(null)}/>
+            pick={()=>{ if (covers || revealed) open(b.id); else { warmNote(b.id); turn(b.id); } }} reshelve={()=>turn(null)}/>
           {revealed&&<button className="volume-return" aria-label={'Reshelve '+title} onClick={()=>turn(null)}>Reshelve</button>}
         </div>;
       })}
@@ -92,7 +94,7 @@ export function PublicShelf(){
  },[searchResults]);
  const matches=useMemo(()=>{
    const found=searchResults.filter(b=>!focus||b.focus===focus);
-   const byTitle=(a:ShelfBook,b:ShelfBook)=>displayTitle(a.title).localeCompare(displayTitle(b.title),'en',{numeric:true});
+   const byTitle=(a:ShelfBook,b:ShelfBook)=>titleOrder.compare(displayTitle(a.title),displayTitle(b.title));
    if(sort==='title') found.sort(byTitle);
    if(sort==='author') found.sort((a,b)=>a.author.localeCompare(b.author,'en')||byTitle(a,b));
    if(sort==='short'||sort==='long') found.sort((a,b)=>{
@@ -124,6 +126,7 @@ export function PublicShelf(){
  useEffect(()=>{const el=sentinel.current;if(!el||shown>=matches.length)return;const io=new IntersectionObserver(([e])=>{if(e.isIntersecting)setRows(n=>n+4)},{rootMargin:'500px'});io.observe(el);return()=>io.disconnect()},[shown,matches.length,phone]);
  const param=useCallback((k:string,v:string)=>{const p=new URLSearchParams(window.location.search);if(v)p.set(k,v);else p.delete(k);setParams(p,{replace:true,preventScrollReset:true});if(k!=='pick'){setRows(4);setTurned(null)}},[setParams]);
  const openBook=useCallback((id:string)=>{
+   void readNote(id).catch(() => {});
    const search=new URLSearchParams(window.location.search);
    search.set('pick',id);
    navigate({search:search.toString()},{state:{fromBookshelf:true},preventScrollReset:true});
