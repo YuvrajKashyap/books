@@ -1,1142 +1,1368 @@
 {
   "$100M Money Models|Alex Hormozi": {
+    "id": "077f0196a69b74a2f35b32522f20c3dc",
     "brief": "What happens to cash between a customer's first purchase and their next one?",
     "synopsis": "Hormozi arranges offers in the order a customer encounters them. He works through introductory deals, upgrades and recurring purchases to show how two businesses with the same product can collect cash at very different speeds.",
     "author": "Alex Hormozi built Gym Launch with his wife, Leila. Paying to acquire gym customers before their fees came in made the timing of cash a practical concern."
   },
   "100M Leads|Alex Hormozi": {
+    "id": "56e9975e5c3566e66f9e12b35057764e",
     "brief": "A field guide to finding people who might actually buy.",
     "synopsis": "Hormozi follows a lead from first contact to a sales conversation. He separates work a founder can do personally, such as contacting former customers, from advertising or referrals that can reach strangers.",
     "author": "Alex Hormozi first had to fill his own gyms. Later he sold other gym owners a system for doing the same, which gave him a second market in which to test his methods."
   },
   "100M Offers|Alex Hormozi": {
+    "id": "74b00d9f0be64ca299c8479608679293",
     "brief": "How to put together an offer a customer can judge before buying.",
     "synopsis": "Price is only one part of Hormozi's calculation. He asks what result a buyer wants, how soon they expect it and how much risk they carry if the product disappoints.",
     "author": "Before co-founding Acquisition.com, Alex Hormozi sold customer-acquisition programs to gym owners. His running examples come from selling a result that owners could measure in memberships."
   },
   "12 Rules for Life|Jordan B. Peterson": {
+    "id": "11d568848a91338fe1168c986851ca14",
     "brief": "Peterson uses twelve everyday rules to ask what a person owes themselves and other people.",
     "synopsis": "Advice about posture or telling the truth leads into discussions of resentment, responsibility and suffering. Peterson moves between clinical anecdotes, biblical stories and his own family life.",
     "author": "Jordan Peterson practiced clinical psychology and taught psychology at the University of Toronto. An early version of the rules appeared in an answer he wrote on Quora."
   },
   "33 Strategies of War|Robert Greene": {
+    "id": "c7d49e35a117c5d9194da4cf68a7a54b",
     "brief": "Military history becomes a set of studies in timing, morale and misjudgment.",
     "synopsis": "Greene takes apart campaigns to examine how commanders read an opponent, lose control of a coalition or spend resources they cannot replace. He then draws parallels with civilian conflicts.",
     "author": "Robert Greene had already used historical episodes to examine power and seduction. Here the unit of study is a campaign, where one decision changes the choices available later."
   },
   "48 Laws of Power|Robert Greene": {
+    "id": "a8723855eee37d9aac662bb5313f6030",
     "brief": "Forty-eight lessons in how people gain influence and lose it.",
     "synopsis": "Greene pairs episodes from courts and political life with his reading of the tactics involved. The gap between what a ruler says publicly and what an adviser can safely say in private runs through the book.",
     "author": "Robert Greene developed the book with book producer Joost Elffers. Historical anecdotes gave him a way to write about power at work without relying on contemporary office stories."
   },
   "5 Types of People Who Can Ruin Your Life|Bill Eddy": {
+    "id": "e09c40a4615ff87a095db4bde0a4043b",
     "brief": "Eddy describes recurring patterns in disputes that escalate whatever the other person does.",
     "synopsis": "The book follows five high-conflict personality patterns and the behavior a reader can observe. Its practical sections concern boundaries, communication and deciding when to seek help.",
     "author": "Bill Eddy has worked as a family lawyer, mediator and clinical social worker. He wrote for people who find themselves in a dispute without the tools available to a professional mediator."
   },
   "50 Scientifically Proven Ways to be Persuasive|Noah J. Goldstein, Steve J. Martin & Robert Cialdini": {
+    "id": "a8c204a1ac6db6d8df5b8a281122a25d",
     "brief": "Small changes in a request can change how people answer it.",
     "synopsis": "Fifty short cases examine persuasion in everyday settings. One hotel study asks whether guests reuse more towels when a notice describes what earlier guests actually did.",
     "author": "Social psychologists Noah Goldstein and Robert Cialdini worked with persuasion practitioner Steve Martin to translate research findings into decisions a reader might face at work."
   },
   "7 Strategies for Wealth & Happiness|Jim Rohn": {
+    "id": "cb9851bf57315021bf159b0e7967141a",
     "brief": "Rohn treats keeping a journal and keeping accounts as related habits.",
     "synopsis": "The seven strategies connect personal goals with the way a person spends money and time. Rohn asks readers to put their intentions on paper so they can compare them with what they actually did.",
     "author": "Jim Rohn made his career giving business seminars. The book keeps the direct, exercise-based form of advice he delivered to those audiences."
   },
   "A Brief History of Time|Stephen Hawking": {
+    "id": "e7a4028ca80465f194c7c4cbbcaa3bd5",
     "brief": "What can black holes tell us about the beginning of time?",
     "synopsis": "Hawking builds from familiar ideas of space and motion toward an uneasy meeting between gravity and quantum mechanics. Black holes give him a place where both theories have something to say.",
     "author": "Stephen Hawking studied cosmology and black holes at Cambridge. He wrote for readers curious about the questions physicists ask who did not have the mathematics to read the research papers."
   },
   "A Causal Test of the Strength of Weak Ties|Science / LinkedIn study": {
+    "id": "9dc84316d0ba55625086380ad08bd7cc",
     "brief": "A LinkedIn experiment asks which acquaintances help people find new jobs.",
     "synopsis": "Researchers examined changes to the people LinkedIn recommended as contacts and tracked subsequent job moves. Moderately weak ties proved especially useful on some measures, and the pattern differed across industries.",
     "author": "Karthik Rajkumar and his coauthors used randomized variations in LinkedIn's recommendation system. That design helped them distinguish a connection's effect from the tendency of similar people to meet.",
     "source": "https://pubmed.ncbi.nlm.nih.gov/36107999/"
   },
   "A Happy Pocket Full Of Money|David Cameron Gikandi": {
+    "id": "071dd4f021bcb500d7382db74c8c408d",
     "brief": "Gikandi approaches wealth as a question of attention and belief.",
     "synopsis": "The book asks readers to examine what they imagine when they think about money. Its exercises in visualization come from a spiritual account of abundance and draw analogies with quantum physics.",
     "author": "David Cameron Gikandi wrote this as a work of spiritual self-help. The physics references are part of his philosophical argument about belief and prosperity."
   },
   "A Hitchhiker’s Guide to the Galaxy|Douglas Adams": {
+    "id": "4b2ca30778313539466b71389fa42416",
     "brief": "Arthur Dent leaves Earth just before a demolition crew destroys it.",
     "synopsis": "His friend Ford Prefect turns out to be a researcher for an interstellar travel guide. Hitching a ride puts Arthur in a universe where bureaucracy travels farther than human common sense.",
     "author": "Douglas Adams first wrote the story as a BBC radio comedy. The disembodied narrator and the guidebook entries survived the move to print."
   },
   "A Random Walk Down Wallstreet|Burton G. Malkiel": {
+    "id": "4d71f545f7d3a8bb18bf9ad86c9949cd",
     "brief": "Malkiel asks how much an investor can learn from yesterday's stock prices.",
     "synopsis": "He puts chart reading and company analysis alongside the evidence for index investing. Historical bubbles give him cases where a persuasive story and a sound price were very different things.",
     "author": "Burton Malkiel was a Princeton economist when the book first appeared in 1973. He made the case for a low-cost market portfolio before ordinary investors could readily buy one."
   },
   "A Short History of Nearly Everything|Bill Bryson": {
+    "id": "2ffae8f17452a5c36fa6265639ca67de",
     "brief": "Bryson follows the people who worked out how old the Earth is and what it is made of.",
     "synopsis": "The narrative moves across geology, physics and biology through the instruments, rivalries and accidents behind the discoveries. A measurement often starts with someone noticing that the accepted answer cannot quite work.",
     "author": "Travel writer Bill Bryson wanted to understand the science that school textbooks had made seem settled and remote. He interviewed scientists and visited the places where they worked."
   },
   "AI Engineering|Chip Huyen": {
+    "id": "aae8fd87fab6c0913bd05c156beee5e3",
     "brief": "A guide to building software around models that can give a different answer on every run.",
     "synopsis": "Huyen follows a foundation-model application through evaluation, retrieval and deployment. The hard question comes early. What evidence would show that a new answer is better than the last one?",
     "author": "Chip Huyen has built machine-learning systems and taught machine learning systems design at Stanford. She wrote this book as pretrained models were changing what an application team had to build itself."
   },
   "Activate Your Brain|Scott G. Halford": {
+    "id": "e15c08399446f825eb82e0edcb59710d",
     "brief": "Halford connects everyday work habits with what happens to attention under stress.",
     "synopsis": "He explores how threat, reward and rest affect a working day. The exercises ask readers to change a concrete condition, such as leaving room to recover between demanding tasks.",
     "author": "Scott Halford works with leaders on communication and performance. He wrote the book to bring ideas from behavioral science into the kinds of decisions his workshop participants faced."
   },
   "Algorithms to Live by|Brian Christian & Tom Griffiths": {
+    "id": "83ee289855c81ff89f5f7cff93f24262",
     "brief": "Computer science offers a surprisingly practical way to think about when to stop looking.",
     "synopsis": "An apartment search introduces optimal stopping. A cluttered desk introduces caching. The authors show what an algorithm assumes before asking whether it belongs in a human decision.",
     "author": "Brian Christian writes about computing and human judgment. Tom Griffiths studies how people learn and make decisions, a question he approaches with computational models."
   },
   "Antifragile|Nassim Nicholas Taleb": {
+    "id": "ccda11d2fee8b410bad9e5a4c5fcff7c",
     "brief": "Why do some things improve when exposed to disorder?",
     "synopsis": "Taleb distinguishes things that survive a shock from things that gain from it. He examines small experiments, spare capacity and arrangements where the upside of an error differs from its cost.",
     "author": "Nassim Nicholas Taleb spent years trading options, where exposure to a price change matters as much as the price itself. That asymmetry shapes his account of uncertainty."
   },
   "Art of War|Sun Tzu": {
+    "id": "2ae295978a2757b175d7b24c96ae0c9e",
     "brief": "An ancient Chinese treatise on winning a conflict at the lowest possible cost.",
     "synopsis": "The text examines terrain, intelligence and the condition of both armies before battle. Some of its sharpest passages concern the commander who sees no reason to fight at all.",
     "author": "Tradition attributes the text to Sun Tzu. Its exact authorship and date remain uncertain, and the surviving work belongs to the military literature of ancient China."
   },
   "As We Speak|Peter Meyers & Shann Nix": {
+    "id": "815ac77114816f1dc1ab7488045e0d27",
     "brief": "A speaking coach's guide to what an audience actually hears.",
     "synopsis": "Meyers and Nix divide the work of speaking between content, delivery and the state of mind a speaker brings into the room. A well-written speech can still fail if listeners cannot follow its movement.",
     "author": "Peter Meyers trained performers and public speakers. Journalist and broadcaster Shann Nix brought experience speaking to people who could turn the dial at any moment."
   },
   "As a Man Thinketh|James Allen": {
+    "id": "c75ee2994c401633ddf48bd1beb804df",
     "brief": "Allen uses the image of a garden to describe the thoughts a person tends.",
     "synopsis": "This short essay follows his belief that repeated patterns of thought shape character and conduct. It belongs to the moral self-culture tradition of the early twentieth century.",
     "author": "James Allen was an English essayist. He published this little book in 1903, long before habit formation became a subject of popular behavioral science."
   },
   "Atomic Habits|James Clear": {
+    "id": "841781f20af8660b08eb7f73db7d0388",
     "brief": "Clear explains how to make a small habit easier to repeat tomorrow.",
     "synopsis": "A habit begins with a cue and ends with a reward. Clear uses that sequence to show why leaving a guitar on a stand can change practice more reliably than a fresh promise to practise.",
     "author": "James Clear developed the book through years of writing about habits. His account of rebuilding routines after a severe baseball injury gives the opening chapter its personal stakes."
   },
   "Bad Blood|John Carreyrou": {
+    "id": "0e853cc24db7462c482efb145470f680",
     "brief": "Inside Theranos, a blood-testing promise outgrew the machine meant to deliver it.",
     "synopsis": "Employees, patients and investors saw different pieces of the company. Carreyrou traces how secrecy kept them apart and how former staff helped establish what the technology could actually do.",
     "author": "John Carreyrou broke the Theranos investigation for The Wall Street Journal in 2015. The book gave him room to reconstruct events that preceded his first story."
   },
   "Becoming Steve Jobs|Brent Schlender & Rick Tetzeli": {
+    "id": "ec4561939db9e6e43f608b48b5d89127",
     "brief": "How did the young executive pushed out of Apple become the person who led its return?",
     "synopsis": "The authors spend time in the intervening years at NeXT and Pixar. Those companies let them trace changes in Jobs's judgment and the people he learned to trust.",
     "author": "Brent Schlender covered Jobs for decades and interviewed him repeatedly. Rick Tetzeli joined him in revisiting that reporting and speaking to people who had worked closely with Jobs."
   },
   "Beyond Order|Jordan B. Peterson": {
+    "id": "6c88090fc5503ce9ee8f15e4c0d85a35",
     "brief": "Twelve further rules about what happens when familiar routines stop helping.",
     "synopsis": "Peterson takes up the dangers of excessive order, including avoiding necessary conflict and taking refuge in ideology. Clinical stories and readings of myths supply much of the argument.",
     "author": "Jordan Peterson wrote this follow-up after the public reception of his first rules book. The writing period also included serious illness in his family and his own prolonged health crisis."
   },
   "Black Swan|Nassim Nicholas Taleb": {
+    "id": "6d3515deda36c9cc29efc16c87e08825",
     "brief": "Taleb asks why the events that change history most are so easy to explain afterward.",
     "synopsis": "A rare event arrives outside the range of ordinary expectations. Once it happens, people assemble a story that makes it sound predictable. Taleb examines what that habit costs forecasters and investors.",
     "author": "Nassim Nicholas Taleb traded derivatives before writing about probability for a general audience. In that work, a single extreme trading day could undo years of apparently reliable results."
   },
   "Blitzscaling|Reid Hoffman & Chris Yeh": {
+    "id": "21882551451a86fa7102a7a113f788ff",
     "brief": "When does it make sense for a young company to grow faster than it can organize itself?",
     "synopsis": "Hoffman and Yeh examine companies racing to claim a market before a rival does. They trace the point at which the habits that helped a small team move quickly begin to fail.",
     "author": "Reid Hoffman co-founded LinkedIn and invested in startups. Chris Yeh worked with early-stage companies, and the two developed these ideas in a Stanford course."
   },
   "Born to Win|Zig Ziglar": {
+    "id": "b5a81c34b4f264deaaa6001b0e44821b",
     "brief": "Ziglar starts with planning for a win, then asks how a person prepares for it.",
     "synopsis": "Goals become a set of daily commitments. The book pays attention to the gap between wanting a particular outcome and having done enough preparation to expect it.",
     "author": "Motivational speaker Zig Ziglar drew on his sales and speaking career. His son Tom worked with him on this account of the methods they taught."
   },
   "Built to Sell|John Warrillow": {
+    "id": "16b794713e5b28768727950315ea06a8",
     "brief": "Could a buyer run your business after you walked away?",
     "synopsis": "In Warrillow's business fable, an agency owner wants to sell a company whose clients still depend on him personally. Turning one repeatable service into a product changes what a buyer is willing to pay for.",
     "author": "John Warrillow built and sold businesses before studying what made other owners' firms transferable. He chose a fictional agency so readers could follow a sale from the owner's side."
   },
   "Burn the Boats|Matt Higgins": {
+    "id": "a80f4991f78229cdaba7f0d246ddabde",
     "brief": "Higgins asks when keeping an escape route makes a commitment harder to honor.",
     "synopsis": "He revisits decisions in which a fallback plan quietly absorbed time and attention. His cases include entrepreneurs as well as episodes from his own education and career.",
     "author": "Matt Higgins grew up in poverty in Queens, left high school and later became a sports executive and investor. Those early choices give his argument about commitment a personal history."
   },
   "Business Habits that Drive High Performance|Jon R. Katzenbach, James Thomas & Gretchen Anderson": {
+    "id": "2b98fd8f259f0c0ded3f70b931381bdf",
     "brief": "Which everyday behaviors give a workplace its character?",
     "synopsis": "This shelf title points toward the authors' work on organizational culture. Their published book The Critical Few asks managers to choose a small number of observable behaviors and find the colleagues others already follow.",
     "author": "Jon Katzenbach, James Thomas and Gretchen Anderson worked on organizational culture at the Katzenbach Center. The exact publication behind this catalogue title is uncertain.",
     "source": "https://www.oreilly.com/library/view/the-critical-few/9781523098743/xhtml/title.html"
   },
   "Business Model Generation|Alexander Osterwalder & Yves Pigneur": {
+    "id": "7a4055be5875cbc51627efeed1e08d4d",
     "brief": "A business model drawn on one page makes its assumptions easier to argue about.",
     "synopsis": "The Business Model Canvas puts customers, costs and revenue alongside partners and activities. The authors use worked examples to show what else must change when one part of a business changes.",
     "author": "Alexander Osterwalder developed the underlying framework through doctoral research supervised by Yves Pigneur. Practitioners contributed examples as the two turned it into a handbook."
   },
   "Buy Back Your Time|Dan Martell": {
+    "id": "03bee9721abc49a67fff1afb2fea7e0b",
     "brief": "Martell asks founders to look at their calendar before deciding whom to hire.",
     "synopsis": "He starts with a time audit and follows the work an owner hands off. Documenting a task only pays off if someone else can actually do it without sending every decision back.",
     "author": "Dan Martell founded software companies and later coached other founders. The book addresses a problem he encountered even in growing companies whose owners could afford help."
   },
   "Can’t Hurt Me|David Goggins": {
+    "id": "f4f2a8e86cb7e8e395c9d3d22ed1541c",
     "brief": "Goggins recounts the training, failures and endurance races through which he remade his life.",
     "synopsis": "A difficult childhood and repeated setbacks precede his military training. Each chapter pairs a particular episode with a challenge drawn from the way he responded to it.",
     "author": "David Goggins became a Navy SEAL and an ultradistance athlete. He wrote from the unusual position of having failed portions of training before eventually completing them."
   },
   "Capital Returns|Edward Chancellor": {
+    "id": "1077db8e609a63c71df0a1cec15ca5c0",
     "brief": "An industry's profits can begin to fall just when its prospects look brightest.",
     "synopsis": "Marathon Asset Management's investment letters follow capital into popular industries and back out of neglected ones. New factories and fresh competition can destroy the margins that attracted investors in the first place.",
     "author": "Financial historian Edward Chancellor edited the collection. The investment arguments are the work of Marathon's managers, written as they assessed businesses for their portfolios."
   },
   "Cashvertising|Drew Eric Whitman": {
+    "id": "84a2dc3b223160cf980696c1f370a1ae",
     "brief": "Whitman takes an advertisement apart to see what earns a reader's next few seconds.",
     "synopsis": "The book examines headlines, proof and the reasons a buyer might hesitate. Its examples come from direct response, where an advertiser can count the orders a piece of copy produces.",
     "author": "Drew Eric Whitman trained advertisers and wrote direct-response copy. He organized the book around choices a copywriter can make on the page."
   },
   "Chinas Super Consumers|Savio Chan & Michael Zakkour": {
+    "id": "7ccb81c40511eaec05fd7be47d36d6f0",
     "brief": "What happens when a Chinese shopper encounters a foreign brand at home and abroad?",
     "synopsis": "Chan and Zakkour examine changing household expectations, shopping habits and the meanings attached to brands. They write for businesses trying to understand a market that varies considerably by region and customer.",
     "author": "Savio Chan and Michael Zakkour advised companies doing business in China. Their account grew out of work connecting Chinese consumers with international retailers."
   },
   "Company of One|Paul Jarvis": {
+    "id": "abd0ac346240e98ec56ab6b6f7d0174d",
     "brief": "Jarvis asks what a business owner gains by staying small on purpose.",
     "synopsis": "He examines decisions about staffing, recurring costs and how much revenue counts as enough. Growth becomes a choice with a price the owner can calculate.",
     "author": "Paul Jarvis ran an independent design business. The book came out of his experience making a living from client work without building a conventional agency."
   },
   "Confessions of an Advertising Man|David Ogilvy": {
+    "id": "9a80e57a8a3236257af9b5214343db45",
     "brief": "Ogilvy describes how he found clients and built an advertising agency they would keep.",
     "synopsis": "Alongside advice on headlines and research are chapters on running the office and handling an account. A bad relationship with a client can ruin an otherwise good campaign.",
     "author": "David Ogilvy published the book in 1963, while running the agency he founded on Madison Avenue. Earlier jobs in sales and audience research shaped his interest in evidence."
   },
   "Content Inc.|Joe Pulizzi": {
+    "id": "d02f264f31e3942fba586fd3ce78d26c",
     "brief": "Pulizzi starts a business with a readership and asks what it might eventually sell.",
     "synopsis": "The method begins with a narrow subject and a dependable publishing schedule. Revenue comes later, once the publisher knows who keeps coming back and why.",
     "author": "Joe Pulizzi founded the Content Marketing Institute. His own trade publication and events business supplied a working example of the sequence he describes."
   },
   "Copywriting Secrets|Jim Edwards": {
+    "id": "8cb559aafee49d35a101362717c26de2",
     "brief": "Edwards shows how to write sales copy when you have a product and a blank page.",
     "synopsis": "He works through promises, headlines and objections in the order a potential buyer encounters them. The exercises ask the seller to name what a customer would gain in ordinary language.",
     "author": "Jim Edwards sold products online and taught entrepreneurs to write their own copy. He wrote this for business owners who normally have to do the selling themselves."
   },
   "Courage Is Calling|Ryan Holiday": {
+    "id": "cf9d971dbfe78fac2f2b31886501ee9c",
     "brief": "Holiday examines the moment someone decides to act despite a foreseeable cost.",
     "synopsis": "Historical episodes let him distinguish an initial act of courage from the work of sustaining it. He pays particular attention to fear of public disapproval.",
     "author": "Ryan Holiday writes popular books on Stoicism. This volume opened his series on the four classical virtues, with courage as the first subject."
   },
   "Cryptoassets|Chris Burniske & Jack Tatar": {
+    "id": "efc80a85e5d106b491f03a15b97bb6eb",
     "brief": "A framework for examining a digital asset as an investor.",
     "synopsis": "Burniske and Tatar distinguish different kinds of cryptoassets and ask what could give each one value. They place the early trading history beside questions of custody, risk and portfolio construction.",
     "author": "Chris Burniske worked on cryptoasset research at ARK Invest. Jack Tatar brought a financial adviser's perspective to a book written while the asset class was still young."
   },
   "Deep Work|Cal Newport": {
+    "id": "129610066cf6572b734aa5dc9c992c49",
     "brief": "Newport asks what work becomes possible when interruptions stop.",
     "synopsis": "The book distinguishes sustained concentration from the administrative tasks that crowd it out. Newport describes how writers, scholars and programmers arrange their days to protect demanding work.",
     "author": "Cal Newport is a computer scientist. His own research requires long stretches of uninterrupted thought, and he wrote the book while digital communication was taking up more of the working day."
   },
   "Devil Take the Hindmost|Edward Chancellor": {
+    "id": "03eaaf2e828648fd3418198f476ba486",
     "brief": "A history of what people buy when they expect someone else to pay more tomorrow.",
     "synopsis": "Chancellor follows speculative episodes across centuries, including railway promotions and stock-market booms. He asks what each generation remembered about earlier crashes and what it managed to forget.",
     "author": "Edward Chancellor worked in finance before becoming a financial writer. He completed the book during the late-1990s market boom, while his historical subject had fresh counterparts."
   },
   "Digital Minimalism|Cal Newport": {
+    "id": "f361d362da9225b5909b99109c6d96c7",
     "brief": "Which digital tools would you invite back after a month without them?",
     "synopsis": "Newport proposes a temporary break from optional technologies. Reintroducing them one at a time makes it easier to see which activities they support and which activities they displace.",
     "author": "Computer scientist Cal Newport wrote this after hearing from readers who felt attached to their phones even outside work, a problem his earlier book on concentration only partly addressed."
   },
   "Discipline Equals Freedom Field Manual|Jocko Willink": {
+    "id": "6c8b8a9c16b04db178ac37b57059c700",
     "brief": "Willink lays out the routines he uses when motivation is in short supply.",
     "synopsis": "Short entries cover training, sleep and the arguments people make with themselves before starting. The field-manual format lets a reader turn directly to the obstacle at hand.",
     "author": "Jocko Willink served as a Navy SEAL officer and commanded a task unit in Iraq. His account of discipline draws on military routines and the training he kept after service."
   },
   "Discipline Is Destiny|Ryan Holiday": {
+    "id": "d10179d48f2c3df67dc6736f04cb59fc",
     "brief": "Holiday studies restraint through the lives of people who wielded unusual power.",
     "synopsis": "Examples of athletic training sit next to accounts of leaders who had every opportunity to overindulge. The recurring question is what a person can govern when nobody else can tell them no.",
     "author": "Ryan Holiday wrote this second volume of his classical virtues series about temperance. His interest in Stoicism shapes his choice of examples."
   },
   "Do Things That Don’t Scale|Paul Graham": {
+    "id": "0da930c6bc58340375c1aa03b497b9f4",
     "brief": "Why should a startup founder do work that could never serve a million customers?",
     "synopsis": "Graham argues that personally recruiting and helping the first users teaches founders what to build. He draws on early companies that did an extraordinary amount by hand before automating any of it.",
     "author": "Paul Graham co-founded Y Combinator. He wrote this 2013 essay after seeing founders hesitate to do small, laborious things that could get their companies started."
   },
   "DotCom Secrets|Russell Brunson": {
+    "id": "3fab3ee3f52d15facec7c49d0643b8ff",
     "brief": "Brunson maps what happens between a stranger landing on a website and becoming a customer.",
     "synopsis": "The book follows visitors through a sequence of pages and offers. Brunson shows how changing the order of those offers changes what a customer sees and what the seller can learn.",
     "author": "Russell Brunson co-founded ClickFunnels, software for building these sales sequences. He wrote for sellers who needed to understand the sequence before choosing the software."
   },
   "Economic Facts and Fallacies|Thomas Sowell": {
+    "id": "1f9d35943bb32df3990bfebb4f4ab218",
     "brief": "Sowell takes apart economic claims that sound obvious on first hearing.",
     "synopsis": "Examples in housing, education and labor markets turn on the choice of comparison. A statistic can accurately describe two groups while giving a misleading account of why their outcomes differ.",
     "author": "Thomas Sowell was an economist and a Hoover Institution fellow. He wrote for general readers accustomed to encountering economic arguments through politics and the press."
   },
   "Economics in One Lesson|Henry Hazlitt": {
+    "id": "28b085949d4a7676a530b40b3a284416",
     "brief": "Hazlitt follows the cost of a policy past the people who benefit first.",
     "synopsis": "A broken window gives a glazier work, but the shopkeeper must give up another purchase. Hazlitt carries that line of reasoning into tariffs, wages and public spending.",
     "author": "Henry Hazlitt was a financial journalist. He wrote the book in the 1940s in the tradition of Frédéric Bastiat's essays on the visible and unseen effects of economic choices."
   },
   "Elon Musk - Walter Isaacson|Walter Isaacson": {
+    "id": "14fc1b91a8baa35a461482ad2d0e0481",
     "brief": "A close account of how Musk makes decisions inside the companies he runs.",
     "synopsis": "Isaacson follows meetings on factory floors, rocket launches and the Twitter acquisition. Scenes of last-minute intervention let the reader observe how Musk's deadlines affect the people doing the work.",
     "author": "Walter Isaacson spent roughly two years shadowing Musk. That access puts the biography close to its subject during decisions the author could witness firsthand."
   },
   "Elon Musk- Ashlee Vance|Ashlee Vance": {
+    "id": "daac1a2810d77f18ae77350a38b0a02a",
     "brief": "Vance follows Musk's path into electric cars and commercial spaceflight.",
     "synopsis": "The biography moves through his early software ventures to the years when Tesla and SpaceX both faced the prospect of failure. Colleagues and former employees describe what it cost to keep them operating.",
     "author": "Technology reporter Ashlee Vance interviewed Musk and people around him for a biography published in 2015. It captures a much earlier stage of the companies than Isaacson's later account."
   },
   "Enterprise AI Startups are Rewriting the Benchmarks|a16z": {
+    "id": "74dd78c02cb5086a48bfaa900ba14ff0",
     "brief": "A venture firm's look at how quickly enterprise AI companies were finding paying customers in 2025.",
     "synopsis": "The newsletter compares early revenue growth with familiar software benchmarks. It asks what rapid adoption says about staying power when customers can still switch between competing products.",
     "author": "Andreessen Horowitz's enterprise team published this dispatch in July 2025. The authors write as investors in the market whose growth they are measuring.",
     "source": "https://a16z.com/newsletter/enterprise-ai-rewrites-benchmarks/"
   },
   "Enterprise Sales for Founders|YC Startup Library": {
+    "id": "06fb971aab2f4817fc1d9b861d341c19",
     "brief": "What does a founder have to do before a large company will sign?",
     "synopsis": "This YC lesson follows the enterprise sale beyond the product demonstration. A user who wants the software may still need to persuade a budget owner and get the purchase through procurement.",
     "author": "Y Combinator publishes lessons for the founders it funds and for people building their first companies. Its enterprise sales material addresses teams that still rely on founders to close deals."
   },
   "Entrusted|Frank Hanna": {
+    "id": "4f12187b285fa2fbe8eacee7a454eb04",
     "brief": "A shelf entry about the responsibility that comes with family wealth. The edition is uncertain.",
     "synopsis": "One published title, Entrusted, examines what families pass on besides money. Frank Hanna also writes about stewardship, but the available publication records do not establish that the two works are the same.",
     "author": "The catalogue credits Frank Hanna, a businessman and philanthropist who wrote What Your Money Means. David York and Andrew Howell wrote Entrusted: Building a Legacy That Lasts.",
     "source": "https://www.davidryork.com/entrusted"
   },
   "Epictetus|Epictetus": {
+    "id": "0e27a02bb6179a34355f11a1bef9cbc4",
     "brief": "Epictetus asks where a person's freedom begins when circumstances refuse to cooperate.",
     "synopsis": "His teaching distinguishes what we can decide from what happens to us. A reputation, an illness or somebody else's anger offers a test of that distinction. This entry does not specify a particular collection.",
     "author": "Epictetus lived under slavery before teaching philosophy in the Roman world. His student Arrian recorded his teaching, which survives in the Discourses and a shorter handbook."
   },
   "Exceptional|Daniel Cable": {
+    "id": "6d156805db70127843ad7f3d247c21c7",
     "brief": "Cable asks what other people remember about us when we are doing our best work.",
     "synopsis": "The book invites readers to gather accounts of particular moments from people who know them. Those stories can reveal abilities a performance review or a list of personal strengths might miss.",
     "author": "Daniel Cable teaches organizational behavior at London Business School. The book grows out of research into how people respond when others recognize a specific contribution they have made."
   },
   "Expert Secrets|Russell Brunson": {
+    "id": "2958757094ec6e359832a8eb616e7895",
     "brief": "How does someone turn specialist knowledge into something others will pay to learn?",
     "synopsis": "Brunson follows an expert through choosing an audience, explaining a method and making a sales presentation. Stories matter here because they help a potential buyer understand what is being offered.",
     "author": "Russell Brunson co-founded ClickFunnels. This book focuses on the teacher or presenter using a sales funnel, the human counterpart to the system in DotCom Secrets."
   },
   "Fake|Robert T. Kiyosaki": {
+    "id": "7fa97d8614c8502beaba2e762b1d7375",
     "brief": "Kiyosaki challenges familiar beliefs about money, education and the assets people buy.",
     "synopsis": "He divides the book around what he calls fake money, fake teachers and fake assets. These labels belong to his argument about currency and financial education and carry his strong personal views.",
     "author": "Robert Kiyosaki built an education business around Rich Dad Poor Dad. This later book returns to the distrust of conventional financial advice that runs through his work."
   },
   "Filthy Rich|James Patterson": {
+    "id": "f6c87d45d75f064cf099096591e7c76c",
     "brief": "An account of Jeffrey Epstein's abuse and the institutions that failed his victims.",
     "synopsis": "Patterson and his coauthors reconstruct the Palm Beach investigation and the favorable treatment Epstein received. The book appeared in 2016, before the later federal arrest brought the case renewed attention.",
     "author": "Novelist James Patterson wrote this nonfiction account with journalists John Connolly and Tim Malloy. Their reporting grounds a story often told through Epstein's celebrity contacts."
   },
   "Focus|Daniel Goleman": {
+    "id": "927d9991c25e5213e8a9de50a15479f6",
     "brief": "Goleman examines what happens when attention moves between oneself, other people and the surrounding world.",
     "synopsis": "A leader can read a spreadsheet and still miss the mood of a room. Goleman looks at the distinct kinds of attention involved and how the demands on one can crowd out another.",
     "author": "Daniel Goleman trained in psychology and reported on science for The New York Times. He returned to questions about attention after writing Emotional Intelligence."
   },
   "Founders at Work|Jessica Livingston": {
+    "id": "6cb324a9a496ba7b383122bf96294cab",
     "brief": "Founders remember the early days before their companies had a success story to tell.",
     "synopsis": "Livingston's interviews linger over half-built products, broken partnerships and the first person willing to pay. Reading the accounts side by side reveals how little the founders could take for granted at the time.",
     "author": "Jessica Livingston co-founded Y Combinator. She interviewed founders herself, giving them room to describe details that had fallen out of the polished versions of their company histories."
   },
   "Games People Play|Eric Berne": {
+    "id": "39834f78fccb36d8ca0d8b30c08e0d5a",
     "brief": "Berne gives names to the recurring exchanges that leave both parties feeling strangely familiar resentment.",
     "synopsis": "He describes social encounters in which the spoken request differs from the reward each person is pursuing. Short cases introduce his vocabulary for these patterns in relationships.",
     "author": "Eric Berne was a psychiatrist who developed transactional analysis. The book brought ideas he used in clinical work to a much wider readership in the 1960s."
   },
   "Getting Things Done|David Allen": {
+    "id": "b5b2e8b4689abd742ff646bef942f4b4",
     "brief": "Allen sets up a system for getting unfinished commitments out of your head.",
     "synopsis": "A vague obligation becomes a next physical action, a calendar entry or something to review later. The weekly review keeps that external list credible enough to stop mentally rehearsing it.",
     "author": "David Allen developed the approach while advising executives on managing their work. Its smallest unit is an action someone can actually take, even in the middle of a crowded day."
   },
   "Goals|Brian Tracy": {
+    "id": "2e0fa416ba1e9a90e6da908e8a76ec41",
     "brief": "Tracy works backward from a written goal to the next thing a person can do.",
     "synopsis": "The exercises ask readers to set a deadline, name obstacles and specify the skills or help they need. Reviewing the written goal makes it possible to notice when a plan has stopped moving.",
     "author": "Brian Tracy taught salespeople and business audiences before writing about personal achievement. The book reads like the written component of one of his practical seminars."
   },
   "Good to Great|Jim Collins": {
+    "id": "83464b79cb556755f38b85ce1a2f73dd",
     "brief": "Collins studies companies that made a sustained improvement in stock performance after years of ordinary results.",
     "synopsis": "His team matched these firms with comparison companies and looked for differences in leadership and operations. The cases led to terms such as the hedgehog concept, a way to narrow a company's focus.",
     "author": "Jim Collins led the research after coauthoring Built to Last. The historical selection of companies matters when reading the findings as lessons for a different business."
   },
   "Gym Launch Secrets|Alex Hormozi": {
+    "id": "fd9f1a7371f083329073efa23c42f3d1",
     "brief": "A manual for filling a gym and making its memberships pay for the cost of finding customers.",
     "synopsis": "Hormozi looks at the offer a prospective member sees, the first sale and what persuades someone to stay. The numbers are those of a local service business with a fixed amount of space.",
     "author": "Alex Hormozi operated gyms before starting Gym Launch with Leila Hormozi. This book addresses the specific business they helped other owners run."
   },
   "High Output Management|Andrew S. Grove": {
+    "id": "42a0b5a784135b1527530728ed9571a5",
     "brief": "Grove measures a manager's work by what the team can produce.",
     "synopsis": "A breakfast order becomes a miniature production line. Grove carries the same reasoning into meetings, one-to-ones and training, where a small amount of managerial time can affect many people's work.",
     "author": "Andrew Grove wrote this while leading operations at Intel. Semiconductor production gave him unusually concrete examples of bottlenecks and of mistakes that become more expensive downstream."
   },
   "How Asia Works|Joe Studwell": {
+    "id": "84aec21e07b508cfedde8d5d14054b19",
     "brief": "Why did some East Asian economies industrialize while others stalled?",
     "synopsis": "Studwell compares land reform, manufacturing policy and the use of bank credit across countries. The test he follows is whether protected firms eventually had to sell goods that could compete abroad.",
     "author": "Joe Studwell spent years reporting on Asian economies. The comparative form lets him examine policies that looked similar on paper but produced very different results."
   },
   "How They Get You|Chris Kohler": {
+    "id": "b84f30b7f218d05d083f587a72e0ceb9",
     "brief": "Kohler follows the small charges that make an ordinary week more expensive.",
     "synopsis": "Gift cards, loyalty programs and fees become case studies in how a seller shapes the choices a buyer sees. He asks who makes money when a customer forgets a deadline or leaves a balance unused.",
     "author": "Chris Kohler is an Australian business journalist. His reporting on household economics supplies the setting for these examples from everyday consumer life."
   },
   "How to Become Insanely Well-Connected|First Round Review": {
+    "id": "96ff9c896e72c39cfe0471118b90833c",
     "brief": "Chris Fralic explains what makes someone remember a first conversation years later.",
     "synopsis": "The profile follows the small obligations that come after an introduction. A specific thank-you or a promised piece of work gives the other person a reason to keep the conversation going.",
     "author": "First Round Review interviewed Fralic, a First Round investor with a background in sales. An early encounter with venture capitalist John Doerr helps explain how he learned to follow up.",
     "source": "https://review.firstround.com/how-to-become-insanely-well-connected/"
   },
   "How to Get Rich|Felix Dennis": {
+    "id": "8a6b4ced5ff815a5d37d66c224ab6f8b",
     "brief": "A publisher gives a candid account of what getting rich required of him.",
     "synopsis": "Dennis writes about ownership, hiring and the difficult point at which a founder has to cede control of daily work. He also gives an unusually personal reckoning of what his fortune cost him.",
     "author": "Felix Dennis made his money in magazine publishing. He wrote the book after achieving the goal in its title, with enough distance to question parts of the bargain."
   },
   "How to Make Money in Stocks|William J. O’Neil": {
+    "id": "45e9c7770b08e6755f6c95f7de3b6916",
     "brief": "O'Neil looks for recurring traits in stocks before their largest advances.",
     "synopsis": "His CAN SLIM method combines earnings growth with price and trading volume. Annotated charts ask readers to inspect what was observable at the time of purchase.",
     "author": "William O'Neil ran a brokerage and founded Investor's Business Daily. He built a historical database of winning stocks to develop the approach he taught individual investors."
   },
   "How to Make Shit Happen|Sean Whalen": {
+    "id": "d6a9f5ff2c01996ab5583e9168a83dc8",
     "brief": "Whalen asks readers to turn a chaotic week into a small set of daily commitments.",
     "synopsis": "He groups daily work around body, relationships, business and personal reflection. Each area gets an action the reader can point to at the end of the day.",
     "author": "Sean Whalen built the Lions Not Sheep coaching brand. The blunt tone and daily exercises come from the way he addresses his business and self-development audience."
   },
   "How to Win Friends and Influence People|Dale Carnegie": {
+    "id": "9bd102ef7dd7c82e63ef8d019bd6ce7f",
     "brief": "Carnegie studies what makes people willing to listen to one another.",
     "synopsis": "He draws on conversations in sales, management and ordinary social life. Remembering a name or admitting an error matters because it changes what the other person has to defend.",
     "author": "Dale Carnegie taught public speaking to adults. The book grew from classroom experiments with people who wanted help getting along with colleagues as much as they wanted to give better speeches."
   },
   "Hyper Learning|Edward D. Hess": {
+    "id": "1ccbb4bdb2ba9a9e3e687dc03be4c9db",
     "brief": "Hess asks what people need to keep learning when machines take over more routine work.",
     "synopsis": "The focus falls on listening, questioning assumptions and creating a workplace where an error can be discussed. He treats learning as behavior people have to practise together.",
     "author": "Edward Hess taught at the University of Virginia's Darden School of Business after a career in business. He studied how organizations learn and why defensiveness gets in the way."
   },
   "Hyperfocus: How to Work Less to Achieve More|Chris Bailey": {
+    "id": "3b904f8d78bb87dfa57677961c3311a1",
     "brief": "Bailey pairs periods of sustained attention with time for a mind to wander.",
     "synopsis": "He calls the first mode hyperfocus and the second scatterfocus. One helps finish a chosen task, while the other gives stray thoughts enough room to meet and produce an idea.",
     "author": "Chris Bailey tested productivity practices on himself and wrote about the results. Here he concentrates on what a person pays attention to once time has already been set aside."
   },
   "Influence: Psychology of Persuasion|Robert Cialdini": {
+    "id": "4c7d8575a55a665b425d3468a8fc8c7f",
     "brief": "Why do a favor, a scarce item or a roomful of other buyers change what we agree to?",
     "synopsis": "Cialdini organizes persuasion around recurring social cues. He explains why a shortcut that usually serves a person well can also be used by someone who knows how to trigger it.",
     "author": "Robert Cialdini was a social psychologist at Arizona State University. Alongside experimental research, he spent time among professional persuaders to see how they worked outside the laboratory."
   },
   "Invent it, Sell it, Bank it|Lori Greiner": {
+    "id": "390fbde59abd330235d15b2ff05e7438",
     "brief": "Greiner follows a consumer invention from its first sketch to the retail shelf.",
     "synopsis": "The tasks include checking whether anybody wants the product, negotiating manufacturing and demonstrating it to a buyer. A clever prototype still has to survive its price tag and packaging.",
     "author": "Lori Greiner built a consumer-products business and sold inventions on QVC. Her advice draws on having to demonstrate a product's use in the time a television viewer was willing to give it."
   },
   "It Doesn’t Have to Be Crazy at Work|Jason Fried & David Heinemeier Hansson": {
+    "id": "b000030b567d698a483b78f2bcb4d462",
     "brief": "Fried and Hansson describe how they run a software company without treating chronic overwork as normal.",
     "synopsis": "They examine meeting policies, deadlines and customer expectations at Basecamp. Each short chapter asks which management decision created a particular demand on employees' time.",
     "author": "Jason Fried and David Heinemeier Hansson led Basecamp while writing the book. They could try the policies in their own company and describe the tradeoffs they accepted."
   },
   "James Bond|Ian Fleming": {
+    "id": "c72e779272a7846bb9607873007dbdf2",
     "brief": "Ian Fleming sends a British intelligence officer into the espionage of the Cold War.",
     "synopsis": "The Bond stories pair assignments with precise details of travel, equipment and physical risk. This shelf entry refers to the series, so a single mission would give a misleading idea of its scope.",
     "author": "Fleming served in British naval intelligence during the Second World War. Afterward he wrote the Bond novels at his home in Jamaica, starting with Casino Royale."
   },
   "Judgment in Managerial Decision Making|Max H. Bazerman & Don A. Moore": {
+    "id": "2073b1b7a335bad3c41d56ed4684c76f",
     "brief": "A decision-making textbook about the errors managers make even when they have enough information.",
     "synopsis": "Bazerman and Moore use exercises to let readers make a judgment before seeing the research behind it. Negotiations, forecasts and estimates expose different ways confidence can outrun accuracy.",
     "author": "Max Bazerman and Don Moore study behavioral decision-making. The book developed through teaching management students who would have to recognize these errors in their own decisions."
   },
   "Leonardo da Vinci|Walter Isaacson": {
+    "id": "30734ec34bc9aee6d9dfb85fb5df1dd8",
     "brief": "Isaacson reads Leonardo's notebooks alongside the paintings they helped make possible.",
     "synopsis": "A marginal question about water or a sketch of a muscle can lead back to a finished picture. The biography also leaves room for commissions Leonardo delayed or never completed.",
     "author": "Walter Isaacson built this biography around pages that survive in Leonardo's own hand. That choice gave him access to the artist's questions as well as his public achievements."
   },
   "Let My People Go Surfing|Yvon Chouinard": {
+    "id": "5762afa4f99fbdd1111d7e523fd9e121",
     "brief": "Patagonia's founder explains what he wanted the company to be able to do differently.",
     "synopsis": "Chouinard traces the move from climbing hardware to clothing and the environmental choices that followed. Product design and employment policies become part of the same account of ownership.",
     "author": "Yvon Chouinard was a climber and a maker of pitons before becoming a clothing-company founder. He wrote partly to put Patagonia's business philosophy in reach of its employees."
   },
   "Letters From a Stoic|Seneca": {
+    "id": "ac06d4805aa664bff436588d95ad3a82",
     "brief": "Seneca writes to a friend about how to spend a life whose length nobody can know.",
     "synopsis": "Money, illness and the prospect of death recur across the letters. A passing incident often becomes the occasion for a question about what a person actually controls.",
     "author": "Seneca wrote the letters to Lucilius late in his life, after serving at Nero's court. Their advice about wealth and public position came from someone who had held both."
   },
   "Lost and Founder|Rand Fishkin": {
+    "id": "98e5e7ba68275f21bce77f2ee6f459d0",
     "brief": "Fishkin's memoir follows a venture-backed software company through the years when growth stopped feeling simple.",
     "synopsis": "Moz begins as an SEO business and takes on the expectations that come with outside funding. Fishkin writes about a founder's public optimism alongside the difficult decisions employees rarely see.",
     "author": "Rand Fishkin co-founded Moz and stepped down as CEO before writing the book. That distance let him revisit financing decisions he had once argued for himself."
   },
   "Main Street Millionaire|Codie Sanchez": {
+    "id": "7d2280c1dc47e63148b2df0583a87c69",
     "brief": "Sanchez looks for existing local businesses whose owners are ready to sell.",
     "synopsis": "She follows the steps between identifying a business and understanding what its cash flow can support. The book gives particular attention to businesses a new owner must operate after the deal closes.",
     "author": "Codie Sanchez worked in finance before buying small businesses. She writes about the less visible part of the acquisition market, where the owner may still answer the telephone."
   },
   "Makers and Takers|Rana Foroohar": {
+    "id": "8fc657f29ffb2710adc66b7c46d3dd3a",
     "brief": "Foroohar asks what happens when making money from financial transactions pays better than making things.",
     "synopsis": "She follows the growth of financial priorities inside American companies. Decisions about share prices and debt can alter what remains available for factories, workers and research.",
     "author": "Rana Foroohar reported on business and economics in the years around the financial crisis. The book grew out of her reporting on the relationship between Wall Street and the wider economy."
   },
   "Mastering the Market Cycle|Howard Marks": {
+    "id": "992c4e988e9b35901fed433719cdcedb",
     "brief": "Marks asks how an investor can judge where a market stands without predicting its next move.",
     "synopsis": "He follows cycles in credit, profits and investor confidence. A lender's willingness to accept weaker terms can reveal as much about the cycle as the level of a stock index.",
     "author": "Howard Marks co-founded Oaktree Capital Management. His work investing in distressed debt made shifts in credit availability an especially practical concern."
   },
   "Mastery|Robert Greene": {
+    "id": "c1833bea4ced0537217128ec4931ba59",
     "brief": "Greene looks at the long apprenticeship behind exceptional work.",
     "synopsis": "Historical and contemporary cases follow people through imitation, experimentation and an eventual departure from their teachers. The emphasis falls on the years usually compressed into a sentence in a biography.",
     "author": "Robert Greene drew on biographical research and interviews. His own path through a succession of jobs also informed his interest in how people discover what work suits them."
   },
   "Measure What Matters|John Doerr": {
+    "id": "eb574b414b870765874f6f56d133d3a1",
     "brief": "Doerr describes how a team can state an objective and tell whether it is getting anywhere.",
     "synopsis": "Objectives name an intended result, and key results supply observable tests. Examples at Google and elsewhere show how teams use them to negotiate priorities and review missed goals.",
     "author": "John Doerr learned the approach at Intel under Andy Grove. As a venture investor, he later introduced it to the founders of Google."
   },
   "Meditations|Marcus Aurelius": {
+    "id": "632186a7542f6cb29071df45c2f78707",
     "brief": "Private reminders by a Roman emperor trying to govern his reactions as carefully as his empire.",
     "synopsis": "Marcus returns to irritation, distraction and the knowledge that his life is short. The repetitions make sense as exercises he needed to do again, even after he knew the argument.",
     "author": "Marcus Aurelius wrote these notes to himself during his reign. Some passages are associated with military campaigns, and the work has the intimacy of a notebook he never prepared for publication."
   },
   "Mind Over Money|Brad Klontz & Ted Klontz": {
+    "id": "492b804a4995c21c387f9fd79b20c118",
     "brief": "The Klontzes examine the money beliefs people acquire before they are old enough to balance an account.",
     "synopsis": "They trace recurring financial behavior back to family experiences and unspoken rules. Exercises ask readers to identify the story behind a decision that otherwise looks irrational.",
     "author": "Brad and Ted Klontz are a son and father who worked in financial psychology. Their approach grew out of bringing therapeutic methods to conversations about money."
   },
   "Mindset: The New Psychology of Success|Carol S. Dweck": {
+    "id": "59a297dcb00aa5623bf25e64d4159a57",
     "brief": "Dweck examines what people do after a mistake when they believe ability can grow.",
     "synopsis": "Scenes from classrooms, sports and work show how praise and feedback can direct attention toward learning or toward protecting a reputation. Effort matters alongside strategies and opportunities to practise.",
     "author": "Carol Dweck is a psychologist whose research investigated children's responses to failure. Classroom experiments supplied the distinction she later called fixed and growth mindsets."
   },
   "Mini Habits|Stephen Guise": {
+    "id": "f178078c97a336ba7ad75e20c8121ba2",
     "brief": "Guise builds a habit around a minimum so small it is hard to refuse.",
     "synopsis": "One push-up is enough to count. Doing more is allowed, but the tiny requirement stays fixed so getting started never depends on feeling particularly motivated.",
     "author": "Stephen Guise developed the idea while trying to make himself exercise. His one-push-up experiment became the example he could explain from personal experience."
   },
   "Misbehaving|Richard H. Thaler": {
+    "id": "bea13b2b2ffea34e494f129e6ba24a63",
     "brief": "Thaler tells the story of the economists who took apparently foolish human choices seriously.",
     "synopsis": "Anomalies such as keeping separate mental accounts for identical dollars become clues to how people decide. Thaler recalls the arguments involved in getting these observations into economic research.",
     "author": "Richard Thaler helped establish behavioral economics. This is partly a participant's history, including his collaboration with psychologists Daniel Kahneman and Amos Tversky."
   },
   "Money: Master the Game|Tony Robbins": {
+    "id": "46a11caa2e7a82b087509e02f8c5dc3c",
     "brief": "Robbins interviews investors about what an individual saver can keep after fees and losses.",
     "synopsis": "The book moves between basic savings decisions and conversations about diversifying a portfolio. Robbins asks professional money managers to explain which ideas an ordinary household might use.",
     "author": "Tony Robbins came to the subject as a speaker and coach. He undertook the interviews after the financial crisis, when many of his readers had questions about whom to trust with their savings."
   },
   "Moral Mazes|Robert Jackall": {
+    "id": "d7dbdaa0d885ab20efeb5faf7e4e84ae",
     "brief": "What does a manager learn to call ethical inside a large corporation?",
     "synopsis": "Jackall follows managers through promotions, reversals and decisions whose authorship can become hard to trace. Their working definitions of responsibility shift with the demands of the hierarchy.",
     "author": "Sociologist Robert Jackall conducted fieldwork inside American corporations. Interviews and observation let him study the informal rules that employees seldom put in writing."
   },
   "More Everything Forever|Adam Becker": {
+    "id": "69ffcddcf4483e5f6032d8addc686958",
     "brief": "Becker investigates the grand futures promised by some of Silicon Valley's most influential thinkers.",
     "synopsis": "Space settlements, radical life extension and machine intelligence become questions about resources and power. Becker asks who gets to define the future when a speculative idea attracts substantial funding.",
     "author": "Adam Becker trained in astrophysics and writes about science. He approaches these promises by examining both their physical assumptions and the people financing them."
   },
   "More Money Than Trust|Graham Duncan": {
+    "id": "cab922258f01064a8fc01e665fd8832f",
     "brief": "Graham Duncan's subject is the trust involved in letting someone else manage money.",
     "synopsis": "An allocator can move capital quickly. Judging how another person thinks and behaves under pressure takes longer. The precise essay or talk filed under this title has yet to be identified.",
     "author": "Duncan co-founded East Rock Capital and has written about selecting investment managers. His work puts him on the side of the person deciding whom to entrust with capital."
   },
   "Nail it Then Scale it|Nathan Furr & Paul Ahlstrom": {
+    "id": "63b540d610a0f50e0131c53ad21db179",
     "brief": "Furr and Ahlstrom ask founders to test the problem before building a company around the answer.",
     "synopsis": "Customer conversations and small tests precede a larger investment in sales and staff. The book follows the point where learning what customers want gives way to repeating a sale that works.",
     "author": "Nathan Furr studied entrepreneurship. Paul Ahlstrom brought experience founding and funding companies, where scaling a mistaken assumption could become expensive very quickly."
   },
   "Never Eat Alone|Keith Ferrazzi & Tahl Raz": {
+    "id": "fe1e054ad0b45e20c577ba6ddbfe0f2d",
     "brief": "Ferrazzi describes the work of keeping in touch before either person needs a favor.",
     "synopsis": "Shared meals, introductions and follow-up make up much of the book. Ferrazzi is especially interested in how someone outside an established circle can begin contributing to it.",
     "author": "Keith Ferrazzi worked in marketing leadership roles at Deloitte and Starwood. He wrote with journalist Tahl Raz about relationships that had shaped his own career."
   },
   "Never Finished|David Goggins": {
+    "id": "05c7f02cad29b12db804e7dd230b6146",
     "brief": "Goggins returns to what happened after the accomplishments described in his first memoir.",
     "synopsis": "Later races and setbacks raise a different problem. Once a difficult goal has been reached, the methods that got a person there may still leave unfinished work. Reflection exercises follow the stories.",
     "author": "David Goggins wrote this sequel after his military career and years in endurance events. He could look back on both the public image created by his first book and the work that followed it."
   },
   "Never Split the Difference|Chris Voss": {
+    "id": "5d51e53bb9f4a325c10b769953e6991f",
     "brief": "A hostage negotiator explains how to keep someone talking when the stakes make compromise difficult.",
     "synopsis": "Mirroring someone's last words and naming an emotion are ways of hearing more before making an offer. Voss follows actual negotiations and then applies their lessons to less extreme disputes.",
     "author": "Chris Voss negotiated kidnappings for the FBI. He wrote with journalist Tahl Raz after moving into teaching negotiation to business audiences."
   },
   "Nonviolent Communication|Marshall B. Rosenberg": {
+    "id": "3b8c532dacdae759946eb43bd42caad7",
     "brief": "Rosenberg offers a way to say what hurt without making the other person defend their character.",
     "synopsis": "He separates an observation from a judgment and a request from a demand. Sample conversations let a reader hear how a small change in wording can alter a difficult exchange.",
     "author": "Marshall Rosenberg trained as a clinical psychologist and worked as a mediator. His method grew out of trying to keep communication possible across deep disagreement."
   },
   "Ogilvy on Advertising|David Ogilvy": {
+    "id": "0892157e0c35d1fb696ca260e8cfa7ee",
     "brief": "Ogilvy opens the files on how advertisements get researched, written and judged.",
     "synopsis": "He annotates actual campaigns and compares the demands of print, television and direct mail. The examples show how much information he expected an advertisement to carry.",
     "author": "David Ogilvy wrote this later book after decades running an advertising agency. He could revisit campaigns with both their creative decisions and commercial results in view."
   },
   "One Up On Wall Street|Peter Lynch": {
+    "id": "c89f13f7dee44d31d9b89ce90b0245f0",
     "brief": "Lynch asks when noticing a good business gives an ordinary investor a place to start researching.",
     "synopsis": "A crowded store or a product people buy repeatedly can be a lead. Lynch then works through the accounts and company type to see whether the stock price already assumes that success.",
     "author": "Peter Lynch managed Fidelity's Magellan Fund. He wrote with John Rothchild while his experience selecting companies was still part of his daily work."
   },
   "One to Many|Jason Fladlien": {
+    "id": "a9e69388fd6a984efce37eea948904d1",
     "brief": "Fladlien treats a webinar as a sales conversation with many listeners at once.",
     "synopsis": "He works backward from the offer to the questions a presentation needs to answer. Timing, examples and the transition to a purchase all get attention.",
     "author": "Jason Fladlien built a business selling and teaching through webinars. He wrote for presenters who have to hold an audience long enough to explain an unfamiliar offer."
   },
   "Open|Andre Agassi": {
+    "id": "3a1c6a53de15ca5212a9336a49336132",
     "brief": "Agassi tells the story of a tennis career he was trained for before he could choose it.",
     "synopsis": "His father's ball machine, years on tour and a hard-won return to competition give the memoir its shape. Private ambivalence runs through some of its most public victories.",
     "author": "Andre Agassi wrote after retiring from professional tennis. He worked closely with writer J. R. Moehringer to reconstruct the experiences behind the scores."
   },
   "Other People’s Money|John Kay": {
+    "id": "c96df04f59a66451aed33bce45d96045",
     "brief": "Kay asks which parts of modern finance actually serve households and businesses.",
     "synopsis": "He starts with the purposes of finance, such as payments and funding investment, then examines a system increasingly occupied with trading existing claims. The distance between a saver and an end borrower is central.",
     "author": "British economist John Kay reviewed equity markets for the UK government after the financial crisis. That work informed his interest in the chain of intermediaries handling other people's money."
   },
   "Outliers|Malcolm Gladwell": {
+    "id": "96f7c7c409627d791b3bfeaa16696312",
     "brief": "Gladwell examines the opportunities hidden inside stories of individual success.",
     "synopsis": "Birth dates in youth hockey and early access to computers complicate the idea that talent explains an outcome by itself. The cases ask who got the practice, timing and access that others missed.",
     "author": "Malcolm Gladwell was a staff writer at The New Yorker. He used reported stories to bring research about achievement and opportunity to a general audience."
   },
   "Outlive: The Science and Art of Longevity|Dr. Peter Attia": {
+    "id": "dc6e57fde63cf0556c4df19f9ceb092c",
     "brief": "Attia asks what it would take to stay capable in the last decades of life.",
     "synopsis": "The book organizes preventive care around major chronic diseases and the physical abilities a person hopes to retain. Attia discusses exercise and metabolic health through the priorities of his clinical practice.",
     "author": "Peter Attia trained in surgery and later built a practice focused on longevity. He wrote the book with journalist Bill Gifford to explain the reasoning behind that practice."
   },
   "Pitch Anything|Oren Klaff": {
+    "id": "071695b5828315d24d74fffc72c36276",
     "brief": "Klaff studies what happens before the facts in a pitch get a fair hearing.",
     "synopsis": "He pays attention to who defines the meeting and how a listener decides what deserves attention. His examples come from presentations where securing the next conversation mattered as much as the slide deck.",
     "author": "Oren Klaff worked in investment banking and capital raising. The book grows out of pitching deals to people who routinely hear more proposals than they can consider."
   },
   "Pivot|Jenny Blake": {
+    "id": "21bcfa8cf83bb30937f40dd9f83c058c",
     "brief": "Blake treats a career change as a series of small trials.",
     "synopsis": "Start with skills and relationships that already exist, then test possible directions before making a larger move. A short project can answer questions a job description leaves open.",
     "author": "Jenny Blake worked in career development at Google before leaving to work independently. She drew on that transition and on conversations with people facing similar decisions."
   },
   "Poor Charlie's Almanack|Charles T. Munger (edited by Peter D. Kaufman)": {
+    "id": "d7de861aa023931ae839c61ccd330ac5",
     "brief": "Munger's talks show how he borrowed ideas across disciplines to think about businesses and human error.",
     "synopsis": "The collection mixes speeches with biographical material and commentary. Munger returns to the ways incentives and several ordinary biases can combine to produce an extraordinary mistake.",
     "author": "Charlie Munger was Berkshire Hathaway's vice chairman and Warren Buffett's longtime investing partner. Peter Kaufman edited the collection, preserving much of Munger's speaking voice."
   },
   "Pre-Suasion: A Revolutionary Way to Influence and Persuade|Robert Cialdini": {
+    "id": "dba2adde5d715fc45a11f93e11f77061",
     "brief": "Cialdini studies the moment before somebody hears a request.",
     "synopsis": "A question or an image can steer attention toward one consideration before a proposal is even made. The book examines experiments in which changing that first moment changed the response that followed.",
     "author": "Social psychologist Robert Cialdini returned to persuasion after years of studying what makes a message effective. This time he asked what a communicator does before delivering it."
   },
   "Predictable Revenue|Aaron Ross & Marylou Tyler": {
+    "id": "68d717df7d057031e2f17386000c201f",
     "brief": "Ross and Tyler separate the job of finding a prospect from the job of closing the sale.",
     "synopsis": "They describe a sales organization with distinct roles and a repeatable way to start conversations. The examples show why expecting one representative to do every part can make revenue hard to forecast.",
     "author": "Aaron Ross developed an outbound sales team at Salesforce. Marylou Tyler brought experience in sales development and process design to their account of how the model works."
   },
   "Principles|Ray Dalio": {
+    "id": "9092c44a4ecfbd1b9a6f1a91305eb8a2",
     "brief": "Dalio sets out the rules he wrote for making decisions and running Bridgewater.",
     "synopsis": "Personal mistakes become rules to consult when a similar situation recurs. In the workplace sections he describes how employees challenge each other and how the firm weighs disagreement.",
     "author": "Ray Dalio founded Bridgewater Associates. The work began as principles circulated inside the investment firm before he expanded them into a book for the public."
   },
   "Problem Solving 101|Ken Watanabe": {
+    "id": "300291dd2700d93b24350001d1e97129",
     "brief": "A children's rock band gives Watanabe a way to teach problem solving with pencil and paper.",
     "synopsis": "Simple cases ask readers to define a problem, sort possible causes and decide what evidence would distinguish them. Diagrams make each step visible enough for someone else to challenge it.",
     "author": "Ken Watanabe worked at McKinsey and originally wrote the book for young readers in Japan. That original audience accounts for its small cases and accessible diagrams."
   },
   "Psycho-Cybernetics|Maxwell Maltz": {
+    "id": "73101b8af27beeecdc4017c21f0b1b79",
     "brief": "Maltz asks why a change in appearance does not always change the way a person sees themselves.",
     "synopsis": "He compares self-image to an internal guidance system and proposes rehearsal and imagery exercises. His case material begins with patients whose confidence did or did not change after surgery.",
     "author": "Maxwell Maltz was a plastic surgeon. The mismatch he observed between a successful operation and a patient's sense of self prompted him to write beyond the boundaries of his specialty."
   },
   "Reach Out, Stay in Touch and Deepen Your Connections|First Round Review": {
+    "id": "d02ba1a1526bab62f8b233f15f6d5a28",
     "brief": "Practical advice on what to say between a first introduction and the next time you meet.",
     "synopsis": "First Round collects ways to make an introduction specific, follow up with something useful and reach out after a long silence. The focus is the awkward middle of a relationship, after names have been exchanged.",
     "author": "First Round Review drew the piece from interviews with operators and investors in its archive. The result brings several practitioners' habits together rather than attributing one method to a single author.",
     "source": "https://review.firstround.com/reach-out-stay-in-touch-and-deepen-your-connections-with-this-essential-networking-advice/"
   },
   "Read People Like a Book|Patrick King": {
+    "id": "7918794f7e2c124ae7e9264a2d5bfb79",
     "brief": "King asks what you can reasonably infer about someone from what they say and do.",
     "synopsis": "He considers motives, body language and repeated behavior. His examples encourage looking at context and patterns before drawing conclusions from one expression or gesture.",
     "author": "Patrick King writes and coaches on social skills. He frames observation as a skill readers can practise in everyday conversations."
   },
   "Read Write Own|Chris Dixon": {
+    "id": "ea55999dd03f34435301f0a22adb1655",
     "brief": "Dixon describes internet networks that give participants a claim on the systems they use.",
     "synopsis": "The argument follows a shift from open protocols to platforms owned by companies. Dixon presents blockchains as a possible ownership model and examines the economic incentives behind that proposal.",
     "author": "Chris Dixon founded technology companies before leading crypto investing at Andreessen Horowitz. He writes as an investor with a stated interest in the networks he describes."
   },
   "Ready, Fire, Aim|Michael Masterson": {
+    "id": "1bfcfd7c69511e2536b931289c04906d",
     "brief": "Masterson divides a growing company's problems by its stage of revenue.",
     "synopsis": "Early chapters concentrate on making the first dependable sales. Later ones turn to hiring and management, when a founder can become the constraint on a business that already knows how to sell.",
     "author": "Michael Masterson is a pen name of entrepreneur and direct-response marketer Mark Ford. He drew on businesses he helped build in publishing and related fields."
   },
   "Reality Transurfing|Vadim Zeland": {
+    "id": "48c6238b84cf4ef37259cdc3daf17688",
     "brief": "Zeland imagines life as a set of possible paths a person can learn to navigate.",
     "synopsis": "The books develop a vocabulary of alternative realities and forces he calls pendulums. Within this metaphysical system, reducing the importance assigned to an outcome is one way to change a person's relationship to it.",
     "author": "Vadim Zeland is the author associated with the Russian Transurfing series. Reliable biographical detail is scarce, and the system is best read on its own stated metaphysical terms."
   },
   "Relentless|Tim S. Grover": {
+    "id": "15fd2831b510c7a017687ecfc6d7cc58",
     "brief": "Grover describes what elite basketball players ask of themselves after ordinary training ends.",
     "synopsis": "He sorts competitors by how they respond to pressure and examines the habits of players who demand the ball when an outcome is uncertain. The portraits draw on time spent in training rooms.",
     "author": "Tim Grover trained Michael Jordan and other professional athletes. He wrote with Shari Wenk about the mental demands he saw alongside physical preparation."
   },
   "Rework|Jason Fried & David Heinemeier Hansson": {
+    "id": "34a1ccb6a8c6c8ff7f9e1dda06a6eb26",
     "brief": "Short essays question how much of running a business truly requires a plan, a meeting or a new hire.",
     "synopsis": "Fried and Hansson favor releasing a smaller product and learning from people who actually use it. The essays return to how easily a growing company can spend time coordinating work that nobody needs.",
     "author": "The authors ran 37signals, the software company behind Basecamp. They wrote while building products with a small team and financing the business through customers."
   },
   "Rich Dad Poor Dad|Robert T. Kiyosaki": {
+    "id": "99d3ec7fca3ce68bb09dc6c0661a65a5",
     "brief": "Kiyosaki contrasts two approaches to earning money through the figures of two fathers.",
     "synopsis": "He uses household balance sheets and stories about work to explain why he prizes ownership and cash flow. The two fathers function as teachers in his account of learning about money.",
     "author": "Robert Kiyosaki built his career around financial education. The book's first-person teaching stories established the format he later used throughout the Rich Dad series."
   },
   "Rich Dad’s Guide to Investing|Robert T. Kiyosaki": {
+    "id": "c4b2722f00a591b9313fbea8a7118056",
     "brief": "Kiyosaki asks what changes when an investor can build or buy a business.",
     "synopsis": "The book distinguishes kinds of investors and the preparation he thinks each needs. Much of the discussion turns on who controls an asset and how to read the cash flowing through it.",
     "author": "Robert Kiyosaki wrote this as part of his Rich Dad series with Sharon Lechter. It develops the investing side of the earlier book's argument for financial education."
   },
   "Rich Kid Smart Kid|Robert T. Kiyosaki": {
+    "id": "fe083b26c4e298cc789f723c1c38af5e",
     "brief": "How might a family teach a child about money before the child's first paycheck?",
     "synopsis": "Kiyosaki connects conversations at home with games and examples meant to make financial choices visible. He questions how well conventional schooling prepares children to evaluate those choices.",
     "author": "Robert Kiyosaki and Sharon Lechter developed educational materials around money. This entry in their Rich Dad series turns to the adults responsible for teaching children."
   },
   "Richsterious Autopilot Money|Richsterius (org)": {
+    "id": "1d266815a038f03dafd92fb722cb6740",
     "brief": "An independently marketed ebook about earning money on autopilot.",
     "synopsis": "Richsterius sells this title alongside Money Slave as part of its financial-freedom collection. The public listing identifies the work but gives little detail about the specific methods it contains.",
     "author": "Richsterius is the publishing name on the cover and storefront. The publisher provides no named individual author or professional biography there.",
     "source": "https://richsterius.com/financial-freedom-book-bundle"
   },
   "Right Thing, Right Now|Ryan Holiday": {
+    "id": "0e36ac1e841523a7734d027e266096c3",
     "brief": "Holiday asks what acting justly requires when doing so costs the person making the choice.",
     "synopsis": "His historical cases turn on obligations to strangers, colleagues and opponents. Keeping a promise becomes more revealing when nobody can compel a person to honor it.",
     "author": "Ryan Holiday wrote this as the justice volume in his series on the classical virtues. It follows his books on courage and temperance."
   },
   "Rising Strong|Brené Brown": {
+    "id": "3c3c9238f2138bcf8f0f939d4a01839e",
     "brief": "Brown looks at the story people tell themselves immediately after something painful happens.",
     "synopsis": "She follows the movement from an initial interpretation to a more careful account of what happened. The examples give particular attention to shame and the temptation to protect oneself by assigning blame.",
     "author": "Brené Brown trained as a social worker and researched vulnerability and shame. She wrote this after readers of her earlier work began asking what to do after taking a risk went badly."
   },
   "Sapiens|Yuval Noah Harari": {
+    "id": "b0a524d7eb47f8d96bd5366a2f3ab77c",
     "brief": "Harari tells a history of humanity through changes in what large groups can believe and do together.",
     "synopsis": "He moves through agriculture, empires and scientific inquiry, asking how shared stories and institutions make cooperation possible among strangers. The scale is the species rather than a particular nation.",
     "author": "Yuval Noah Harari taught history at the Hebrew University of Jerusalem. The book grew out of a broad survey course that asked students to connect events normally studied in isolation."
   },
   "Secrets of the Millionaire Mind|T. Harv Eker": {
+    "id": "6bc4b69c42c3c70f7045796f71715cbc",
     "brief": "Eker asks readers to examine the financial expectations they inherited at home.",
     "synopsis": "His idea of a money blueprint links early messages about wealth with later habits of earning, spending and saving. The exercises invite readers to identify those messages in their own histories.",
     "author": "T. Harv Eker taught money seminars before publishing this book. Its declarations and self-assessments reflect the participatory format of those events."
   },
   "Sell or Be Sold|Grant Cardone": {
+    "id": "86707cc1d6ffcbd74a62d91e5fe04ea9",
     "brief": "Cardone treats selling as the work of getting another person to commit to a decision.",
     "synopsis": "He considers conviction in a product, follow-up and the discomfort of asking directly for a sale. Examples extend the term selling well beyond a conventional sales job.",
     "author": "Grant Cardone trained sales teams, including automobile dealers. His approach is rooted in retail environments where objections and decisions happen face to face."
   },
   "Shoe Dog|Phil Knight": {
+    "id": "01d7921133453d726d5962e346186879",
     "brief": "Before Nike had a name, Phil Knight was selling Japanese running shoes from the trunk of his car.",
     "synopsis": "A new shipment could sell out and still leave Knight short of money for the next one. He follows those early orders through factory disputes, bank meetings and the formation of the team that built Nike.",
     "author": "Knight ran track at Oregon under Bill Bowerman, who became his business partner. He wrote the memoir decades later, choosing to spend most of it in the years before Nike went public."
   },
   "Skin in the Game|Nassim Nicholas Taleb": {
+    "id": "bea79634806d99d2aa16e69a9f153fda",
     "brief": "Taleb asks who bears the loss when somebody else's advice turns out badly.",
     "synopsis": "His examples include traders, officials and professionals insulated from the effects of their decisions. Personal exposure to a downside becomes a test he applies to both fairness and expertise.",
     "author": "Nassim Nicholas Taleb worked as a derivatives trader. This book extends his writing on uncertainty to the incentives of the people who claim they can manage it."
   },
   "Startup Rising|Christopher Schröder": {
+    "id": "4e0e8719815bff7b080ae0b10d8bce0e",
     "brief": "Schroeder reports on entrepreneurs building technology companies across the Middle East.",
     "synopsis": "Founders describe reaching customers, raising capital and working around patchy infrastructure. The book captures a particular moment when mobile connectivity and political upheaval were changing the region.",
     "author": "Christopher Schroeder is an entrepreneur and investor. Visits to regional startup gatherings led him to spend more time with founders whose companies rarely appeared in American coverage."
   },
   "Startups for Students|YC Startup Library": {
+    "id": "696b9a0b7786987ac906912dcd6f08cc",
     "brief": "A student's guide to choosing between starting a company and joining one.",
     "synopsis": "YC collects the questions students kept asking about cofounders, timing and getting experience at a startup. Short answers lead into firsthand accounts and earlier talks in its library.",
     "author": "Tamanna Khemani and Kat Mañalac assembled the guide after Y Combinator's virtual outreach tours. They had met thousands of students and could see which questions kept recurring.",
     "source": "https://www.ycombinator.com/blog/startups-for-students-guide/"
   },
   "Status Anxiety|Alain de Botton": {
+    "id": "a558dbce45b86ce8a9b61e964cb08436",
     "brief": "De Botton asks why a change in social standing can feel like a judgment on a whole life.",
     "synopsis": "He traces the wish for recognition through class, work and ideas about merit. Philosophy and art offer other ways of judging a life when the surrounding society equates success with income.",
     "author": "Alain de Botton writes philosophical essays for general readers. Here he uses literature, paintings and social history to examine a worry more often treated as a private failing."
   },
   "Stories That Stick|Kindra Hall": {
+    "id": "c1d121e1f77937a4ca54ebc8d8acd7a9",
     "brief": "Hall shows how to find the particular moment that makes a business story worth telling.",
     "synopsis": "She distinguishes stories about a product's value, a founder, a purpose and a customer. The practical work lies in choosing a scene a listener can picture and understanding whose decision it might affect.",
     "author": "Kindra Hall worked as a storyteller and speaker before writing for business audiences. Her examples come from the kinds of presentations in which a polished claim often fails to stick."
   },
   "Surrounded By Idiots|Thomas Erikson": {
+    "id": "05ac801f816238140cb2366536d6268a",
     "brief": "Erikson uses four colors to discuss the different ways people communicate at work.",
     "synopsis": "The book walks through fictionalized encounters in which a person's pace or directness gets misread. The colors are a shorthand in the author's communication model, not a clinical assessment.",
     "author": "Thomas Erikson is a Swedish writer and lecturer on communication. Everyday misunderstandings gave him the premise for a book intended for use outside a psychology classroom."
   },
   "Tax-Free Wealth|Tom Wheelwright": {
+    "id": "c4f8634d822809753787cadcd54fb525",
     "brief": "Wheelwright reads tax rules as clues to the activities governments want to encourage.",
     "synopsis": "He uses business and investment examples to show how choices about ownership and expenses can affect tax treatment. The examples reflect the jurisdictions and rules in the edition being read.",
     "author": "Tom Wheelwright is a certified public accountant who advises entrepreneurs and investors. He wrote to explain the reasoning he uses in conversations with business owners."
   },
   "The $100 Startup|Chris Guillebeau": {
+    "id": "30848e62fc8f2e259c8190233d06f15d",
     "brief": "Guillebeau profiles people who found paying customers with very little startup capital.",
     "synopsis": "A skill that seems ordinary to its owner can solve a problem for someone else. The cases follow the first offer, the first sale and the costs involved in keeping a small business running.",
     "author": "Chris Guillebeau ran independent ventures and wrote about earning a living outside conventional employment. He collected stories from other owners to see how their beginnings differed."
   },
   "The 10x Rule|Grant Cardone": {
+    "id": "4ef4dd88740618329cc5549430934bef",
     "brief": "Cardone argues that people underestimate both the size of a goal and the work it will require.",
     "synopsis": "He lays out levels of action and asks readers to compare their daily activity with the results they expect. Sales prospecting supplies a particularly visible example of the gap.",
     "author": "Grant Cardone built a business training sales organizations. His multiplier reflects the language of targets and activity levels he used with those teams."
   },
   "The 21 Irrefutable Laws of Leadership|John C. Maxwell": {
+    "id": "209480f1a4cdb3ef30d5f8c0476408d2",
     "brief": "Maxwell organizes his approach to leadership around twenty-one recurring principles.",
     "synopsis": "Each chapter studies a different problem, such as earning trust or preparing a successor. Stories give readers a way to connect a principle with a decision they might face.",
     "author": "John Maxwell led churches before teaching leadership to business and nonprofit audiences. His experience depended heavily on persuading people to participate voluntarily."
   },
   "The 4 Hour Work Week|Timothy Ferriss": {
+    "id": "b54a84ee71f32db519495667bb9342b5",
     "brief": "Ferriss takes apart his working week to see which parts still need him there.",
     "synopsis": "Outsourcing routine decisions and testing a small product business are part of a larger experiment in controlling one's time. The travel sections ask what that freedom would actually be used for.",
     "author": "Tim Ferriss was running a sports-nutrition business when he began experimenting with remote management. The book grew out of his effort to travel while the company continued operating."
   },
   "The 5 Types of Wealth|Sahil Bloom": {
+    "id": "04e526f8114f6b650f98d0085664c8c0",
     "brief": "Bloom asks what a person might accumulate besides money and what earning money can quietly cost.",
     "synopsis": "He considers time, relationships, mental life, health and finances as separate forms of wealth. Questions and exercises let readers examine which tradeoffs they are making in a particular season of life.",
     "author": "Sahil Bloom worked in finance and wrote a widely read newsletter before publishing the book. His reflections on time with family give the framework a personal starting point."
   },
   "The 80/20 Principle|Richard Koch": {
+    "id": "daf664ee0796b88a1a2ae58b3ce26ed1",
     "brief": "Koch looks for situations where a small share of the causes accounts for most of the result.",
     "synopsis": "A few customers or products may produce a disproportionate share of profits. Koch uses this unevenness to ask where managers and individuals can stop spending effort.",
     "author": "Richard Koch worked as a management consultant and investor. He adapted an observation associated with economist Vilfredo Pareto into a practical guide to allocating time and resources."
   },
   "The Alchemist|Paulo Coelho": {
+    "id": "03acd5b84563cefa90b0535b6a3c5a6b",
     "brief": "An Andalusian shepherd leaves his flock to follow a recurring dream about treasure.",
     "synopsis": "Santiago's journey takes him across the desert, where work, love and chance encounters complicate the promise that first set him moving. Coelho tells it as a fable and leaves its discovery to the reader.",
     "author": "Paulo Coelho was a Brazilian songwriter before turning to novels. He published the book in Portuguese in 1988, after a pilgrimage that also informed his early writing."
   },
   "The Algebra of Wealth|Scott Galloway": {
+    "id": "867cfe32b6e50a0aa04b1335e519e683",
     "brief": "Galloway asks which early choices give a person more control over their financial future.",
     "synopsis": "Career focus, spending habits and long holding periods carry more weight in his account than picking a spectacular investment. He connects financial decisions with where and how a person chooses to work.",
     "author": "Scott Galloway founded businesses and taught marketing at NYU Stern. He draws on both successful ventures and costly mistakes in discussing what founders and employees can realistically control."
   },
   "The Algorithm|John McNeill": {
+    "id": "a224cdcec052f87c7e0b427b4232c4a6",
     "brief": "McNeill lays out the five-step operating method he learned at Tesla.",
     "synopsis": "The sequence begins by questioning requirements and deleting unnecessary steps. Simplifying, speeding up and automating come later, since automation can make an unnecessary process expensive to undo.",
     "author": "Jon McNeill led global sales and service at Tesla and later served as Lyft's chief operating officer. He writes about using the method both inside Tesla and after leaving.",
     "source": "https://www.penguinrandomhouse.com/books/799958/the-algorithm-by-jon-mcneill/"
   },
   "The Almanack of Naval Ravikant|Eric Jorgenson": {
+    "id": "5907a830e16722df7d4ea51ab8caa6ed",
     "brief": "A collection of Naval Ravikant's remarks on building wealth and living with one's own decisions.",
     "synopsis": "Short excerpts on ownership, judgment and happiness sit alongside longer passages. The arrangement lets a reader follow one subject across conversations that originally took place years apart.",
     "author": "Eric Jorgenson selected and organized material from Ravikant's interviews and public writing. The result is an edited reader rather than a continuous memoir written by Ravikant."
   },
   "The Art of Seduction|Robert Greene": {
+    "id": "1931bbe73dea879b5e952ff69bf99cfb",
     "brief": "Greene reads historical seductions as exercises in attention, anticipation and power.",
     "synopsis": "He arranges episodes around recurring roles and tactics, with examples drawn from politics as well as romance. His interest lies in how one person can shape another's perception over time.",
     "author": "Robert Greene had previously used court histories to write about power. He returned to several of the same kinds of sources to study influence in more intimate settings."
   },
   "The Bezos Letters|Steve Anderson": {
+    "id": "d8da4f8aa3aff55cda2b0ae793f71ef6",
     "brief": "Anderson reads Amazon's shareholder letters as a record of how the company approached growth.",
     "synopsis": "He draws business principles from the decisions Jeff Bezos explained to shareholders. Long time horizons and a willingness to fund experiments recur even as the business itself changes.",
     "author": "Steve Anderson studied technology and risk in business. He wrote with Karen Anderson using the public letters, an outsider's source distinct from interviews inside Amazon."
   },
   "The Book of Five Rings|Miyamoto Musashi": {
+    "id": "a1a123be824fbd7e16ce911b3a8eafc7",
     "brief": "A swordsman's account of timing, distance and the ability to see what an opponent is doing.",
     "synopsis": "Musashi places individual combat beside broader questions of strategy. His writing keeps returning to practice, because a useful instruction on the page still has to become a movement.",
     "author": "Miyamoto Musashi was a Japanese swordsman who wrote the treatise late in life. He drew on a martial tradition in which a mistaken reading of distance had immediate consequences."
   },
   "The Boron Letters|Gary C. Halbert": {
+    "id": "422972307c0eaf1e9a4f374a590858f9",
     "brief": "A copywriter in prison writes to his son about sales letters and the life around them.",
     "synopsis": "Halbert explains lists, offers and the discipline of studying mail that produces orders. Advice about exercise and daily habits sits beside the advertising lessons because these were letters home.",
     "author": "Gary Halbert wrote the letters to his son Bond while incarcerated at Boron Federal Prison Camp. Their informal address and occasional digressions come directly from that circumstance."
   },
   "The Circadian Code|Satchin Panda": {
+    "id": "c0fc938c6183c44b2afeb9ca3b594a9a",
     "brief": "Panda asks what meal times and light exposure have to do with the body's daily clocks.",
     "synopsis": "He follows the rhythms that govern sleep, metabolism and activity. His account of time-restricted eating grew out of laboratory work on when animals ate as well as what they ate.",
     "author": "Satchin Panda researches circadian biology at the Salk Institute. He wrote the book to connect work on cellular clocks with the timing of ordinary daily routines."
   },
   "The Courage to be Disliked|Ichiro Kishimi & Fumitake Koga": {
+    "id": "bcabf9be7b9c526cc038112dc598f836",
     "brief": "A young man and a philosopher argue over whether a person's past determines their future.",
     "synopsis": "Over a series of evenings, the philosopher introduces Alfred Adler's ideas about responsibility and the desire for approval. The young man's objections give the argument room to develop.",
     "author": "Ichiro Kishimi studied Adlerian psychology. Writer Fumitake Koga worked with him to present those ideas through dialogue, a form that lets the reader follow the questions as well as the answers."
   },
   "The Daily Laws|Robert Greene": {
+    "id": "b22ec82e44ea6466d33bbf219f075aad",
     "brief": "A year's worth of short readings from Greene on power, practice and human behavior.",
     "synopsis": "Each day pairs an observation with a prompt. Monthly themes hold the sequence together, letting readers revisit an idea in small portions rather than reading a historical case in one sitting.",
     "author": "Robert Greene assembled the book after writing several longer works on power and mastery. It draws from those books and from the advice readers asked him for afterward."
   },
   "The E-Myth Revisited|Michael E. Gerber": {
+    "id": "901cab3f6c31e6b147ea59008f1f6e75",
     "brief": "Gerber explains why being good at a trade can be poor preparation for owning the business that sells it.",
     "synopsis": "A fictional pie-shop owner faces the difference between baking a good pie and running a shop that can do so repeatedly. The story introduces documented processes and a clearer division of responsibilities.",
     "author": "Michael Gerber worked with small-business owners. He expanded his original E-Myth book around a problem he saw often, an owner's skill becoming the very thing the firm could never operate without."
   },
   "The Everything Store|Brad Stone": {
+    "id": "7527599de60c3ff5c39886b47343e43d",
     "brief": "Stone follows Amazon as an online bookseller becomes a retailer with ambitions far beyond books.",
     "synopsis": "Employees and rivals describe the company's expansion into new categories and services. Stone traces how internal practices formed while the business was changing faster than its competitors expected.",
     "author": "Brad Stone covered the technology industry as a reporter and interviewed people across Amazon's history. His book appeared before several later chapters in the company's growth."
   },
   "The Goal|Eliyahu M. Goldratt": {
+    "id": "964700b90a738b84fd817eeae28c799f",
     "brief": "A factory manager has a few months to save his plant and has to find what really limits its output.",
     "synopsis": "Orders are late even though every department is trying to stay busy. Through a series of questions, Alex Rogo learns why improving one machine may do nothing for the plant as a whole.",
     "author": "Eliyahu Goldratt developed the theory of constraints. He wrote the novel with Jeff Cox so readers could reason through the plant's problems before being handed a management rule."
   },
   "The Greatest Salesman in the World|Og Mandino": {
+    "id": "ecb14d1a3ebc279bd21e29ccfd820f85",
     "brief": "A young camel boy learns the craft of selling through a set of scrolls.",
     "synopsis": "Mandino builds a fable around repeated readings and the habits they are meant to cultivate. The story treats a salesperson's conduct toward other people as part of the work of selling.",
     "author": "Og Mandino worked in sales and later edited Success Unlimited. He chose a historical fable to present ideas that his original audience usually heard in a sales meeting."
   },
   "The Hard Thing About Hard Things|Ben Horowitz": {
+    "id": "e8ab1699bf310c6bdb6f5eb6ce5092fc",
     "brief": "Horowitz writes about the decisions a chief executive still has to make when every option looks bad.",
     "synopsis": "Layoffs, replacing executives and keeping a struggling company alive get more space than founding-day optimism. Horowitz revisits decisions he made with incomplete information and employees depending on him.",
     "author": "Ben Horowitz led Loudcloud through a difficult transition into the software company Opsware. He later co-founded Andreessen Horowitz, where founders brought him many of the same problems."
   },
   "The House of Morgan|Ron Chernow": {
+    "id": "80f58840cd5d4c00bb78cd3273e45a9e",
     "brief": "Chernow traces the Morgan banking houses through a century and a half of financial and political change.",
     "synopsis": "Bankers arrange loans for states, intervene in panics and eventually encounter governments powerful enough to curb them. The family story runs alongside a history of how banking authority moved between institutions.",
     "author": "Ron Chernow worked as a journalist before writing this financial history. Archival research let him follow the people and institutions well beyond the lifetime of J. P. Morgan himself."
   },
   "The Innovator’s Dilemma|Clayton M. Christensen": {
+    "id": "751c6958b63a8f9d9a66c517d0234c85",
     "brief": "Christensen asks why a well-run company can listen to its best customers and still lose its market.",
     "synopsis": "The disk-drive industry supplies his central puzzle. A smaller drive can initially look inferior to established buyers while being useful enough for a different market where it has time to improve.",
     "author": "Clayton Christensen developed the argument through doctoral research at Harvard Business School after working in industry. He wanted to explain patterns of failure that poor management alone could not account for."
   },
   "The Intelligent Investor|Benjamin Graham": {
+    "id": "2ef71448ca9c1fef404d9570820f922b",
     "brief": "Graham sets out how an investor can allow room for being wrong about a business.",
     "synopsis": "He distinguishes investment from speculation and develops the idea of a margin of safety. His imaginary business partner Mr. Market illustrates why a quoted price and a business's value need not coincide.",
     "author": "Benjamin Graham managed investments and taught security analysis at Columbia. He published the first edition in 1949 after living through a market crash and a long depression."
   },
   "The Kaisen Challenge|Sarah Harvey": {
+    "id": "e0b489282cdf8a2ed3aac36433458df0",
     "brief": "Harvey applies the Japanese idea of continuous improvement to small changes in everyday routines.",
     "synopsis": "She asks readers to choose a manageable change and observe what happens before extending it. The scale is domestic and personal, rather than the factory floor where many readers first encounter kaizen.",
     "author": "Sarah Harvey explored Japanese approaches to daily life while living in Tokyo. Her published work on kaizen supplies the context for the spelling used in this shelf entry."
   },
   "The Lean Startup|Eric Ries": {
+    "id": "3b919d466d805a04893ce19ff65f4407",
     "brief": "Ries treats a startup's first product as a way to test what its founders believe.",
     "synopsis": "A small release can reveal whether customers want the proposed outcome before the team commits to building everything. Ries looks for measures that can distinguish genuine learning from mere activity.",
     "author": "Eric Ries co-founded IMVU and drew on its early experiments. He developed the book while bringing ideas from lean manufacturing into conversations among software founders."
   },
   "The Little Book That Beats the Market|Joel Greenblatt": {
+    "id": "899ab8e343448d8f6a4959b192849e16",
     "brief": "Greenblatt offers a simple screen for finding profitable companies at relatively low prices.",
     "synopsis": "The method ranks businesses on measures of earnings yield and return on capital. The book asks why a rule that sounds simple might still be difficult for an investor to follow through lean years.",
     "author": "Joel Greenblatt ran Gotham Capital and taught investing at Columbia. He wrote the explanation in language intended to be accessible even to his children."
   },
   "The Lords of Easy Money|Christopher Leonard": {
+    "id": "01c2e61a5af2d785d190acdbea4e48e8",
     "brief": "Leonard follows the Federal Reserve's experiment with exceptionally loose monetary policy.",
     "synopsis": "Through officials, financiers and companies that borrowed in this period, he examines how cheap money affected asset prices and risk-taking. Dissent inside the Fed provides a recurring point of view.",
     "author": "Christopher Leonard is a business journalist. His reporting uses interviews and the experiences of firms outside Washington to trace decisions that otherwise appear mainly as changes in interest rates."
   },
   "The Millionaire Fastlane|MJ DeMarco": {
+    "id": "f730db43514539f88bfe2d24036de47b",
     "brief": "DeMarco asks how the economics of owning a scalable business differ from being paid for hours worked.",
     "synopsis": "He divides approaches to wealth into road metaphors, then examines ownership, customer need and scale. His running example is a company whose reach could grow beyond the founder's working day.",
     "author": "MJ DeMarco built and sold Limos.com. His frustration with waiting decades for financial independence supplied the premise for the comparison."
   },
   "The Millionaire Next Door|Thomas J. Stanley & William D. Danko": {
+    "id": "77717fe7111b6e82da10f139e3fa3b72",
     "brief": "Stanley and Danko look at the spending habits of American households that quietly accumulated wealth.",
     "synopsis": "They compare outward signs of affluence with net worth and document the budgeting and career choices of their respondents. Many of the households they studied would be easy to miss by appearance alone.",
     "author": "Thomas Stanley and William Danko researched affluent consumers. Interviews and surveys undertaken for that work yielded a portrait different from the image many advertisers had of a millionaire."
   },
   "The Mind of Napoleon|Napoleon Bonaparte, J. Christopher Herold": {
+    "id": "73f346aae6342ddb5ec9f72858eb3d9f",
     "brief": "Napoleon's remarks on government, warfare and human character, gathered by subject.",
     "synopsis": "The arrangement puts observations made at different times beside one another. It lets a reader compare the general's account of leadership with the emperor's judgments about law, ambition and public opinion.",
     "author": "Historian J. Christopher Herold selected and translated Napoleon's words. The organization and selection are Herold's editorial work rather than a treatise Napoleon composed in this form."
   },
   "The Monk Who Sold His Ferrari|Robin Sharma": {
+    "id": "62a2686d2b73969884b35607ba77963e",
     "brief": "A lawyer who collapses in court gives up his possessions and leaves to reconsider his life.",
     "synopsis": "Julian Mantle returns with a set of lessons he learned on his travels. Sharma uses the exchange between Julian and a former colleague to discuss attention, discipline and what professional success can cost.",
     "author": "Robin Sharma trained as a lawyer before writing about leadership and personal development. A lawyer's crisis gave him a setting whose professional rewards he knew firsthand."
   },
   "The Motive|Patrick Lencioni": {
+    "id": "78b41d48a4364577799edd73d9924ff1",
     "brief": "Lencioni asks a chief executive why he wanted the job in the first place.",
     "synopsis": "A conversation between two executives exposes the parts of leadership one has been avoiding. The book then looks at difficult conversations and meetings as duties that come with authority.",
     "author": "Patrick Lencioni advised leadership teams and used business fables in his teaching. Here he directs the question at the person at the top, whose reasons for leading affect everyone else's work."
   },
   "The Now Habit|Neil Fiore": {
+    "id": "2e22aafdc84857401af88461b0d9b236",
     "brief": "Fiore looks at why an important task can become harder to start the longer it waits.",
     "synopsis": "His Unschedule places recreation and fixed commitments on the calendar first. The reader then records completed work, shifting attention to short starts and observable progress.",
     "author": "Neil Fiore was a psychologist who worked on stress and procrastination. The book treats avoidance as something to understand and plan around rather than a simple shortage of willpower."
   },
   "The ONE Thing|Gary Keller & Jay Papasan": {
+    "id": "5f0faa86d5bda1a57b4bbaf330c255d6",
     "brief": "Keller and Papasan ask which single action would make the rest of a day's work easier.",
     "synopsis": "They apply a focusing question to long-term goals and the next available block of time. Protecting that block becomes a practical test of whether a stated priority is real.",
     "author": "Gary Keller co-founded Keller Williams Realty. He and editor Jay Papasan drew on work with business owners whose many apparent priorities competed for the same hours."
   },
   "The Outsiders|William N. Thorndike Jr.": {
+    "id": "f5f5e691ab2d6fe1a119f89ad73edc9d",
     "brief": "Eight chief executives made unusually consequential choices about where to put their companies' money.",
     "synopsis": "Thorndike studies buybacks, acquisitions, dividends and reinvestment across very different businesses. The comparisons treat allocation of cash as a central part of the chief executive's job.",
     "author": "William Thorndike founded the investment firm Housatonic Partners. He approached the executives as an investor trying to explain long-run returns that ordinary management profiles missed."
   },
   "The Personal MBA|Josh Kaufman": {
+    "id": "2f28f1b1cf286f8f6f2989d06ca3af1f",
     "brief": "Kaufman organizes the basic workings of a business into concepts a reader can study independently.",
     "synopsis": "Value creation, sales and finance sit alongside decisions about people and systems. The short entries let a reader look up the part of a business they need to understand next.",
     "author": "Josh Kaufman developed his reading project while working at Procter & Gamble. He expanded it into an alternative course of independent study for people considering business school."
   },
   "The Replaceable Founder|Ari Meisel": {
+    "id": "55fd165bd7d107d276e8b0623d931cc7",
     "brief": "Meisel asks how a business would operate if its founder could no longer answer every question.",
     "synopsis": "He follows recurring work through simplification, automation and delegation. The aim is for the next person to know both what to do and when they have authority to decide.",
     "author": "Ari Meisel founded Less Doing and coached entrepreneurs on reducing their involvement in routine operations. This book concentrates that work on a founder's dependence on being available."
   },
   "The Richest Man in Babylon|George S. Clason": {
+    "id": "ae934cf564791e0cd464425e7cc941d7",
     "brief": "Clason uses parables set in ancient Babylon to explain saving, lending and spending.",
     "synopsis": "Characters who earn similar wages find themselves in different financial circumstances. Their conversations introduce the practice of keeping part of one's earnings and questioning an investment one does not understand.",
     "author": "George Clason published financial pamphlets that banks and insurance companies distributed to customers. Their compact parables later became the book."
   },
   "The Sales Acceleration Formula|Mark Roberge": {
+    "id": "397d81559fc0b578248792607fddc3dd",
     "brief": "Roberge asks whether building a sales team can be made as systematic as building a product.",
     "synopsis": "He follows the work in sequence, beginning with who gets hired and how those hires are trained. Sales data then helps a manager see where the process itself needs attention.",
     "author": "Mark Roberge trained as an engineer and led sales at HubSpot during its early growth. The hiring and training systems in the book grew out of that job."
   },
   "The Sales Advantage|Dale Carnegie": {
+    "id": "656340b39d1d0ddae5615959b6b9c256",
     "brief": "A practical guide to discovering what a customer wants before asking for an order.",
     "synopsis": "The book follows preparation, questioning and listening through to handling concerns. It applies Carnegie's lessons about human relationships to the particular demands of a sales conversation.",
     "author": "J. Oliver Crom and Michael Crom wrote the book from Dale Carnegie Training's sales courses. The Carnegie name on the shelf refers to that teaching tradition."
   },
   "The Sales Development Playbook|Trish Bertuzzi": {
+    "id": "b790f6afed173768e4a924c3173720e6",
     "brief": "Bertuzzi works through the decisions involved in building a team that starts sales conversations.",
     "synopsis": "The book examines whom to target, how to structure a role and what managers should measure. A team can log a great deal of outreach without creating an opportunity the next salesperson can use.",
     "author": "Trish Bertuzzi founded The Bridge Group and advised business-to-business sales teams. Her examples come from companies deciding how much specialization their sales process could support."
   },
   "The Sales Playbook for Founders|YC Startup Library": {
+    "id": "ae6a0c7786fb7b93b3d136f4b7757cd9",
     "brief": "A founder's guide to moving a business customer from an initial conversation to a signed deal.",
     "synopsis": "The Startup School talk covers qualifying prospects and keeping a sales process moving. It treats an enthusiastic meeting as an intermediate step whose value depends on what the customer agrees to do next.",
     "author": "YC's Tom Blomfield founded GoCardless and Monzo. He draws on selling financial products to businesses before an established name could open the door for him.",
     "source": "https://www.youtube.com/watch?v=DH7REvnQ1y4"
   },
   "The Science of Getting Rich|Wallace D. Wattles": {
+    "id": "423d104847fa829bea9feb1d709cf16b",
     "brief": "Wattles presents prosperity as a discipline of thought and action in the New Thought tradition.",
     "synopsis": "He argues that a person can pursue wealth creatively and asks readers to practise gratitude and purposeful work. The title uses the language of his philosophy rather than that of an experimental study.",
     "author": "Wallace D. Wattles was an American New Thought writer. The book appeared in 1910, when spiritual accounts of prosperity had a substantial popular readership."
   },
   "The Score Takes Care of Itself|Bill Walsh with Steve Jamison and Craig Walsh": {
+    "id": "079563ac4032d347ad2f7ce01f5a54c1",
     "brief": "Walsh explains the standards he set before the 49ers became a winning team.",
     "synopsis": "Practice routines, office conduct and the wording of instructions all enter his account of coaching. A score records a result after the game, while these are choices a coach can make beforehand.",
     "author": "Bill Walsh coached San Francisco to three Super Bowl wins. Steve Jamison and Walsh's son Craig helped bring his teaching and recollections together in a book published after his death."
   },
   "The Snowball|Alice Schroeder": {
+    "id": "c6e7649245a8478449fc7be72a417834",
     "brief": "Schroeder traces Warren Buffett's investing life alongside the family relationships that shaped it.",
     "synopsis": "Childhood businesses give way to investment partnerships and Berkshire Hathaway. The biography follows the accumulation of money while asking what the demands of that work meant at home.",
     "author": "Alice Schroeder covered Berkshire as an insurance analyst. Buffett granted her extensive access for the biography, and she also interviewed relatives and business associates."
   },
   "The Sovereign Individual|James Dale Davidson & William Rees-Mogg": {
+    "id": "5e7f1dd7b3479f2cf270bd9b38e7d59e",
     "brief": "Davidson and Rees-Mogg predict how digital networks could alter the balance between states and individuals.",
     "synopsis": "The authors reason from earlier shifts in military and economic technology to a future of more mobile wealth. Reading it today also means reading a late-1990s forecast made before many of those technologies were commonplace.",
     "author": "James Dale Davidson wrote about investment and politics. William Rees-Mogg edited The Times and wrote on public affairs. Their collaboration brings both perspectives to the forecast."
   },
   "The Startup Playbook|David Kidder": {
+    "id": "090d1750990e50bdb3b4749726d4ac19",
     "brief": "Kidder interviews founders about the early choices they still consider decisive.",
     "synopsis": "Rather than tell one company's history, he asks entrepreneurs to revisit hiring, products and moments when the original plan failed. Differences among the answers are part of the value of the collection.",
     "author": "David Kidder was a startup founder himself. His interviews approach well-known companies through the questions one entrepreneur might ask another."
   },
   "The Startup of You|Reid Hoffman & Ben Casnocha": {
+    "id": "d1b363516c625ad6754cb666ec2fc6f0",
     "brief": "Hoffman and Casnocha treat a career as a venture whose assumptions need updating.",
     "synopsis": "They examine professional networks, opportunities and backup plans. An alternative plan has value even when the original one works because it helps a person decide which risks they can afford.",
     "author": "Reid Hoffman co-founded LinkedIn. Ben Casnocha founded a company while still in school. Their different starting points inform a book about working in a changing employment market."
   },
   "The Value of Debt in Building Wealth|Thomas J. Anderson": {
+    "id": "09a4364eae697e34b7be04e586c8a971",
     "brief": "Anderson asks when paying down every debt can leave a household short of cash it needs.",
     "synopsis": "He weighs the cost of borrowing against liquidity and the demands of different stages of life. The tradeoffs depend on the terms of the debt and the household's ability to withstand a setback.",
     "author": "Thomas J. Anderson worked in wealth management and wrote a series on how borrowers use debt. He approached the question from conversations about clients' entire balance sheets."
   },
   "The Way of The Superior Man|David Deida": {
+    "id": "a591a8acc55bdab0389b29ac9c57d1c7",
     "brief": "Deida writes about the tensions between purpose, intimacy and desire in a man's life.",
     "synopsis": "Short chapters address how a man might stay present with a partner while retaining direction in his own work. The book develops these ideas through the author's spiritual framework of masculine and feminine energies.",
     "author": "David Deida writes and teaches about sexuality and intimate relationships. This work belongs to that spiritual teaching tradition and reflects its particular language about gender."
   },
   "The Way of the Wolf|Jordan Belfort": {
+    "id": "eb80c46552cc359ee88ff7cebce629ae",
     "brief": "Belfort sets out the sales script and delivery techniques he calls the Straight Line.",
     "synopsis": "The book follows a call from the opening seconds through objections and a request for commitment. Belfort gives particular weight to the salesperson's voice and the listener's confidence.",
     "author": "Jordan Belfort ran Stratton Oakmont and was convicted of securities fraud. He later taught sales, a relevant piece of context for a book on the persuasive methods he used."
   },
   "The Winner Effect|Ian Robertson": {
+    "id": "48eab7c4e00d4e0aee6313d044d9d493",
     "brief": "Robertson asks how winning once can change a person's behavior the next time they compete.",
     "synopsis": "He looks at the interaction between confidence, power and physiology, drawing on studies of humans and other animals. The same changes that encourage action can also distort judgment.",
     "author": "Ian Robertson is a clinical psychologist and neuroscientist who worked at Trinity College Dublin. He brought research on brain and behavior to a subject often told through winners' biographies."
   },
   "The Work of Art|Adam Moss": {
+    "id": "d74016b26a4a32c3e717522ada29b662",
     "brief": "Moss asks artists to reconstruct the making of one particular work.",
     "synopsis": "Drafts, sketches and abandoned versions sit beside conversations about the choices that survived. A finished lyric or a painting becomes a record of revisions that its audience would normally never see.",
     "author": "Adam Moss edited New York magazine. After leaving that job and trying to paint, he became interested in how other people moved through the uncertain middle of making something."
   },
   "Think and Grow Rich|Napoleon Hill": {
+    "id": "e8db0ae7acf4f10e912456bae1f28909",
     "brief": "Hill sets out a philosophy of achievement built around a definite purpose and sustained effort.",
     "synopsis": "The book pairs exercises in goal setting and self-suggestion with stories drawn from American business. Its argument about thought and wealth belongs to the self-help culture of the Depression years.",
     "author": "Napoleon Hill published the book in 1937. He presented his work through accounts of successful industrialists, an approach that shaped generations of business self-help writing."
   },
   "Think like a Rocket Scientist|Ozan Varol": {
+    "id": "8beb9c16c2b2571de69f7e45d94f095a",
     "brief": "Varol uses the habits of space exploration to rethink decisions made with incomplete information.",
     "synopsis": "He examines working from first principles, running tests that could disprove a favored idea and learning from failure. Mission examples give those instructions concrete consequences.",
     "author": "Ozan Varol worked on the operations team for the Mars Exploration Rovers before becoming a law professor. He drew on both engineering and teaching to write the book."
   },
   "Thinking Fast and Slow|Daniel Kahneman": {
+    "id": "89ae77b5814c55cc62181222085dc94b",
     "brief": "Kahneman examines the judgments people make before they realize they have made a judgment.",
     "synopsis": "Experiments in probability and choice show how an easy question can stand in for the difficult one actually being asked. Later chapters consider how people remember experiences and weigh gains against losses.",
     "author": "Daniel Kahneman developed much of this research with Amos Tversky. He wrote the book late in his career, looking back on the experiments and the friendship behind them."
   },
   "Thinking in Bets|Annie Duke": {
+    "id": "bfdbf47668439839bd89e396d6128f78",
     "brief": "Duke uses poker to show why a good outcome is a poor test of a single decision.",
     "synopsis": "A well-played hand can lose. She applies that lesson to estimating probabilities, reviewing decisions and talking with people who can challenge a confident opinion.",
     "author": "Annie Duke played professional poker after studying cognitive psychology. At the table, the information a player never gets to see is often as important as the cards they do."
   },
   "Thou Shall Prosper|Rabbi Daniel Lapin": {
+    "id": "26597ce5bd122144c604c0a31cefce3b",
     "brief": "Lapin approaches earning a living through Jewish teachings about trade and service.",
     "synopsis": "He connects trust, specialization and business relationships with questions of moral obligation. Readers meet an explicitly religious account of why commercial activity can contribute to a community.",
     "author": "Daniel Lapin is a rabbi who writes and speaks about business ethics. He structures the book around principles he draws from Jewish religious tradition."
   },
   "Total Recall|Arnold Schwarzenegger": {
+    "id": "86c3cb2295f910b09b8f4f5fb3249098",
     "brief": "Schwarzenegger recounts the decisions that carried him from rural Austria into three very public careers.",
     "synopsis": "Bodybuilding contests give way to Hollywood and electoral politics. The memoir sets meticulous training and career planning beside accounts of family life and his failures as a husband.",
     "author": "Arnold Schwarzenegger wrote after serving two terms as governor of California. He could look back on pursuing each new career while still identified publicly with the last one."
   },
   "Traction|Gino Wickman": {
+    "id": "ed534b73551ebc26801b44a20f5f6a15",
     "brief": "Wickman gives a leadership team a common way to run its weekly business.",
     "synopsis": "His Entrepreneurial Operating System brings goals, responsibilities, measurements and problem-solving into a regular meeting rhythm. The book includes the working documents teams use to put it into practice.",
     "author": "Gino Wickman ran a family business and later advised entrepreneurial companies. He developed the system by working repeatedly with owners and their leadership teams."
   },
   "Traffic Secrets|Russell Brunson": {
+    "id": "2ffec42fc6f940c6505e1e3eb88526f8",
     "brief": "Brunson starts with the places potential customers already spend their attention.",
     "synopsis": "He works through borrowed audiences, paid traffic and contacts a business can reach directly. The longer-term question is how to keep reaching customers when a platform changes its rules.",
     "author": "Russell Brunson wrote this as the traffic volume of his marketing series. Running ClickFunnels put him close to sellers whose results depended on search engines, ads and mailing lists."
   },
   "Trillion Dollar Coach|Eric Schmidt, Jonathan Rosenberg & Alan Eagle": {
+    "id": "138822b6f6496ae9768a64719baa939a",
     "brief": "Colleagues remember the coaching of Bill Campbell, a quiet presence behind several Silicon Valley leaders.",
     "synopsis": "The book reconstructs one-to-one meetings, arguments and the ways Campbell helped executives work together. Many of his interventions took place outside the formal reporting structure.",
     "author": "Eric Schmidt, Jonathan Rosenberg and Alan Eagle knew Campbell through Google. They interviewed others after his death to record coaching that had largely happened in private."
   },
   "Unlimited Power|Tony Robbins": {
+    "id": "a64953e1dd5b2d48d058d8dcb821a2d6",
     "brief": "Robbins presents exercises for changing the mental and physical state a person brings to a task.",
     "synopsis": "He asks readers to model effective performers and experiment with posture, language and attention. The methods reflect his early interest in neuro-linguistic programming.",
     "author": "Tony Robbins published the book during his early career as a motivational trainer. Its exercises reflect the live seminars through which he first built an audience."
   },
   "Unlock Secrets|Russell Brunson": {
+    "id": "114ce6083fd872fbd68413371bfe13a7",
     "brief": "A companion workbook for putting Brunson's three Secrets books to use together.",
     "synopsis": "The workbook connects exercises on building a sales funnel, explaining an offer and finding traffic. It is intended to be filled in alongside the main books as a reader works through a business of their own.",
     "author": "Russell Brunson described Unlock Secrets as the workbook linking DotCom Secrets, Expert Secrets and Traffic Secrets. That role explains its place beside three similarly titled books on this shelf."
   },
   "Unscripted|MJ DeMarco": {
+    "id": "7bda56eff06169f2cbca2d5e4352cd8b",
     "brief": "DeMarco questions the conventional script of exchanging most of one's working life for a distant retirement.",
     "synopsis": "He returns to business ownership and asks what would make a product useful enough to pay its creator repeatedly. The discussion connects ideas about independence with the work of building and selling something.",
     "author": "MJ DeMarco built an online limousine marketplace. He wrote this after The Millionaire Fastlane to develop the broader argument about work and autonomy behind his earlier book."
   },
   "Unshackled: Visa Opportunities for International Students and Scholars|Sharon He": {
+    "id": "49bc696fec54aa4a2eaed75bef24169d",
     "brief": "A library entry on the visa choices facing international students and scholars in the United States.",
     "synopsis": "A published guide called Unshackled follows skilled immigrants through the US immigration system. Its subtitle and byline differ from this shelf record, so the two editions cannot confidently be identified as the same work.",
     "author": "The shelf credits Sharon He. Soundarya Basubramani and immigration attorney Sameer Khedekar wrote the published guide, drawing on immigrant experiences and legal practice.",
     "source": "https://feld.com/archives/2023/07/book-unshackled-a-practical-guide-for-highly-skilled-immigrants-to-thrive-in-the-united-states/"
   },
   "What Every Real Estate Investor Needs To Know About Cash Flow|Frank Gallinelli": {
+    "id": "7d3757942a786401b21c953b52a37c43",
     "brief": "Gallinelli shows how the same property can look attractive or expensive depending on the measure used.",
     "synopsis": "Worked examples move through cash flow, capitalization rates and returns over time. The book asks readers to inspect the rent, expenses and financing assumptions underneath a promising number.",
     "author": "Frank Gallinelli founded RealData, which develops real estate investment analysis software. His teaching and software work both required making the arithmetic of property decisions explicit."
   },
   "Who Moved My Cheese|Spencer Johnson": {
+    "id": "cb0c5b556885864cb8c2ecda773cf809",
     "brief": "Four characters return to a familiar supply of cheese and discover it is gone.",
     "synopsis": "Johnson uses the different reactions inside the maze to ask how people notice and respond to change. The story is deliberately short enough for a group to read and discuss together.",
     "author": "Spencer Johnson trained as a physician and coauthored The One Minute Manager. He used short fables to give workplace conversations a shared point of reference."
   },
   "Why Startups Fail|Tom Eisenmann": {
+    "id": "350523f405116cb3f652b6e4b557b159",
     "brief": "Eisenmann studies startups that failed even though the usual ingredients for success seemed to be present.",
     "synopsis": "Case histories distinguish different patterns of failure, including a promising launch that hides weak demand. He also examines what a founder can do when preserving the company is no longer the right goal.",
     "author": "Tom Eisenmann taught entrepreneurship at Harvard Business School. Failures among founders he knew prompted him to investigate what standard startup advice had failed to explain."
   },
   "Why We Sleep|Matthew Walker": {
+    "id": "41e11a6adaf5b12c229d440cdf969b07",
     "brief": "Walker describes what happens in the brain and body across a night's sleep.",
     "synopsis": "Chapters follow sleep stages, dreaming and the effects of disrupted rest. The book argues for treating sleep as a biological necessity and brings the author's interpretation of research to a general audience.",
     "author": "Matthew Walker is a sleep researcher and professor at UC Berkeley. Laboratory studies of memory and sleep form part of the scientific background to his account."
   },
   "Winners|Alastair Campbell": {
+    "id": "1ab95848d64331dd9b0c5e2c244e53a1",
     "brief": "Campbell interviews competitors and leaders about how they prepare for the result everyone else sees.",
     "synopsis": "Sport sits alongside business and politics. The conversations examine preparation, setbacks and the role a team plays in achievements normally credited to one person.",
     "author": "Alastair Campbell worked as a journalist and as Tony Blair's communications director. Political campaigns gave him firsthand experience of a contest with a public result and an immovable deadline."
   },
   "Wisdom Takes Work|Ryan Holiday": {
+    "id": "bc0d134274a483713276ea022f26172e",
     "brief": "Holiday treats wisdom as something acquired through study, attention and the correction of mistakes.",
     "synopsis": "Historical lives supply the cases. The emphasis falls on the effort behind a sound judgment, especially the work of reconsidering something one once felt certain about.",
     "author": "Ryan Holiday wrote this as the wisdom installment of his series on the four classical virtues, following books on courage, temperance and justice."
   },
   "Wooden on Leadership|John Wooden": {
+    "id": "1b3be6818f6e6df2ba889ed422c2330a",
     "brief": "Wooden describes the daily teaching behind UCLA's record in college basketball.",
     "synopsis": "Practice plans, preparation and standards of behavior receive as much attention as games. His Pyramid of Success gives those details a structure he could explain to a new player.",
     "author": "John Wooden coached UCLA to ten NCAA men's basketball titles. He worked with Steve Jamison to set down lessons from decades of coaching."
   },
   "Work With The Best|Jay Yang": {
+    "id": "843fd6a6b25dcd92f19ce347fb917004",
     "brief": "Yang explains how to approach someone you would like to work for with evidence that you can already help.",
     "synopsis": "The guide moves from researching a person's work to making something useful before asking for a meeting. Its examples concern the first opportunity, when a conventional résumé offers little proof.",
     "author": "Jay Yang used a cold email to land an internship at newsletter company beehiiv. That experience supplies a concrete starting point for the advice he gives early-career readers.",
     "source": "https://jayyanginspires.com/work-with-the-best"
   },
   "You Can Just Do Things|Jay Yang": {
+    "id": "0fb9ecfc3a9586af948d9ea4de173bdb",
     "brief": "Yang asks what a young person can start doing before anyone gives them permission.",
     "synopsis": "He focuses on small acts of initiative, including contacting people and beginning work without a formal invitation. The aim is to make the first attempt concrete enough to do today.",
     "author": "Jay Yang built early work opportunities through unsolicited outreach and writing online. He uses those experiences to address readers who have more curiosity than credentials."
   },
   "You Can Negotiate Anything|Herb Cohen": {
+    "id": "a8fa9d6ef33d5001876c385cf1b2b460",
     "brief": "Cohen looks at the information, time and perceived power on either side of an everyday negotiation.",
     "synopsis": "He examines deadlines, preparation and the things each side cares about that the other might not suspect. Familiar transactions give readers a way to try the ideas outside a formal bargaining room.",
     "author": "Herb Cohen trained negotiators and advised businesses and government organizations. He wrote for the person who negotiates regularly without being given that job title."
   },
   "Zero to One|Peter Thiel": {
+    "id": "b748b14f4cacaa56e28f105606493135",
     "brief": "Thiel asks what it takes to build a company that does something genuinely new.",
     "synopsis": "The book examines small initial markets, proprietary technology and the advantages of escaping direct competition. It asks founders to explain what they believe about the world that their rivals have missed.",
     "author": "Peter Thiel taught a startup course at Stanford after co-founding PayPal. Blake Masters's class notes became the starting point for the book they wrote together."

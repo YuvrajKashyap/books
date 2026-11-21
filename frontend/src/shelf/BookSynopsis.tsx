@@ -1,39 +1,21 @@
 import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { displayTitle } from "./artwork";
-import catalogueUrl from "./synopses.json?url";
+import { cachedNote, readNote } from "./bookNote";
 
-type Note = { brief: string; synopsis: string; author: string; source?: string };
-type Catalogue = Record<string, Note>;
-let catalogue: Catalogue | undefined;
-let pending: Promise<Catalogue> | undefined;
-
-function loadCatalogue() {
-  pending ??= fetch(catalogueUrl)
-    .then(async response => {
-      if (!response.ok) throw new Error("Synopsis unavailable");
-      catalogue = await response.json() as Catalogue;
-      return catalogue;
-    })
-    .finally(() => { pending = undefined; });
-  return pending;
-}
-
-export function BookSynopsis({ title, author }: { title: string; author: string }) {
-  const [notes, setNotes] = useState(catalogue);
+export function BookSynopsis({ id }: { id: string }) {
+  const [note, setNote] = useState(() => cachedNote(id));
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    if (notes) return;
+    if (note !== undefined) return;
     let active = true;
-    loadCatalogue().then(data => { if (active) setNotes(data); })
+    readNote(id).then(data => { if (active) setNote(data); })
       .catch(() => { if (active) setFailed(true); });
     return () => { active = false; };
-  }, [notes, attempt]);
+  }, [id, note, attempt]);
 
   if (failed) return <button type="button" onClick={() => { setFailed(false); setAttempt(n => n + 1); }}>Retry synopsis</button>;
-  if (!notes) return <p role="status" className="synopsis-loading">Loading synopsis…</p>;
-  const note = notes[displayTitle(title) + "|" + author.trim()];
+  if (note === undefined) return <p role="status" className="synopsis-loading">Loading synopsis…</p>;
   if (!note) return null;
   return <div className="book-synopsis">
     <p className="synopsis-lead">{note.brief}</p>

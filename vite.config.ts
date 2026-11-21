@@ -4,6 +4,7 @@ import { getRequestListener } from "@hono/node-server";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import api from "./backend/app.js";
+import { bookNotes } from "./build/book-notes";
 export default defineConfig({
   root: "frontend",
   build: {outDir:"../dist",emptyOutDir:true},
@@ -11,6 +12,7 @@ export default defineConfig({
     fileURLToPath(new URL("./" + dir, import.meta.url))) } },
   plugins: [
     react(),
+    bookNotes(),
     {
       name: "books-api",
       configureServer(server) {

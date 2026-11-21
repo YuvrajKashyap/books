@@ -190,7 +190,7 @@ export function PublicShelf(){
        <button onClick={()=>{setAngle(-7);setOpened(!opened)}}><BookOpen size={14}/>{opened?'Close cover':'Open cover'}</button>
      </div>
      <p className="inspection-byline">{selected.author}</p>
-     <BookSynopsis key={selected.id} title={selected.title} author={selected.author}/>
+     <BookSynopsis key={selected.id} id={selected.id}/>
      <div className="inspection-imprint"><small>{selected.focus}</small><PrintEdition book={selected}/>{jacketFor(selected)?.custom&&<small>Custom library jacket</small>}</div>
      <div className="inspect-nav">
        <button disabled={current<=0} onClick={()=>param('pick',matches[current-1].id)}><ArrowLeft size={15}/>Previous</button>
