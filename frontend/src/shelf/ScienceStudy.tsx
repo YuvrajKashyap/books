@@ -8,9 +8,13 @@ type Gesture = typeof quiet;
 export function ScienceStudy() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const target = useRef<Gesture>(quiet);
+  const pulseStart = useRef(-Infinity);
   const redraw = useRef<() => void>(() => {});
   const [pinned, setPinned] = useState<Gesture>(quiet);
-  const preview = (gesture: Gesture) => {
+  const preview = (gesture: Gesture, strike = false) => {
+    if (gesture.instrument >= 0 && (strike || gesture.instrument !== target.current.instrument)) {
+      pulseStart.current = performance.now();
+    }
     target.current = gesture;
     redraw.current();
   };
@@ -25,7 +29,7 @@ export function ScienceStudy() {
     const paint = (time: number) => {
       frame = 0;
       const aim = target.current;
-      const blend = motion.matches ? 1 : 1 - Math.exp(-Math.min(50, time - last || 16) / 70);
+      const blend = motion.matches ? 1 : 1 - Math.exp(-Math.min(50, time - last || 16) / 85);
       last = time;
       let moving = false;
       const approach = (from: number, to: number) => {
@@ -36,8 +40,9 @@ export function ScienceStudy() {
       levels.forEach((v, i) => { levels[i] = approach(v, Number(i === aim.instrument)); });
       x = approach(x, aim.x);
       y = approach(y, aim.y);
-      drawLight(ctx, el.width, el.height, levels, x, y);
-      if (moving && !motion.matches) frame = requestAnimationFrame(paint);
+      const pulse = motion.matches ? 1 : Math.max(0, Math.min(1, (time - pulseStart.current) / 1080));
+      drawLight(ctx, el.width, el.height, levels, x, y, pulse);
+      if ((moving || pulse < 1) && !motion.matches) frame = requestAnimationFrame(paint);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(paint);
@@ -63,7 +68,11 @@ export function ScienceStudy() {
   }, []);
 
   function aim(event: PointerEvent<HTMLButtonElement>, instrument: number) {
-    if (event.pointerType === "touch" || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (event.pointerType === "touch") return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (target.current.instrument !== instrument) preview({ instrument, x: 0, y: 0 });
+      return;
+    }
     const box = event.currentTarget.getBoundingClientRect();
     preview({ instrument, x: 2 * (event.clientX - box.left) / box.width - 1,
       y: 2 * (event.clientY - box.top) / box.height - 1 });
@@ -86,7 +95,7 @@ export function ScienceStudy() {
         const touchY = event.detail ? 2 * (event.clientY - box.top) / box.height - 1 : -.4;
         const next = pinned.instrument === instrument ? quiet : { instrument, x: touchX, y: touchY };
         setPinned(next);
-        preview(next);
+        preview(next, true);
       }} />)}
   </div>;
 }

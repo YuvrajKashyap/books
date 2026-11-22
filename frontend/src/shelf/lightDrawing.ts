@@ -7,10 +7,19 @@ const stars = [
 
 // The glass faces and refracted rays share the same intersections in drawing coordinates.
 export function drawLight(ctx: CanvasRenderingContext2D, w: number, h: number,
-  levels: number[], x: number, y: number) {
+  levels: number[], x: number, y: number, pulse: number) {
   ctx.setTransform(w / 384, 0, 0, h / 104, 0, 0);
   ctx.clearRect(0, 0, 384, 104);
   const [lamp, prism, lens] = levels;
+  const power = Math.min(1, lamp + .8 * prism + .68 * lens);
+  const heat = lamp * (.86 - .12 * y) + .44 * prism + .34 * lens;
+  const cx = 318 + lens * x * 12, cy = 62 + lens * y * 10;
+  // A single flash travels from the wire to the far edge on each new interaction.
+  const front = 42 + 412 * pulse;
+  const flash = ctx.createLinearGradient(front - 26, 0, front + 5, 0);
+  flash.addColorStop(0, "transparent");
+  flash.addColorStop(.80, "#fff0c8ac");
+  flash.addColorStop(1, "transparent");
   function stroke(path: Path2D, color: string | CanvasGradient, width = 1) {
     ctx.strokeStyle = color;
     ctx.lineWidth = width;
@@ -41,15 +50,16 @@ export function drawLight(ctx: CanvasRenderingContext2D, w: number, h: number,
   const rule = new Path2D("M4 95H380");
   stroke(rule, "#cba96d44", .6);
 
-  const entryY = 51 + prism * (y * 8 - 2);
-  const exitY = entryY + 4 + prism * (4 - x * 2);
+  const entryY = 49 + prism * (y * 8 - 2) + lamp * y * 3;
+  const exitY = entryY + 3 + prism * (3 - x * 2);
   const entryX = 190 - (entryY - 18) * 37/63;
   const exitX = 190 + (exitY - 18) * 34/57;
   const beam = new Path2D();
-  beam.moveTo(69, 40 - prism * y * 4);
+  beam.moveTo(64, 37);
   beam.lineTo(entryX, entryY);
   beam.lineTo(exitX, exitY);
-  stroke(beam, gradient(69, 172, "#f2cb7c12", "#efdbabcf"), .95 + lamp * .55);
+  stroke(beam, gradient(64, entryX, "#f2cb7c55", "#efdbabcf"), .95 + heat * .7);
+  if (pulse < 1) stroke(beam, flash, 2.1);
 
   const face = new Path2D("M190 18L153 81L224 75Z");
   const glass = ctx.createLinearGradient(155, 72, 216, 52);
@@ -66,24 +76,12 @@ export function drawLight(ctx: CanvasRenderingContext2D, w: number, h: number,
   const shine = new Path2D("M188 27L162 72 M166 76L199 73 M213 61L220 72");
   stroke(shine, "#e9e1c384", .85);
 
-  spectrum.forEach((color, i) => {
-    const endX = 275 + prism * (8 + 4*x);
-    const endY = exitY + (i - 2.5) * (2.6 + prism * (2.4 + x)) + prism * y * 5;
-    const ray = new Path2D();
-    ray.moveTo(exitX, exitY);
-    ray.lineTo(endX, endY);
-    const fade = gradient(exitX, endX, color + (prism > .3 ? "d9" : "a0"), color + "00");
-    stroke(ray, fade, 1.6 + prism * .6);
-  });
-
   // The bright trace follows the filament inside the etched glass envelope.
-  const heat = lamp * (.82 - .16 * y);
   halo(64, 37, 16 + 16 * heat, `rgba(255,183,74,${.10 + heat * .32})`);
   const wire = new Path2D("M62 47C61 40 57 26 63 24C71 21 66 41 66 47");
   stroke(wire, `rgba(255,201,111,${heat * .88})`, 2.4);
   stroke(wire, `rgba(255,246,188,${heat})`, .85);
 
-  const cx = 317 + lens * x * 7, cy = 52 + lens * y * 6;
   for (const [sx, sy, size] of stars) {
     halo(sx, sy, size * 2.6, "#eed6a444");
     ctx.fillStyle = "#e0d0a0bc";
@@ -92,24 +90,50 @@ export function drawLight(ctx: CanvasRenderingContext2D, w: number, h: number,
   const orbit = new Path2D();
   orbit.ellipse(cx, cy, 34, 26, -.38, .26, 4.9);
   stroke(orbit, "#b4a27b45", .7);
-  for (let i = 0; i < 3; i++) {
+  const spread = .036 + .016 * lamp + prism * (.032 + .014 * x);
+  const tilt = -.058 + prism * y * .052;
+  const arrival = Math.max(0, 1 - Math.abs(front - cx - 7) / 42);
+  let illumination = 0;
+  spectrum.forEach((color, i) => {
+    const slope = tilt + (i - 2.5) * spread;
+    const clearance = cy - (exitY + (cx - exitX) * slope);
+    const coupling = Math.exp(-Math.abs(clearance) / 32);
+    illumination += coupling / spectrum.length;
+    // The two images pass on opposite sides of the lens. Softening the bend
+    // at alignment keeps a ray continuous when the pointer crosses its path.
+    const bend = Math.tanh(clearance / 8) * coupling * (19 + 20 * lens);
     const ray = new Path2D();
-    const base = 37 + i * 4;
-    for (let px = 246; px <= 382; px += 2) {
-      const d = (px - cx) / (16 + i * 2);
-      const py = base + (px - 246) * .065 - (6 + i * 1.2 + lens * (8 + y * 3)) / (1 + d * d);
-      if (px === 246) ray.moveTo(px, py);
-      else ray.lineTo(px, py);
+    ray.moveTo(exitX, exitY);
+    for (let px = exitX + 3; px <= 384; px += 3) {
+      const distance = px - exitX;
+      const offset = (px - cx) / 25;
+      ray.lineTo(px, exitY + distance * slope - bend * (1 - Math.exp(-distance / 24)) / (1 + offset * offset));
     }
-    const ink = ctx.createLinearGradient(246, 0, 382, 0);
-    ink.addColorStop(0, "#c8b68100"); ink.addColorStop(.5, i === 1 ? "#edd5a6d9" : "#c8b68168"); ink.addColorStop(1, "#c8b68100");
-    stroke(ray, ink, i === 1 ? 1.15 : .65);
+    const ink = ctx.createLinearGradient(exitX, 0, 382, 0);
+    ink.addColorStop(0, color + "ee");
+    ink.addColorStop(.62, color + "bb");
+    ink.addColorStop(1, color + "00");
+    ctx.globalAlpha = .50 + .48 * power;
+    stroke(ray, ink, 1.15 + power * .48);
+    ctx.globalAlpha = 1;
+    if (pulse < 1) stroke(ray, flash, 1.45);
+  });
+  const light = illumination * (.25 + power) + arrival * .32;
+  halo(cx, cy, 13 + light * 14, `rgba(245,201,126,${.27 + light * .35})`);
+  if (arrival > 0) {
+    const echo = new Path2D();
+    const radius = 9 + (front - cx + 35) * .21;
+    echo.ellipse(cx, cy, radius, radius * .68, -.38, 0, 2 * Math.PI);
+    stroke(echo, `rgba(247,218,158,${arrival * .53})`, .85);
   }
-  halo(cx, cy, 14 + lens * 3, "#eac48370");
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(1 + light * .44, 1 + light * .44);
   const star = new Path2D();
-  star.moveTo(cx, cy - 7); star.quadraticCurveTo(cx + 1, cy - 1, cx + 5, cy);
-  star.quadraticCurveTo(cx + 1, cy + 1, cx, cy + 7);
-  star.quadraticCurveTo(cx - 1, cy + 1, cx - 5, cy);
-  star.quadraticCurveTo(cx - 1, cy - 1, cx, cy - 7);
+  star.moveTo(0, -7); star.quadraticCurveTo(1, -1, 5, 0);
+  star.quadraticCurveTo(1, 1, 0, 7);
+  star.quadraticCurveTo(-1, 1, -5, 0);
+  star.quadraticCurveTo(-1, -1, 0, -7);
   ctx.fillStyle = "#fff0c4"; ctx.fill(star);
+  ctx.restore();
 }
