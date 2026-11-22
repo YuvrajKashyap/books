@@ -78,9 +78,11 @@ export function Feature({ library, open }: { library: Library; open: Open }) {
                 className="desk-gauge"
                 role="img"
                 aria-label={
-                  current.progress != null
+                  (current.format || "Reading") +
+                  ", " +
+                  (current.progress != null
                     ? current.progress + "% read"
-                    : "Progress not recorded"
+                    : "progress not recorded")
                 }
               >
                 <div className="gauge-rule">

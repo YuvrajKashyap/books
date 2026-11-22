@@ -20,7 +20,7 @@ function touchAim(event: PointerEvent, bounds: DOMRect): Gesture {
   const across = Math.max(
     0,
     Math.min(
-      3,
+      instruments.length,
       ((event.clientX - bounds.left) / bounds.width) * instruments.length,
     ),
   );

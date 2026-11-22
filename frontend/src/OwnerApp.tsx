@@ -157,7 +157,13 @@ export default function OwnerApp() {
       backup: ReturnType<typeof backupSchema.parse>;
     } | null>(null);
   const subject = useRef<string | undefined>(undefined);
+  // Each backup choice gets a number. Clearing the staged backup moves the
+  // number on, so a file still being read can never stage itself afterwards.
   const backupChoice = useRef(0);
+  const dropBackup = useCallback(() => {
+    backupChoice.current++;
+    setRestore(null);
+  }, []);
   const lock = useRef(false),
     [params, setParams] = useSearchParams(),
     location = useLocation(),
@@ -217,7 +223,7 @@ export default function OwnerApp() {
               if (s) void loadPages().catch(() => {});
               setLibrary(null);
               setSettings(false);
-              setRestore(null);
+              dropBackup();
               setIssue("");
             }
             setSession(s);
@@ -412,7 +418,7 @@ export default function OwnerApp() {
           title="Library settings"
           onClose={() => {
             setSettings(false);
-            setRestore(null);
+            dropBackup();
           }}
         >
           <div className="setting-intro">
@@ -469,8 +475,8 @@ export default function OwnerApp() {
                 const file = e.target.files?.[0];
                 // A new choice always replaces the old one, even if it fails,
                 // so an earlier backup can never stay queued by mistake.
-                setRestore(null);
-                const choice = ++backupChoice.current;
+                dropBackup();
+                const choice = backupChoice.current;
                 if (!file) return;
                 try {
                   const backup = backupSchema.parse(
@@ -494,12 +500,12 @@ export default function OwnerApp() {
               <button
                 onClick={async () => {
                   if (await mutate({ op: "restore", backup: restore.backup }))
-                    setRestore(null);
+                    dropBackup();
                 }}
               >
                 Restore backup
               </button>
-              <button onClick={() => setRestore(null)}>Cancel</button>
+              <button onClick={dropBackup}>Cancel</button>
             </div>
           )}
           <button
