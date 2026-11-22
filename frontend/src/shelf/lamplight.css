@@ -103,3 +103,37 @@
 ::view-transition-new(root) {
   animation-duration: 0.42s;
 }
+
+/* Owner cover layout: every book stands face-out on the same timber shelves
+   as the spines, and rises a little under the pointer or keyboard focus. */
+.owner-rack.face-out {
+  column-gap: 14px;
+  padding-inline: 22px;
+}
+.owner-rack.face-out .volume-slot.is-turned {
+  z-index: var(--stack, 1);
+}
+.owner-rack.face-out .volume-slot.is-turned .volume-pivot {
+  transform: none;
+}
+.owner-rack.face-out .volume-pick:focus-visible .volume-pivot {
+  transform: translateY(-8px) rotateX(-3deg);
+}
+@media (hover: hover) and (pointer: fine) {
+  .owner-rack.face-out .volume-pick:hover .volume-pivot {
+    transform: translateY(-8px) rotateX(-3deg);
+  }
+}
+
+/* Two short shelves share a row instead of each leaving a long bare board. */
+@media (min-width: 901px) {
+  .shelf-group.is-brief:has(+ .is-brief),
+  .shelf-group.is-brief + .shelf-group.is-brief {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(50% - 12px);
+  }
+  .shelf-group.is-brief + .shelf-group.is-brief {
+    margin-left: 24px;
+  }
+}

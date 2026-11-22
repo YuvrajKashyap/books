@@ -15,6 +15,8 @@ import { scrollShelfWheel } from "./wheel";
 type BookProps = {
   book: Book;
   selected: boolean;
+  // Cover layout: every book faces out and a single press opens it.
+  faceOut?: boolean;
   open: (id: string) => void;
   turn: (id: string | null) => void;
   painted?: boolean;
@@ -25,6 +27,7 @@ type BookProps = {
 export const ShelfSpine = memo(function ShelfSpine({
   book,
   selected,
+  faceOut = false,
   open,
   turn,
   painted = true,
@@ -39,23 +42,23 @@ export const ShelfSpine = memo(function ShelfSpine({
     "--book-center":
       left === undefined
         ? undefined
-        : left + Math.round((selected ? 128 : depth) / 2),
+        : left + Math.round((selected || faceOut ? 128 : depth) / 2),
   } as CSSProperties;
   return (
     <div
-      className={"volume-slot" + (selected ? " is-turned" : "")}
+      className={"volume-slot" + (selected || faceOut ? " is-turned" : "")}
       data-book={book.id}
       style={style}
     >
       <ShelfPick
         book={book}
-        faceOut={selected}
+        faceOut={selected || faceOut}
         exposedEnd={exposedEnd}
         painted={painted || selected}
-        pick={() => (selected ? open(book.id) : turn(book.id))}
+        pick={() => (selected || faceOut ? open(book.id) : turn(book.id))}
         reshelve={() => turn(null)}
       />
-      {selected && (
+      {selected && !faceOut && (
         <button
           className="volume-return"
           onClick={() => turn(null)}
@@ -64,24 +67,6 @@ export const ShelfSpine = memo(function ShelfSpine({
           Reshelve
         </button>
       )}
-    </div>
-  );
-});
-
-const ShelfCover = memo(function ShelfCover({
-  book,
-  open,
-  painted,
-}: Pick<BookProps, "book" | "open" | "painted">) {
-  return (
-    <div className="card-wrap" data-book={book.id}>
-      <button className="bookcard" onClick={() => open(book.id)}>
-        <span className="cover-model">
-          {painted && <BoundVolume book={book} />}
-        </span>
-        <strong>{displayTitle(book.title)}</strong>
-        <small>{book.author || "Author unlisted"}</small>
-      </button>
     </div>
   );
 });
@@ -163,7 +148,7 @@ export function ContinuousShelf({
   let left = 0;
   return (
     <div
-      className={(covers ? "covers" : "owner-rack") + " continuous-shelf"}
+      className={"owner-rack continuous-shelf" + (covers ? " face-out" : "")}
       ref={rack}
       role="region"
       aria-label={label + " horizontal bookshelf"}
@@ -195,18 +180,9 @@ export function ContinuousShelf({
       }}
     >
       {books.map((book, index) => {
-        if (covers)
-          return (
-            <ShelfCover
-              key={book.id}
-              book={book}
-              open={open}
-              painted={painted.has(book.id)}
-            />
-          );
         const position = left;
         const selected = turned === book.id;
-        left += (selected ? 128 : bindingDepth(book)) + 2;
+        left += (selected || covers ? 128 : bindingDepth(book)) + 2;
         return (
           <ShelfSpine
             key={book.id}
@@ -214,6 +190,7 @@ export function ContinuousShelf({
             open={open}
             turn={turn}
             selected={selected}
+            faceOut={covers}
             left={position}
             exposedEnd={index === books.length - 1}
             painted={painted.has(book.id)}
