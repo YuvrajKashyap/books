@@ -145,6 +145,9 @@ export function ContinuousShelf({
     };
   }, []);
 
+  // Matches column-gap on .owner-rack (room.css) and its cover layout
+  // (lamplight.css), so each slot's computed eye line is where it is drawn.
+  const gap = covers ? 14 : 2;
   let left = 0;
   return (
     <div
@@ -182,7 +185,7 @@ export function ContinuousShelf({
       {books.map((book, index) => {
         const position = left;
         const selected = turned === book.id;
-        left += (selected || covers ? 128 : bindingDepth(book)) + 2;
+        left += (selected || covers ? 128 : bindingDepth(book)) + gap;
         return (
           <ShelfSpine
             key={book.id}

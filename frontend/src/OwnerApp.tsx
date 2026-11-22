@@ -152,10 +152,12 @@ export default function OwnerApp() {
     [msg, setMsg] = useState(""),
     [issue, setIssue] = useState(""),
     [settings, setSettings] = useState(false),
-    [restore, setRestore] = useState<ReturnType<
-      typeof backupSchema.parse
-    > | null>(null);
+    [restore, setRestore] = useState<{
+      file: string;
+      backup: ReturnType<typeof backupSchema.parse>;
+    } | null>(null);
   const subject = useRef<string | undefined>(undefined);
+  const backupChoice = useRef(0);
   const lock = useRef(false),
     [params, setParams] = useSearchParams(),
     location = useLocation(),
@@ -465,11 +467,21 @@ export default function OwnerApp() {
               accept=".json"
               onChange={async (e) => {
                 const file = e.target.files?.[0];
+                // A new choice always replaces the old one, even if it fails,
+                // so an earlier backup can never stay queued by mistake.
+                setRestore(null);
+                const choice = ++backupChoice.current;
                 if (!file) return;
                 try {
-                  setRestore(backupSchema.parse(JSON.parse(await file.text())));
+                  const backup = backupSchema.parse(
+                    JSON.parse(await file.text()),
+                  );
+                  // A later choice wins even if this larger file parsed last.
+                  if (choice === backupChoice.current)
+                    setRestore({ file: file.name, backup });
                 } catch {
-                  setMsg("Choose a valid bookshelf JSON backup.");
+                  if (choice === backupChoice.current)
+                    setMsg("Choose a valid bookshelf JSON backup.");
                 }
                 e.target.value = "";
               }}
@@ -477,10 +489,11 @@ export default function OwnerApp() {
           </label>
           {restore && (
             <div className="confirm">
-              Replace the library with {restore.books.length} books?
+              Replace the library with {restore.backup.books.length} books from{" "}
+              <b>{restore.file}</b>?
               <button
                 onClick={async () => {
-                  if (await mutate({ op: "restore", backup: restore }))
+                  if (await mutate({ op: "restore", backup: restore.backup }))
                     setRestore(null);
                 }}
               >
@@ -495,6 +508,7 @@ export default function OwnerApp() {
               await auth?.auth.signOut({ scope: "local" });
               setSettings(false);
               setLibrary(null);
+              navigate("/", { replace: true });
             }}
           >
             <LogOut />

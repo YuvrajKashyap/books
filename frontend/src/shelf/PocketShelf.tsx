@@ -158,6 +158,10 @@ export function PocketShelf({
     let touching = false;
     function settle() {
       if (!loop || touching) return;
+      // Jumping copies would unmount a focused book button and drop keyboard
+      // focus to the page. Wait until focus leaves the books.
+      const focused = document.activeElement;
+      if (focused !== el && el.contains(focused)) return;
       const copy = Math.floor((el.scrollLeft + width / 2) / length);
       if (copy !== 1) {
         el.scrollLeft += (1 - copy) * length;
@@ -185,11 +189,13 @@ export function PocketShelf({
     el.addEventListener("touchstart", touchStart, { passive: true });
     el.addEventListener("touchend", touchEnd, { passive: true });
     el.addEventListener("touchcancel", touchEnd, { passive: true });
+    el.addEventListener("focusout", touchEnd);
     return () => {
       el.removeEventListener("scroll", scrolled);
       el.removeEventListener("touchstart", touchStart);
       el.removeEventListener("touchend", touchEnd);
       el.removeEventListener("touchcancel", touchEnd);
+      el.removeEventListener("focusout", touchEnd);
       window.clearTimeout(timer);
     };
   }, [length, loop, width, syncView]);
@@ -233,6 +239,7 @@ export function PocketShelf({
         <div
           key={copy + ":" + book.id}
           className={"pocket-slot" + (face ? " face-out" : "")}
+          data-book={book.id}
           style={
             {
               left,

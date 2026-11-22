@@ -5,6 +5,7 @@ const name = "open-book";
 
 type FlightDocument = Document & {
   startViewTransition?: (update: () => Promise<void>) => {
+    ready: Promise<void>;
     finished: Promise<void>;
   };
 };
@@ -30,10 +31,33 @@ function settled(done: () => boolean) {
   });
 }
 
-const shelfCopy = (id: string) =>
-  document.querySelector<HTMLElement>(
+// The phone shelf loops, so one title can be on the page more than once.
+// Fly from the copy nearest the middle of the screen that is actually visible.
+function shelfCopy(id: string) {
+  const copies = document.querySelectorAll<HTMLElement>(
     `[data-book="${CSS.escape(id)}"] .volume-pick`,
   );
+  const middle = innerWidth / 2;
+  let best: HTMLElement | null = null;
+  let bestDistance = Infinity;
+  for (const copy of copies) {
+    const box = copy.getBoundingClientRect();
+    if (
+      !box.width ||
+      box.right < 0 ||
+      box.left > innerWidth ||
+      box.bottom < 0 ||
+      box.top > innerHeight
+    )
+      continue;
+    const distance = Math.abs(box.left + box.width / 2 - middle);
+    if (distance < bestDistance) {
+      best = copy;
+      bestDistance = distance;
+    }
+  }
+  return best;
+}
 const readerOpen = () => Boolean(document.querySelector(".book-dialog[open]"));
 
 function fly(update: () => Promise<void>, after: () => void) {
@@ -42,7 +66,11 @@ function fly(update: () => Promise<void>, after: () => void) {
     void update().finally(after);
     return;
   }
-  start.call(document, update).finished.finally(after);
+  const flight = start.call(document, update);
+  // The browser may skip the animation (layout changed mid-flight, tab hidden).
+  // The update still runs, so the skip itself is not an error.
+  flight.ready.catch(() => {});
+  void flight.finished.catch(() => {}).finally(after);
 }
 
 export function liftBook(id: string, open: () => void) {

@@ -116,6 +116,8 @@ export function Lamplight({ ready }: { ready: boolean }) {
     return () => {
       cancelAnimationFrame(frame);
       clearTimeout(waking);
+      dim.classList.remove("is-waking", "is-lit");
+      warm.classList.remove("is-waking", "is-lit");
       cabinet.removeEventListener("pointermove", onMove);
       cabinet.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("scroll", onScroll);
