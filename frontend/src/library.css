@@ -101,6 +101,9 @@ dialog::backdrop {background:#091912a3}
 }
 .light-study {
   position: relative;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   width: clamp(260px, 31vw, 430px);
