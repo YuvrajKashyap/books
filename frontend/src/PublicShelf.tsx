@@ -3,6 +3,8 @@ import { ScienceStudy } from "./shelf/ScienceStudy";
 import { BookInspection } from "./shelf/BookInspection";
 import { readNote, warmNote } from "./shelf/bookNote";
 import { useShelfCamera } from "./shelf/useShelfCamera";
+import { Lamplight } from "./shelf/Lamplight";
+import { liftBook, reshelveBook } from "./shelf/bookFlight";
 import {
   memo,
   useCallback,
@@ -82,7 +84,13 @@ const BookcaseRow = memo(function BookcaseRow({
             <div
               className={"volume-slot" + (revealed ? " is-turned" : "")}
               key={b.id}
-              style={{ "--slot": bindingDepth(b) + "px" } as CSSProperties}
+              data-book={b.id}
+              style={
+                {
+                  "--slot": bindingDepth(b) + "px",
+                  "--n": position,
+                } as CSSProperties
+              }
             >
               <ShelfPick
                 book={b}
@@ -301,9 +309,11 @@ export function PublicShelf() {
       void readNote(id).catch(() => {});
       const search = new URLSearchParams(window.location.search);
       search.set("pick", id);
-      navigate(
-        { search: search.toString() },
-        { state: { fromBookshelf: true }, preventScrollReset: true },
+      liftBook(id, () =>
+        navigate(
+          { search: search.toString() },
+          { state: { fromBookshelf: true }, preventScrollReset: true },
+        ),
       );
     },
     [navigate],
@@ -318,8 +328,12 @@ export function PublicShelf() {
     });
   }
   function closeBook() {
-    if (location.state?.fromBookshelf) navigate(-1);
-    else param("pick", "");
+    const leave = () => {
+      if (location.state?.fromBookshelf) navigate(-1);
+      else param("pick", "");
+    };
+    if (id) reshelveBook(id, leave);
+    else leave();
   }
   const current = matches.findIndex((b) => b.id === id);
   const controls = (
@@ -504,6 +518,7 @@ export function PublicShelf() {
                   />
                 ))}
               <div className="plinth" />
+              <Lamplight ready={state === "ok"} />
             </>
           )}
           {state !== "ok" || !matches.length ? (
