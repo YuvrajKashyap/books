@@ -241,7 +241,18 @@ export function Collection({
         hiddenBooks += group.length - visible.length;
         if (!visible.length) return null;
         return (
-          <section key={g} className="shelf-group">
+          <section
+            key={g}
+            className={
+              "shelf-group" +
+              (!continuous &&
+              view.layout !== "table" &&
+              !arrange &&
+              visible.length <= (view.layout === "shelf" ? 4 : 14)
+                ? " is-brief"
+                : "")
+            }
+          >
             <h2>
               {g}
               <span>{group.length}</span>
@@ -279,6 +290,20 @@ export function Collection({
                     key={book.id}
                     book={book}
                     selected={turned === book.id}
+                    exposedEnd={index === visible.length - 1}
+                    open={open}
+                    turn={setTurned}
+                  />
+                ))}
+              </div>
+            ) : !arrange ? (
+              <div className="owner-rack face-out">
+                {visible.map((book, index) => (
+                  <ShelfSpine
+                    key={book.id}
+                    book={book}
+                    selected={false}
+                    faceOut
                     exposedEnd={index === visible.length - 1}
                     open={open}
                     turn={setTurned}
