@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { Brand, Dialog } from "./components";
 import "./owner-desk.css";
+import "./owner-night.css";
 import { ScienceStudy } from "./shelf/ScienceStudy";
 import type { Mutate } from "./Reading";
 import { PublicShelf } from "./PublicShelf";
@@ -427,7 +428,10 @@ export default function OwnerApp() {
             onClick={() => download(library, "yuvraj-bookshelf.json")}
           >
             <Download />
-            Export library
+            <span className="setting-copy">
+              <b>Export library</b>
+              <small>Books, history, both orders, views and rotation</small>
+            </span>
           </button>
           <button
             className="setting"
@@ -442,11 +446,20 @@ export default function OwnerApp() {
             }}
           >
             <Download />
-            Export original Notion archive
+            <span className="setting-copy">
+              <b>Export original Notion archive</b>
+              <small>The source database exactly as it was imported</small>
+            </span>
           </button>
           <label className="setting">
             <Upload />
-            Restore library backup
+            <span className="setting-copy">
+              <b>Restore library backup</b>
+              <small>
+                Choose a bookshelf JSON file; you confirm before anything
+                changes
+              </small>
+            </span>
             <input
               type="file"
               accept=".json"
@@ -485,7 +498,10 @@ export default function OwnerApp() {
             }}
           >
             <LogOut />
-            Sign out
+            <span className="setting-copy">
+              <b>Sign out</b>
+              <small>Returns to the public shelf on this device</small>
+            </span>
           </button>
         </Dialog>
       )}
