@@ -4,7 +4,13 @@ import {
   flexRender,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { columns, bookFields, statuses, type Book, type View } from "../../shared/model";
+import {
+  columns,
+  bookFields,
+  statuses,
+  type Book,
+  type View,
+} from "../../shared/model";
 import type { Mutate } from "./Reading";
 
 type Props = {

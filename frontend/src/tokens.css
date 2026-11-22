@@ -1,0 +1,29 @@
+/* One place for the palette, type and motion that every surface shares.
+   Scoped overrides (the night room, the desk) are defined beside what they
+   change. */
+:root {
+  /* Paper */
+  --paper: #f4efe2;
+  --surface: #fffbf1;
+  --inset: #e8e1ce;
+  --vellum: #f8efda;
+  --ink: #262e24;
+  --muted: #655f4f;
+  --line: #cdc4ab;
+
+  /* Cloth and metal */
+  --forest: #214837;
+  --cloth: #132c25;
+  --metal: #836438;
+  --gilt: #dbbd81;
+  --light: #ffdc9c;
+
+  /* Timber */
+  --timber: #71442d;
+  --rear: #6a4c37;
+  --frame: #80523a;
+
+  --display: "Cormorant Garamond", Georgia, serif;
+  --margin: clamp(16px, 3vw, 60px);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}

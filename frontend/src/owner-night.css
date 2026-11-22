@@ -1,0 +1,170 @@
+/* The owner's rooms share the night study of the public bookcase. Shelves
+   stand in the room itself; ledgers (table, queues, history) are paper sheets
+   laid in it. */
+.private-room {
+  background:
+    radial-gradient(ellipse at 49% 14rem, #354939 0, transparent 61rem),
+    repeating-linear-gradient(90deg, #bca77a04 0 1px, transparent 1px 4px),
+    #142820;
+}
+.reading-desk.shelf-page {
+  --ink: #f1e6c9;
+  --muted: #b9ae8f;
+  --line: #c9a45c3d;
+  color: var(--ink);
+}
+/* Dialogs opened from the shelves are paper again. */
+.reading-desk.shelf-page dialog {
+  --ink: #262e24;
+  --muted: #655f4f;
+  --line: #cdc4ab;
+  color: var(--ink);
+}
+
+.shelf-page .collection-desk {
+  box-shadow:
+    inset 0 0 0 1px #c9a45c33,
+    0 14px 26px -18px #050d09;
+}
+.shelf-page .shelf-group h2 {
+  color: #f6ecd2;
+}
+.shelf-page .shelf-group h2 span {
+  color: #c9a45c;
+}
+.shelf-page #collection > .pills button {
+  color: #d9cfb4;
+}
+.shelf-page #collection > .pills button:hover {
+  background: #f1e6c914;
+}
+.shelf-page #collection > .pills button[aria-pressed="true"] {
+  color: #1d2f25;
+  background: linear-gradient(180deg, #f1e0b4, #dcc48d);
+  border-color: #e4cf9a;
+}
+.shelf-page #collection > .pills select,
+.shelf-page .more,
+.shelf-page .arrange-notice button,
+.shelf-page .empty button {
+  color: #30291f;
+}
+.shelf-page .more {
+  display: flex;
+  margin: 8px auto 0;
+  padding: 11px 20px;
+  border: 1px solid #e4cf9a;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #f1e0b4, #dcc48d);
+}
+.shelf-page .arrange-notice {
+  color: #d9cfb4;
+}
+.shelf-page .owner-rack,
+.shelf-page .covers {
+  box-shadow:
+    inset 3px 0 9px #31190888,
+    0 22px 34px -20px #040a07,
+    0 2px 0 #a3836055;
+}
+.shelf-page .desk-reading {
+  background:
+    linear-gradient(180deg, transparent 62%, #06120dcc),
+    repeating-linear-gradient(90deg, #d8c08a05 0 1px, transparent 1px 5px),
+    #0b1c15;
+}
+
+/* Paper sheets */
+.reading-desk:not(.shelf-page) > :is(.queue-desk, .timeline, #collection) {
+  padding: clamp(14px, 2.2vw, 28px);
+  border-radius: 5px;
+  background:
+    radial-gradient(ellipse at 18% 0, #fffaf0, transparent 62%), #f3ecdc;
+  box-shadow:
+    inset 0 0 0 1px #bfa46f,
+    inset 0 0 0 4px #f3ecdc,
+    inset 0 0 0 5px #bfa46f40,
+    0 30px 44px -26px #040a07;
+}
+.reading-desk > p[role="status"] {
+  color: #d9cfb4;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reading-desk:not(.shelf-page) > :is(.queue-desk, .timeline, #collection) {
+    animation: lay-sheet 0.55s var(--ease) backwards;
+  }
+  @keyframes lay-sheet {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+}
+
+/* History: larger jackets that lift under the pointer. */
+.private-room .timeline-item .cover {
+  flex: none;
+  width: 60px;
+  box-shadow:
+    3px 3px 0 -1px #d9cbae,
+    7px 10px 14px -6px #3b2c1680;
+  transition: transform 0.3s var(--ease);
+}
+.private-room .timeline-item:is(:hover, :focus-visible) .cover {
+  transform: translateY(-3px) rotate(-2deg);
+}
+.private-room .timeline-item strong {
+  font-size: clamp(24px, 2.3vw, 32px);
+  line-height: 1.05;
+  font-variant-numeric: lining-nums;
+}
+.private-room .timeline-item {
+  padding-block: 14px;
+}
+.tabletitle,
+.private-room td {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Settings: each action explains itself; the file picker is the whole row. */
+.private-room .setting {
+  align-items: center;
+  gap: 14px;
+  padding-block: 13px;
+  text-align: left;
+}
+.setting-copy {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.setting-copy b {
+  font-weight: 560;
+  color: #26342a;
+}
+.setting-copy small {
+  color: #6e6353;
+}
+.private-room label.setting {
+  flex-wrap: nowrap;
+  position: relative;
+  cursor: pointer;
+}
+.private-room label.setting input[type="file"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.private-room label.setting:focus-within {
+  outline: 2px solid #a66629;
+  outline-offset: 2px;
+}
+.private-room .setting.is-leaving {
+  margin-top: 8px;
+}

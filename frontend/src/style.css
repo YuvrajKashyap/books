@@ -3,14 +3,6 @@
     15px/1.5 "DM Sans Variable",
     Arial,
     sans-serif;
-  color: #28362f;
-  background: #f8f6f0;
-  --ink: #28362f;
-  --muted: #646d62;
-  --line: #d9d9cd;
-  --forest: #244b3e;
-  --paper: #f8f6f0;
-  --display: "Cormorant Garamond", Georgia, serif;
   font-synthesis: none;
 }
 * {
@@ -161,15 +153,6 @@ main {
 .brand svg {
   margin-right: 9px;
 }
-.brand-dot {
-  color: #a76b45;
-}
-.mast-caption {
-  border-left: 1px solid var(--line);
-  padding-left: 17px;
-  font-size: 13px;
-  color: var(--muted);
-}
 nav {
   margin-left: auto;
   display: flex;
@@ -201,8 +184,6 @@ main {
 }
 .page-title,
 .section-head,
-.next-top,
-.next-bottom,
 .form-actions,
 .dialog-head,
 .setting-intro,
@@ -218,104 +199,16 @@ main {
 .page-title h1 {
   margin-top: 4px;
 }
-.feature-grid {
-  display: grid;
-  grid-template-columns: 1.75fr 1fr;
-  gap: 16px;
-}
-.feature,
 .next {
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-}
-.feature {
-  display: flex;
-  align-items: center;
-  background: #223e34;
-  color: #fffbe9;
-  isolation: isolate;
-  min-height: 265px;
-}
-.feature-art {
-  width: 41%;
-  min-width: 160px;
-  align-self: stretch;
-  display: grid;
-  place-items: center;
-  position: relative;
-  background: radial-gradient(ellipse at 32% 34%, #75835b70, transparent 77%);
-}
-.etch {
-  position: absolute;
-  inset: 0 -12% 0 0;
-  background: repeating-radial-gradient(
-    ellipse at 48% 68%,
-    transparent 0 8px,
-    #d9d3a828 8.6px,
-    transparent 9.4px 14px
-  );
-  mask-image: linear-gradient(90deg, #000 55%, transparent);
-}
-.feature-art .cover {
-  width: clamp(100px, 10vw, 145px);
-  transform: perspective(850px) rotateY(-10deg) rotate(-7deg);
-  box-shadow:
-    7px 9px 1px -5px #d9cbb3,
-    13px 18px 20px #071a12a3;
-}
-.feature-text {
-  padding: 25px 25px 36px 7px;
-}
-.feature-text .kicker {
-  color: #e8d8aa;
 }
 .light {
   width: 6px;
   height: 6px;
   background: #d4c68c;
   border-radius: 50%;
-}
-.feature h2 {
-  font-size: clamp(38px, 3.8vw, 58px);
-  margin: 12px 0 3px;
-  line-height: 1;
-}
-.feature p {
-  color: #d9e0d4;
-}
-.meta {
-  font-size: 12px;
-  color: #c5d2c1;
-  display: block;
-  margin: 10px 0;
-}
-.feature-text button {
-  background: transparent;
-  color: #fff9e9;
-  border-color: #8eaa9170;
-  font-size: 12px;
-}
-.pager {
-  position: absolute;
-  right: 12px;
-  bottom: 9px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  color: #c4d2c3;
-  font-variant-numeric: tabular-nums;
-}
-.pager button {
-  padding: 3px;
-  border: 0;
-  color: inherit;
-  background: none;
-}
-.pager svg {
-  width: 14px;
-  height: 14px;
 }
 .next {
   display: flex;
@@ -325,7 +218,6 @@ main {
   background: #eee7d8;
   border: 1px solid #dcd3bf;
 }
-.next-top,
 .next .kicker {
   color: #736646;
 }
@@ -335,17 +227,6 @@ main {
 }
 .next p {
   color: #615d4f;
-}
-.next-bottom {
-  border-top: 1px solid #d7cbb6;
-  padding-top: 13px;
-  font-size: 12px;
-}
-.next-bottom button {
-  background: none;
-  border: 0;
-  padding: 0;
-  white-space: nowrap;
 }
 .section-head {
   margin: 30px 0 14px;
@@ -701,8 +582,7 @@ th {
 .pick {
   align-items: flex-start;
 }
-.pick .cover,
-.editor-heading .cover {
+.pick .cover {
   width: 80px;
   flex: none;
 }
@@ -772,7 +652,6 @@ dialog form button.primary {
   color: #994f40;
   margin-right: auto;
 }
-.editor-heading,
 .setting-intro {
   display: flex;
   align-items: center;
@@ -781,15 +660,6 @@ dialog form button.primary {
   padding: 16px;
   border-radius: 7px;
   margin: 0 0 18px;
-}
-.editor-heading h2 {
-  font-size: 35px;
-  margin: 6px 0;
-}
-.editor-heading p {
-  margin: 0;
-}
-.setting-intro {
   justify-content: flex-start;
 }
 .setting {
@@ -845,60 +715,6 @@ dialog h3 {
   margin: 15vh auto;
   width: fit-content;
 }
-.gate {
-  min-height: 100dvh;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-}
-.gate-intro {
-  background: #233d33;
-  color: #f6efda;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(24px, 5vw, 80px);
-  gap: 30px;
-}
-.gate-intro .brand,
-.gate-intro .kicker {
-  color: #e4d5ae;
-}
-.gate-intro h1 {
-  font-size: clamp(76px, 8vw, 136px);
-  line-height: 0.9;
-  margin: 22px 0;
-}
-.gate-intro h1 i {
-  color: #e8d7a5;
-}
-.gate-intro p {
-  color: #e1ddcc;
-}
-.gate-rule {
-  width: 42px;
-  border-top: 1px solid #b0a584;
-  margin: 24px 0 12px;
-}
-.gate-form {
-  align-self: center;
-  justify-self: center;
-  width: min(345px, 85%);
-}
-.gate-form h2 {
-  margin: 16px 0 8px;
-}
-.gate-form p {
-  color: var(--muted);
-}
-.gate-form label {
-  margin: 14px 0;
-}
-.gate-form .primary {
-  width: 100%;
-  margin-top: 8px;
-}
 .switch {
   position: fixed;
   bottom: 20px;
@@ -913,23 +729,8 @@ dialog h3 {
   }
 }
 @media (max-width: 900px) {
-  .mast-caption {
-    display: none;
-  }
-  .feature-grid {
-    grid-template-columns: 1.45fr 1fr;
-  }
-  .feature-art {
-    min-width: 125px;
-  }
-  .feature-text {
-    padding-right: 14px;
-  }
   .next {
     padding: 18px;
-  }
-  .next-bottom {
-    flex-wrap: wrap;
   }
   .bookmat {
     height: 164px;
@@ -968,22 +769,6 @@ dialog h3 {
     font-size: 12px;
     padding: 9px 12px;
   }
-  .feature-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .feature {
-    min-height: 205px;
-  }
-  .feature h2 {
-    font-size: 40px;
-  }
-  .feature-art {
-    width: 39%;
-  }
-  .feature-art .cover {
-    width: 96px;
-  }
   .next {
     padding: 13px 16px;
     gap: 4px;
@@ -994,10 +779,6 @@ dialog h3 {
   }
   .next p {
     margin: 0;
-  }
-  .next-bottom {
-    margin-top: 5px;
-    padding-top: 7px;
   }
   .section-head {
     align-items: flex-end;
@@ -1054,30 +835,6 @@ dialog h3 {
   .fields {
     gap: 10px;
   }
-  .gate {
-    grid-template-columns: 1fr;
-  }
-  .gate-intro {
-    min-height: 220px;
-    gap: 10px;
-  }
-  .gate-intro h1 {
-    font-size: 66px;
-    margin: 10px 0;
-  }
-  .gate-intro h1 br,
-  .gate-rule {
-    display: none;
-  }
-  .gate-intro h1 i:before {
-    content: " ";
-  }
-  .gate-intro p {
-    margin: 0;
-  }
-  .gate-form {
-    margin: 30px auto;
-  }
   .dialog-head h2 {
     font-size: 30px;
   }
@@ -1125,14 +882,29 @@ dialog .fields + button {
 }
 
 @media (max-width: 640px) {
-  .queue-row .icon, .drawer .icon, .dialog-head .icon {
+  .queue-row .icon,
+  .drawer .icon,
+  .dialog-head .icon {
     min-width: 44px;
     min-height: 44px;
     flex-shrink: 0;
   }
-  .queue-title { min-width: 0; overflow-wrap: anywhere; }
-  .queue-tabs button, .mast nav a, .form-actions button { min-height: 44px; }
-  .fields input, .fields textarea, .fields select, .gate-form input,
-  .catalog-search input { font-size: 16px; }
-  .form-actions { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .queue-title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .queue-tabs button,
+  .mast nav a,
+  .form-actions button {
+    min-height: 44px;
+  }
+  .fields input,
+  .fields textarea,
+  .fields select,
+  .catalog-search input {
+    font-size: 16px;
+  }
+  .form-actions {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
 }

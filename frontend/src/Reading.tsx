@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
+import { BookPortrait } from "./shelf/BookPortrait";
+import { displayTitle } from "./shelf/artwork";
+import "./reading-desk.css";
 import {
   DndContext,
   PointerSensor,
@@ -43,83 +46,125 @@ export function Feature({ library, open }: { library: Library; open: Open }) {
     current = reading[i],
     next = nextPick(library.books, library.rotation);
   return (
-    <div className="feature-grid">
-      <article className="feature">
-        <div className="feature-art" aria-hidden="true">
-          <div className="etch" />
+    <section className="desk" aria-label="On the desk">
+      <article className="desk-reading">
+        <div className="desk-lamp" aria-hidden="true" />
+        <div className="desk-book">
           {current ? (
-            <Cover key={current.id} book={current} />
+            <div className="inspection-layout" key={current.id}>
+              <BookPortrait book={current} />
+            </div>
           ) : (
-            <BookOpen size={70} />
+            <BookOpen size={70} aria-hidden="true" />
           )}
         </div>
-        <div className="feature-text">
-          <span className="kicker">
+        <div className="desk-copy">
+          <span className="desk-kicker">
             <span className="light" />
             Currently reading
+            {reading.length > 1 && (
+              <em>
+                {i + 1} of {reading.length}
+              </em>
+            )}
           </span>
-          <h2>{current?.title || "An open shelf"}</h2>
-          <p>{current?.author || "Choose a book from your collection."}</p>
+          <h2>{current ? displayTitle(current.title) : "An open shelf"}</h2>
+          <p className="desk-author">
+            {current?.author || "Choose a book from your collection."}
+          </p>
           {current && (
             <>
-              <span className="meta">
-                {current.format || "Reading"}
-                {current.progress != null
-                  ? " · " + current.progress + "% read"
-                  : ""}
-              </span>
-              {current.progress != null && (
-                <div className="reading-gauge" aria-hidden="true">
-                  <i style={{ width: current.progress + "%" }} />
+              <div
+                className="desk-gauge"
+                role="img"
+                aria-label={
+                  (current.format || "Reading") +
+                  ", " +
+                  (current.progress != null
+                    ? current.progress + "% read"
+                    : "progress not recorded")
+                }
+              >
+                <div className="gauge-rule">
+                  <i
+                    style={
+                      {
+                        "--read": (current.progress ?? 0) / 100,
+                      } as CSSProperties
+                    }
+                  />
                 </div>
-              )}
-              <button onClick={() => open(current.id)}>
-                Continue reading <ArrowRight size={15} />
-              </button>
+                <div className="gauge-legend">
+                  <span>{current.format || "Reading"}</span>
+                  <span>
+                    {current.progress != null
+                      ? current.progress + "% read"
+                      : "Progress not recorded"}
+                  </span>
+                </div>
+              </div>
+              <div className="desk-actions">
+                <button
+                  className="desk-continue"
+                  onClick={() => open(current.id)}
+                >
+                  Continue reading <ArrowRight size={15} />
+                </button>
+                {reading.length > 1 && (
+                  <div className="desk-pager">
+                    <button
+                      aria-label="Previous current read"
+                      onClick={() => setIndex(i + reading.length - 1)}
+                    >
+                      <ChevronLeft size={18} />
+                    </button>
+                    <button
+                      aria-label="Next current read"
+                      onClick={() => setIndex(i + 1)}
+                    >
+                      <ChevronRight size={18} />
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
-        {reading.length > 1 && (
-          <div className="pager">
-            <button
-              aria-label="Previous current read"
-              onClick={() => setIndex(i + reading.length - 1)}
-            >
-              <ChevronLeft />
-            </button>
-            <span>
-              {i + 1} / {reading.length}
-            </span>
-            <button
-              aria-label="Next current read"
-              onClick={() => setIndex(i + 1)}
-            >
-              <ChevronRight />
-            </button>
+      </article>
+      <article className="desk-next">
+        <span className="desk-kicker">
+          <Repeat2 size={14} />
+          Next in rotation
+        </span>
+        <ol className="rotation-track" aria-label="Rotation order">
+          {focuses.slice(0, 3).map((focus) => (
+            <li key={focus} aria-current={focus === next?.focus || undefined}>
+              <FocusIcon focus={focus} />
+              {focus.split(" + ")[0]}
+            </li>
+          ))}
+        </ol>
+        <div className="next-pick">
+          {next && <Cover book={next} />}
+          <div>
+            <h3>{next ? displayTitle(next.title) : "Queue complete"}</h3>
+            <p>{next?.author || "Add an unread book"}</p>
           </div>
+        </div>
+        {next && (
+          <button className="desk-explore" onClick={() => setCompare(true)}>
+            Explore pick <ArrowRight size={14} />
+          </button>
         )}
       </article>
-      <article className="next">
-        <div className="next-top">
-          <span className="kicker">
-            <Repeat2 size={15} />
-            Next in rotation
-          </span>
-          <FocusIcon focus={next?.focus || focuses[0]} />
-        </div>
-        <div>
-          <h2>{next?.title || "Queue complete"}</h2>
-          <p>{next?.author}</p>
-        </div>
-        <div className="next-bottom">
-          <span>{next?.focus || "Add an unread book"}</span>
-          {next && (
-            <button onClick={() => setCompare(true)}>
-              Explore pick <ArrowRight size={14} />
-            </button>
-          )}
-        </div>
-      </article>
+      <dl className="desk-ledger">
+        {(["Reading", "To Read", "Completed"] as const).map((status) => (
+          <div key={status}>
+            <dt>{status}</dt>
+            <dd>{library.books.filter((b) => b.status === status).length}</dd>
+          </div>
+        ))}
+      </dl>
       {compare && next && (
         <Dialog title="Your next read" onClose={() => setCompare(false)}>
           <div className="pick">
@@ -174,7 +219,7 @@ export function Feature({ library, open }: { library: Library; open: Open }) {
             })}
         </Dialog>
       )}
-    </div>
+    </section>
   );
 }
 function QueueRow({
@@ -193,7 +238,7 @@ function QueueRow({
   const s = useSortable({ id: b.id });
   return (
     <div
-      className="queue-row"
+      className={"queue-row" + (i === 0 ? " is-next" : "")}
       ref={s.setNodeRef}
       style={{
         transform: CSS.Transform.toString(s.transform),
@@ -210,6 +255,9 @@ function QueueRow({
         <GripVertical size={17} />
       </button>
       <span className="rank">{String(i + 1).padStart(2, "0")}</span>
+      <span className="queue-cover" aria-hidden="true">
+        <Cover book={b} />
+      </span>
       <button className="queue-title" onClick={() => open(b.id)}>
         <strong>{b.title}</strong>
         <small>{b.author}</small>
@@ -257,7 +305,13 @@ export function Queues({
     <div className="queue-desk">
       <aside className="queue-index" aria-label="Queue controls">
         <div className="rotation">
-          <span className="rotation-dial" data-position={library.rotation} aria-hidden="true"><i /></span>
+          <span
+            className="rotation-dial"
+            data-position={library.rotation}
+            aria-hidden="true"
+          >
+            <i />
+          </span>
           <div>
             <strong>Reading rotation</strong>
             <small>Identity → Wealth → Behavior</small>
@@ -317,7 +371,9 @@ export function Queues({
             ))}
           </SortableContext>
         </DndContext>
-        {!lane.length && <p className="empty">This queue has no unread books.</p>}
+        {!lane.length && (
+          <p className="empty">This queue has no unread books.</p>
+        )}
       </section>
     </div>
   );
@@ -330,12 +386,16 @@ export function Timeline({ books, open }: { books: Book[]; open: Open }) {
   return (
     <div className="timeline">
       {years.map((y) => {
-        const entries = done.filter(b => (b.finished?.slice(0, 4) || "Undated") === y);
+        const entries = done.filter(
+          (b) => (b.finished?.slice(0, 4) || "Undated") === y,
+        );
         return (
           <section key={y}>
             <div className="year">
               <h2>{y}</h2>
-              <small>{entries.length} {entries.length === 1 ? "volume" : "volumes"}</small>
+              <small>
+                {entries.length} {entries.length === 1 ? "volume" : "volumes"}
+              </small>
             </div>
             <div>
               {entries.map((b) => (

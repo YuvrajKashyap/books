@@ -3,7 +3,13 @@ import { ExternalLink, Trash2, Check } from "lucide-react";
 import { Dialog } from "./components";
 import { BookEntry } from "./shelf/BookEntry";
 import { displayTitle } from "./shelf/artwork";
-import { freshBook, bookFields, focuses, statuses, type Book } from "../../shared/model";
+import {
+  freshBook,
+  bookFields,
+  focuses,
+  statuses,
+  type Book,
+} from "../../shared/model";
 import type { Mutate } from "./Reading";
 export function Editor({
   book,
@@ -32,9 +38,7 @@ export function Editor({
       title={book ? displayTitle(book.title) : "Add a book"}
       onClose={onClose}
     >
-      {book && (
-        <BookEntry book={book} owner/>
-      )}
+      {book && <BookEntry book={book} owner />}
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -113,7 +117,9 @@ export function Editor({
               Status
               <select
                 value={draft.status}
-                onChange={(e) => set("status", e.target.value as Book["status"])}
+                onChange={(e) =>
+                  set("status", e.target.value as Book["status"])
+                }
               >
                 {statuses.map((s) => (
                   <option key={s}>{s}</option>

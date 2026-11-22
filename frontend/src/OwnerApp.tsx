@@ -1,4 +1,11 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Link,
   NavLink,
@@ -21,6 +28,7 @@ import {
 } from "lucide-react";
 import { Brand, Dialog } from "./components";
 import "./owner-desk.css";
+import "./owner-night.css";
 import { ScienceStudy } from "./shelf/ScienceStudy";
 import type { Mutate } from "./Reading";
 import { PublicShelf } from "./PublicShelf";
@@ -47,7 +55,9 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
   return (
     <main className="library-login">
       <div className="login-column">
-        <Suspense fallback={<span className="brass-knot knot-space" />}><BrassKnot /></Suspense>
+        <Suspense fallback={<span className="brass-knot knot-space" />}>
+          <BrassKnot />
+        </Suspense>
         <h1>Reading room</h1>
         <form
           onSubmit={async (e) => {
@@ -60,21 +70,32 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
               const username = String(fd.get("username")).trim();
               const password = String(fd.get("password"));
               if (username.includes("@")) {
-                const result = await auth.auth.signInWithPassword({ email: username, password });
-                if (result.error) setError("Could not sign in with those details.");
+                const result = await auth.auth.signInWithPassword({
+                  email: username,
+                  password,
+                });
+                if (result.error)
+                  setError("Could not sign in with those details.");
               } else {
                 const response = await fetch("/api/login", {
-                  method: "POST", headers: { "Content-Type": "application/json" },
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ username, password }),
                 });
                 if (!response.ok) {
-                  setError(response.status === 429 ? "Too many attempts. Try again later."
-                    : response.status >= 500 ? "Sign-in is unavailable. Try again shortly." : "Could not sign in with those details.");
+                  setError(
+                    response.status === 429
+                      ? "Too many attempts. Try again later."
+                      : response.status >= 500
+                        ? "Sign-in is unavailable. Try again shortly."
+                        : "Could not sign in with those details.",
+                  );
                   return;
                 }
                 const session = await response.json();
                 const result = await auth.auth.setSession(session);
-                if (result.error) setError("Could not open the session. Try again.");
+                if (result.error)
+                  setError("Could not open the session. Try again.");
               }
             } catch {
               setError("Unable to reach sign-in. Try again.");
@@ -85,7 +106,14 @@ function Gate({ auth, issue }: { auth: SupabaseClient | null; issue: string }) {
         >
           <label>
             Username
-            <input name="username" autoComplete="username" autoCapitalize="none" spellCheck={false} defaultValue="yuvraj" required />
+            <input
+              name="username"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              defaultValue="yuvraj"
+              required
+            />
           </label>
           <label>
             Password
@@ -124,10 +152,18 @@ export default function OwnerApp() {
     [msg, setMsg] = useState(""),
     [issue, setIssue] = useState(""),
     [settings, setSettings] = useState(false),
-    [restore, setRestore] = useState<ReturnType<
-      typeof backupSchema.parse
-    > | null>(null);
+    [restore, setRestore] = useState<{
+      file: string;
+      backup: ReturnType<typeof backupSchema.parse>;
+    } | null>(null);
   const subject = useRef<string | undefined>(undefined);
+  // Each backup choice gets a number. Clearing the staged backup moves the
+  // number on, so a file still being read can never stage itself afterwards.
+  const backupChoice = useRef(0);
+  const dropBackup = useCallback(() => {
+    backupChoice.current++;
+    setRestore(null);
+  }, []);
   const lock = useRef(false),
     [params, setParams] = useSearchParams(),
     location = useLocation(),
@@ -170,11 +206,14 @@ export default function OwnerApp() {
     (async () => {
       try {
         const [r, { createClient }] = await Promise.all([
-          fetch("/api/config"), import("@supabase/supabase-js"),
+          fetch("/api/config"),
+          import("@supabase/supabase-js"),
         ]);
         if (!r.ok) throw Error();
         const cfg = await r.json();
-        const client = createClient(cfg.url, cfg.key, { auth: { detectSessionInUrl: false } });
+        const client = createClient(cfg.url, cfg.key, {
+          auth: { detectSessionInUrl: false },
+        });
         if (!active) return;
         setAuth(client);
         const sub = client.auth.onAuthStateChange((_e, s) => {
@@ -184,7 +223,7 @@ export default function OwnerApp() {
               if (s) void loadPages().catch(() => {});
               setLibrary(null);
               setSettings(false);
-              setRestore(null);
+              dropBackup();
               setIssue("");
             }
             setSession(s);
@@ -230,7 +269,9 @@ export default function OwnerApp() {
       throw Error("Your library could not be loaded. Refresh to retry.");
     const snapshot = await r.json();
     if (subject.current !== session?.user.id) return;
-    setLibrary(current => current && current.revision > snapshot.revision ? current : snapshot);
+    setLibrary((current) =>
+      current && current.revision > snapshot.revision ? current : snapshot,
+    );
     setIssue("");
   }, [request, session?.user.id]);
   useEffect(() => {
@@ -256,7 +297,12 @@ export default function OwnerApp() {
       }
       const result = await r.json();
       if (subject.current !== session?.user.id) return false;
-      if (result.library) setLibrary(current => current && current.revision > result.library.revision ? current : result.library);
+      if (result.library)
+        setLibrary((current) =>
+          current && current.revision > result.library.revision
+            ? current
+            : result.library,
+        );
       else await refresh();
       setMsg("Library updated");
       return true;
@@ -267,7 +313,9 @@ export default function OwnerApp() {
       lock.current = false;
     }
   };
-  const ownerRoute = ["/admin", "/collection", "/queues", "/history"].includes(location.pathname);
+  const ownerRoute = ["/admin", "/collection", "/queues", "/history"].includes(
+    location.pathname,
+  );
   if (!ready || (session && !library && !issue))
     return (
       <div className="loading">
@@ -275,8 +323,7 @@ export default function OwnerApp() {
         <p>Opening the reading room…</p>
       </div>
     );
-  if (!session && !ownerRoute)
-    return <PublicShelf />;
+  if (!session && !ownerRoute) return <PublicShelf />;
   if (!library || !session)
     return (
       <>
@@ -301,22 +348,24 @@ export default function OwnerApp() {
           : "room";
   const navLinks = nav.map(({ path, label, icon: Icon }) => (
     <NavLink key={path} end to={path}>
-      <Icon size={15} />{label}
+      <Icon size={15} />
+      {label}
     </NavLink>
   ));
   const selected = library.books.find((b) => b.id === edit);
-  const shelfPage = (page === "room" || page === "collection") && view.layout !== "table";
+  const shelfPage =
+    (page === "room" || page === "collection") && view.layout !== "table";
   return (
     <div className="private-room">
-      <header className={`library-heading owner-heading${shelfPage ? " shelf-page" : ""}`}>
+      <header
+        className={`library-heading owner-heading${shelfPage ? " shelf-page" : ""}`}
+      >
         <div className="mast">
           <NavLink to="/" className="brand-link">
             <Brand />
           </NavLink>
-          
-          <nav aria-label="Reading room navigation">
-            {navLinks}
-          </nav>
+
+          <nav aria-label="Reading room navigation">{navLinks}</nav>
           <button className="primary" onClick={() => open("new")}>
             <Plus size={17} />
             Add book
@@ -346,7 +395,14 @@ export default function OwnerApp() {
       </header>
       <main className={`reading-desk${shelfPage ? " shelf-page" : ""}`}>
         <Suspense fallback={<p role="status">Opening the reading room…</p>}>
-          <OwnerPages page={page} library={library} view={view} setView={setView} open={open} mutate={mutate} />
+          <OwnerPages
+            page={page}
+            library={library}
+            view={view}
+            setView={setView}
+            open={open}
+            mutate={mutate}
+          />
         </Suspense>
       </main>
       {edit &&
@@ -362,7 +418,7 @@ export default function OwnerApp() {
           title="Library settings"
           onClose={() => {
             setSettings(false);
-            setRestore(null);
+            dropBackup();
           }}
         >
           <div className="setting-intro">
@@ -380,7 +436,10 @@ export default function OwnerApp() {
             onClick={() => download(library, "yuvraj-bookshelf.json")}
           >
             <Download />
-            Export library
+            <span className="setting-copy">
+              <b>Export library</b>
+              <small>Books, history, both orders, views and rotation</small>
+            </span>
           </button>
           <button
             className="setting"
@@ -395,21 +454,40 @@ export default function OwnerApp() {
             }}
           >
             <Download />
-            Export original Notion archive
+            <span className="setting-copy">
+              <b>Export original Notion archive</b>
+              <small>The source database exactly as it was imported</small>
+            </span>
           </button>
           <label className="setting">
             <Upload />
-            Restore library backup
+            <span className="setting-copy">
+              <b>Restore library backup</b>
+              <small>
+                Choose a bookshelf JSON file; you confirm before anything
+                changes
+              </small>
+            </span>
             <input
               type="file"
               accept=".json"
               onChange={async (e) => {
                 const file = e.target.files?.[0];
+                // A new choice always replaces the old one, even if it fails,
+                // so an earlier backup can never stay queued by mistake.
+                dropBackup();
+                const choice = backupChoice.current;
                 if (!file) return;
                 try {
-                  setRestore(backupSchema.parse(JSON.parse(await file.text())));
+                  const backup = backupSchema.parse(
+                    JSON.parse(await file.text()),
+                  );
+                  // A later choice wins even if this larger file parsed last.
+                  if (choice === backupChoice.current)
+                    setRestore({ file: file.name, backup });
                 } catch {
-                  setMsg("Choose a valid bookshelf JSON backup.");
+                  if (choice === backupChoice.current)
+                    setMsg("Choose a valid bookshelf JSON backup.");
                 }
                 e.target.value = "";
               }}
@@ -417,32 +495,39 @@ export default function OwnerApp() {
           </label>
           {restore && (
             <div className="confirm">
-              Replace the library with {restore.books.length} books?
+              Replace the library with {restore.backup.books.length} books from{" "}
+              <b>{restore.file}</b>?
               <button
                 onClick={async () => {
-                  if (await mutate({ op: "restore", backup: restore }))
-                    setRestore(null);
+                  if (await mutate({ op: "restore", backup: restore.backup }))
+                    dropBackup();
                 }}
               >
                 Restore backup
               </button>
-              <button onClick={() => setRestore(null)}>Cancel</button>
+              <button onClick={dropBackup}>Cancel</button>
             </div>
           )}
           <button
-            className="setting"
+            className="setting is-leaving"
             onClick={async () => {
               await auth?.auth.signOut({ scope: "local" });
               setSettings(false);
               setLibrary(null);
+              navigate("/", { replace: true });
             }}
           >
             <LogOut />
-            Sign out
+            <span className="setting-copy">
+              <b>Sign out</b>
+              <small>Returns to the public shelf on this device</small>
+            </span>
           </button>
         </Dialog>
       )}
-      <nav className="phone-room-nav" aria-label="Reading room navigation">{navLinks}</nav>
+      <nav className="phone-room-nav" aria-label="Reading room navigation">
+        {navLinks}
+      </nav>
       {msg && (
         <div className="toast" role="status">
           {msg}
