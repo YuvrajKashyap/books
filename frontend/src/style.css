@@ -3,14 +3,6 @@
     15px/1.5 "DM Sans Variable",
     Arial,
     sans-serif;
-  color: #28362f;
-  background: #f8f6f0;
-  --ink: #28362f;
-  --muted: #646d62;
-  --line: #d9d9cd;
-  --forest: #244b3e;
-  --paper: #f8f6f0;
-  --display: "Cormorant Garamond", Georgia, serif;
   font-synthesis: none;
 }
 * {
@@ -674,8 +666,6 @@ dialog form button.primary {
   padding: 16px;
   border-radius: 7px;
   margin: 0 0 18px;
-}
-.setting-intro {
   justify-content: flex-start;
 }
 .setting {

@@ -15,9 +15,9 @@
 }
 /* Dialogs opened from the shelves are paper again. */
 .reading-desk.shelf-page dialog {
-  --ink: #30291f;
-  --muted: #6e6353;
-  --line: #d6cabb;
+  --ink: #262e24;
+  --muted: #655f4f;
+  --line: #cdc4ab;
   color: var(--ink);
 }
 

@@ -1,19 +1,4 @@
 /* The stamped binding surrounds the cabinet. The catalogue and writing surfaces use paper. */
-:root {
-  --display: "Cormorant Garamond", Georgia, serif;
-  --paper: #f4efe2;
-  --surface: #fffbf1;
-  --inset: #e8e1ce;
-  --ink: #262e24;
-  --muted: #655f4f;
-  --line: #cdc4ab;
-  --forest: #214837;
-  --metal: #836438;
-  --cloth: #132c25;
-  --gilt: #dbbd81;
-  --vellum: #f8efda;
-  --margin: clamp(16px, 3vw, 60px);
-}
 h1,
 h2,
 h3,
@@ -326,9 +311,6 @@ h3,
 .rotation,
 .next {
   border-radius: 4px;
-}
-.rotation,
-.next {
   background: #e7e6d4;
 }
 .queue-title,

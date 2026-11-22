@@ -6,6 +6,7 @@ import { Brand } from "./components";
 import "@fontsource-variable/dm-sans/wght.css";
 import "@fontsource/cormorant-garamond/latin-500.css";
 import "@fontsource/cormorant-garamond/latin-500-italic.css";
+import "./tokens.css";
 import "./style.css";
 import "./shelf/room.css";
 import "./library.css";

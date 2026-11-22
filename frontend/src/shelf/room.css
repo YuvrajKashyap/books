@@ -1,19 +1,3 @@
-:root {
-  --paper: #f6f1e7;
-  --ink: #30291f;
-  --muted: #6e6353;
-  --line: #d6cabb;
-  --surface: #fbf7ef;
-  --inset: #e8ddcc;
-  --forest: #594632;
-  --metal: #b48a49;
-  --timber: #71442d;
-  --rear: #6a4c37;
-  --frame: #80523a;
-  --light: #ffdc9c;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 :root,
 body {
   background: var(--paper);
@@ -851,10 +835,6 @@ nav .active,
 }
 /* Keep the hit target fixed. Limit the preview to the visible bay, including
    the moving ends of the horizontal rail. The resting lens stays in place. */
-.gallery-volumes,
-.owner-rack {
-  container-type: inline-size;
-}
 :is(.gallery-volumes.spine-out, .owner-rack) .volume-slot {
   --from-center: calc(var(--lens-x, 0px) - var(--slot, 25px) / 2);
   --preview-x: clamp(
@@ -908,6 +888,7 @@ nav .active,
 }
 .gallery-volumes,
 .owner-rack {
+  container-type: inline-size;
   perspective: none;
 }
 .gallery-volumes .volume-pick,
