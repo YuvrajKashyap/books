@@ -17,9 +17,18 @@ export function measure() {
   }
   let serial = 0;
   let mutation: MutationObserver | undefined;
-  const pending = new Map<string, { direction: string; start: number; dom: number }>();
-  const samples: { direction: string; dom: number; paint: number | null; presented: number | null; noteRequests: number }[] = [];
-  const observer = new PerformanceObserver(list => {
+  const pending = new Map<
+    string,
+    { direction: string; start: number; dom: number }
+  >();
+  const samples: {
+    direction: string;
+    dom: number;
+    paint: number | null;
+    presented: number | null;
+    noteRequests: number;
+  }[] = [];
+  const observer = new PerformanceObserver((list) => {
     for (const entry of list.getEntries() as TextPaint[]) {
       const click = pending.get(entry.identifier);
       if (!click) continue;
@@ -30,30 +39,50 @@ export function measure() {
         dom: click.dom - click.start,
         paint: entry.paintTime ? entry.paintTime - click.start : null,
         presented: presented ? presented - click.start : null,
-        noteRequests: performance.getEntriesByType("resource").filter(resource =>
-          resource.name.includes("/book-notes/") && resource.startTime >= click.start &&
-          resource.startTime <= presented).length,
+        noteRequests: performance
+          .getEntriesByType("resource")
+          .filter(
+            (resource) =>
+              resource.name.includes("/book-notes/") &&
+              resource.startTime >= click.start &&
+              resource.startTime <= presented,
+          ).length,
       });
     }
     output.textContent = JSON.stringify(samples);
     output.dataset.count = String(samples.length);
   });
   observer.observe({ type: "element", buffered: true });
-  document.addEventListener("click", event => {
-    if (!event.isTrusted || !(event.target instanceof Element) || serial >= 64) return;
-    const button = event.target.closest<HTMLButtonElement>(".inspect-nav button");
-    const dialog = button?.closest("dialog");
-    if (!dialog || !button || button.disabled) return;
-    const previous = dialog.querySelector(".synopsis-lead");
-    const id = "synopsis-" + ++serial;
-    mutation?.disconnect();
-    mutation = new MutationObserver(() => {
-      const lead = dialog.querySelector(".synopsis-lead");
-      if (!lead || lead === previous) return;
-      pending.set(id, { direction: button.textContent!.trim(), start: event.timeStamp, dom: performance.now() });
-      lead.setAttribute("elementtiming", id);
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (
+        !event.isTrusted ||
+        !(event.target instanceof Element) ||
+        serial >= 64
+      )
+        return;
+      const button = event.target.closest<HTMLButtonElement>(
+        ".inspect-nav button",
+      );
+      const dialog = button?.closest("dialog");
+      if (!dialog || !button || button.disabled) return;
+      const previous = dialog.querySelector(".synopsis-lead");
+      const id = "synopsis-" + ++serial;
       mutation?.disconnect();
-    });
-    mutation.observe(dialog, { subtree: true, childList: true });
-  }, true);
+      mutation = new MutationObserver(() => {
+        const lead = dialog.querySelector(".synopsis-lead");
+        if (!lead || lead === previous) return;
+        pending.set(id, {
+          direction: button.textContent!.trim(),
+          start: event.timeStamp,
+          dom: performance.now(),
+        });
+        lead.setAttribute("elementtiming", id);
+        mutation?.disconnect();
+      });
+      mutation.observe(dialog, { subtree: true, childList: true });
+    },
+    true,
+  );
 }

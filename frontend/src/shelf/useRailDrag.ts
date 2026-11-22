@@ -6,11 +6,18 @@ export function useRailDrag(ref: RefObject<HTMLDivElement | null>) {
     const rail = ref.current;
     if (!rail) return;
     let pointer: number | null = null;
-    let start = 0, left = 0, dragged = false;
+    let start = 0,
+      left = 0,
+      dragged = false;
 
     const down = (e: PointerEvent) => {
       dragged = false;
-      if (e.pointerType !== "mouse" || e.button !== 0 || rail.scrollWidth <= rail.clientWidth) return;
+      if (
+        e.pointerType !== "mouse" ||
+        e.button !== 0 ||
+        rail.scrollWidth <= rail.clientWidth
+      )
+        return;
       pointer = e.pointerId;
       start = e.clientX;
       left = rail.scrollLeft;
@@ -23,7 +30,9 @@ export function useRailDrag(ref: RefObject<HTMLDivElement | null>) {
       dragged = true;
       rail.scrollLeft = left + delta;
     };
-    const end = () => { pointer = null; };
+    const end = () => {
+      pointer = null;
+    };
     const click = (e: MouseEvent) => {
       if (dragged && e.detail) {
         e.preventDefault();
