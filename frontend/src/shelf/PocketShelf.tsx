@@ -322,6 +322,7 @@ export function PocketShelf({
             {String(books.length).padStart(3, "0")}
           </span>
         </div>
+        <div className="pocket-lamp" aria-hidden="true" />
       </div>
       <div className="pocket-caption">
         <div className="pocket-current">

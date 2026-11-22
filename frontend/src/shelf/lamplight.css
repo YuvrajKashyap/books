@@ -137,3 +137,47 @@
     margin-left: 24px;
   }
 }
+
+/* Phone shelf: the lamp hangs over the middle of the case, so the book in
+   hand is lit and its neighbours fall away into shadow. */
+.pocket-lamp {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 64% 72% at 50% 44%,
+    transparent 0,
+    transparent 36%,
+    #0a060452 66%,
+    #0a0604ad 100%
+  );
+}
+.pocket-lamp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: soft-light;
+  background: radial-gradient(
+    ellipse 52% 60% at 50% 40%,
+    #ffe9c266,
+    #ffcf8f29 48%,
+    transparent 78%
+  );
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pocket-lamp::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #070403;
+    opacity: 0;
+    animation: pocket-wake 1.5s var(--ease) backwards;
+  }
+  @keyframes pocket-wake {
+    from {
+      opacity: 0.94;
+    }
+  }
+}
