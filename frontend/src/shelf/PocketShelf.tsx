@@ -194,7 +194,9 @@ export function PocketShelf({ books, covers, open }: { books: ShelfBook[]; cover
         <button className="pocket-title" onClick={() => open(current.id)}>{displayTitle(current.title)}<ArrowUpRight size={17}/></button>
         <p>{current.author}</p></div>
       <div className="pocket-steps"><button aria-label="Previous book on shelf" disabled={!loop && active===0} onClick={()=>move(-1)}><ArrowLeft size={18}/></button>
-        <button aria-label="Next book on shelf" disabled={!loop && active===books.length-1} onClick={()=>move(1)}><ArrowRight size={18}/></button></div>
+        <button aria-label="Next book on shelf" disabled={!loop && active===books.length-1} onClick={()=>move(1)}><ArrowRight size={18}/></button>
+        {books.length > 1 && <small className="pocket-swipe-hint">or swipe with your fingers</small>}
+      </div>
     </div>
   </>;
 }

@@ -107,10 +107,14 @@ dialog::backdrop {background:#091912a3}
   aspect-ratio: 384 / 104;
   flex: none;
 }
+.study-art {
+  position:absolute; inset-inline:0; top:50%; translate:0 -50%;
+  aspect-ratio:384 / 104; pointer-events:none;
+}
 .light-study canvas, .study-lamp { position: absolute; pointer-events: none; }
 .light-study canvas { inset: 0; width: 100%; height: 100%; }
 .study-lamp {
-  left: 3.125%; top: 0; width: 27.083%; height: 100%; object-fit: fill;
+  left: 3.125%; top: 0; width: 27.083%; height: auto; aspect-ratio:1; object-fit:contain;
   mix-blend-mode: lighten; mask-image: radial-gradient(ellipse, #000 52%, transparent 74%);
 }
 .light-study button {
@@ -193,7 +197,7 @@ dialog::backdrop {background:#091912a3}
   .catalogue-identity .volume-count::before {display:none}
   .bookplate-name {font-size:9px;letter-spacing:.14em;gap:7px}
   .bookplate-name::before {width:14px}
-  .light-study, .owner-heading .light-study { width: clamp(132px, 35vw, 235px); min-height: 52px; }
+  .light-study, .owner-heading .light-study { width: clamp(132px, 39vw, 235px); min-height: 48px; }
   .public-heading .library-heading-inner { min-height: 90px; }
   .owner-heading .mast .primary {margin-left:auto}
   .owner-heading .mast .avatar {margin-left:0}
@@ -389,8 +393,14 @@ html:has(.book-dialog[open]) { overflow:hidden; background-color:#14291f; }
     --ink:#304332;--muted:#585944;--line:#b9a77e;
   }
   .reading-gallery .pocket-current .pocket-title {color:#243c2d;min-height:32px}
+  .pocket-title::after {content:"";position:absolute;inset:0;border-radius:2px;cursor:pointer}
+  .pocket-title:focus-visible {outline:none}
+  .pocket-title:focus-visible::after {outline:2px solid #38583e;outline-offset:3px}
+  .pocket-title:active::after {background:#876a3010}
   .reading-gallery .pocket-current small {font-size:10px;font-weight:600;letter-spacing:.055em}
-  .reading-gallery .pocket-steps {gap:3px}
+  .reading-gallery .pocket-steps {display:grid;grid-template-columns:repeat(2,minmax(44px,auto));justify-items:center;gap:4px 3px;pointer-events:none}
+  .pocket-steps button {position:relative;z-index:1;pointer-events:auto}
+  .pocket-swipe-hint {grid-column:1 / -1;font:400 10px/1.3 "DM Sans Variable",sans-serif;color:var(--muted);text-align:center}
   .reading-gallery .pocket-steps button:hover {background-color:#ded1b1}
   .reading-gallery .gallery-main .shelf-layout-controls {
     grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px;padding:14px 0 3px;border:0;
@@ -409,6 +419,7 @@ html:has(.book-dialog[open]) { overflow:hidden; background-color:#14291f; }
   .reading-gallery .owner-footnote {order:5;justify-content:flex-end;margin-top:15px;padding-top:4px;border:0}
 }
 @media(max-width:355px) {
+  .public-heading .catalogue-title h1 {font-size:clamp(27px,8.6vw,30px)}
   .reading-gallery .segmented button {padding-inline:8px}
   .index-entries {grid-template-columns:1fr}
 }

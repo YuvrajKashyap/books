@@ -70,8 +70,10 @@ export function ScienceStudy() {
   }
 
   return <div className="light-study" role="group" aria-label="Studies in light">
-    <img className="study-lamp" src="/materials/edison.webp" alt="" width="88" height="88" />
-    <canvas ref={canvas} aria-hidden="true" />
+    <div className="study-art" aria-hidden="true">
+      <img className="study-lamp" src="/materials/edison.webp" alt="" width="88" height="88" />
+      <canvas ref={canvas} />
+    </div>
     {instruments.map((label, instrument) => <button key={label} type="button"
       aria-label={label} aria-pressed={pinned.instrument === instrument}
       onPointerEnter={event => aim(event, instrument)} onPointerMove={event => aim(event, instrument)}
