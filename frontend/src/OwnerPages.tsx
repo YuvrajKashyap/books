@@ -24,6 +24,7 @@ export default function OwnerPages({
   if (page === "history") return <Timeline books={library.books} open={open} />;
   return (
     <>
+      {page === "room" && <Feature library={library} open={open} />}
       <Collection
         books={library.books}
         views={library.views}
@@ -32,7 +33,6 @@ export default function OwnerPages({
         open={open}
         mutate={mutate}
       />
-      {page === "room" && <Feature library={library} open={open} />}
     </>
   );
 }
