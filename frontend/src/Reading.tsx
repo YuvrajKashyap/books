@@ -257,7 +257,13 @@ export function Queues({
     <div className="queue-desk">
       <aside className="queue-index" aria-label="Queue controls">
         <div className="rotation">
-          <span className="rotation-dial" data-position={library.rotation} aria-hidden="true"><i /></span>
+          <span
+            className="rotation-dial"
+            data-position={library.rotation}
+            aria-hidden="true"
+          >
+            <i />
+          </span>
           <div>
             <strong>Reading rotation</strong>
             <small>Identity → Wealth → Behavior</small>
@@ -317,7 +323,9 @@ export function Queues({
             ))}
           </SortableContext>
         </DndContext>
-        {!lane.length && <p className="empty">This queue has no unread books.</p>}
+        {!lane.length && (
+          <p className="empty">This queue has no unread books.</p>
+        )}
       </section>
     </div>
   );
@@ -330,12 +338,16 @@ export function Timeline({ books, open }: { books: Book[]; open: Open }) {
   return (
     <div className="timeline">
       {years.map((y) => {
-        const entries = done.filter(b => (b.finished?.slice(0, 4) || "Undated") === y);
+        const entries = done.filter(
+          (b) => (b.finished?.slice(0, 4) || "Undated") === y,
+        );
         return (
           <section key={y}>
             <div className="year">
               <h2>{y}</h2>
-              <small>{entries.length} {entries.length === 1 ? "volume" : "volumes"}</small>
+              <small>
+                {entries.length} {entries.length === 1 ? "volume" : "volumes"}
+              </small>
             </div>
             <div>
               {entries.map((b) => (

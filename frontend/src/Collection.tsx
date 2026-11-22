@@ -1,6 +1,13 @@
 import { useShelfCamera } from "./shelf/useShelfCamera";
 import { ContinuousShelf, ShelfSpine } from "./shelf/ContinuousShelf";
-import { lazy, Suspense, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  lazy,
+  Suspense,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -78,10 +85,11 @@ export function Collection({
       (b) =>
         (!view.focus || b.focus === view.focus) &&
         (!view.status || b.status === view.status) &&
-        (!query || [b.title, b.author, b.notes, b.format]
-          .join(" ")
-          .toLowerCase()
-          .includes(query)),
+        (!query ||
+          [b.title, b.author, b.notes, b.format]
+            .join(" ")
+            .toLowerCase()
+            .includes(query)),
     );
     if (view.sort === "Author" || view.sort === "Title") {
       const k = view.sort === "Author" ? "author" : "title";
@@ -100,10 +108,15 @@ export function Collection({
   let remaining = limit;
   let hiddenBooks = 0;
   const categoryPicker = (
-    <select aria-label="Category" value={view.focus}
-      onChange={e => update({ focus: e.target.value as View["focus"] })}>
+    <select
+      aria-label="Category"
+      value={view.focus}
+      onChange={(e) => update({ focus: e.target.value as View["focus"] })}
+    >
       <option value="">All categories</option>
-      {focuses.map(f => <option key={f}>{f}</option>)}
+      {focuses.map((f) => (
+        <option key={f}>{f}</option>
+      ))}
     </select>
   );
   const move = (id: string, target: string) =>
@@ -112,7 +125,9 @@ export function Collection({
     <section id="collection" ref={collection}>
       <div className="collection-desk">
         <div className="section-head">
-          <p className="desk-count" aria-live="polite">{data.length} {data.length === 1 ? "volume" : "volumes"}</p>
+          <p className="desk-count" aria-live="polite">
+            {data.length} {data.length === 1 ? "volume" : "volumes"}
+          </p>
           <div className="segmented">
             {(
               [
@@ -124,8 +139,21 @@ export function Collection({
               <button
                 key={key}
                 aria-pressed={view.layout === key}
-                onFocus={key === "table" ? () => { void loadTable().catch(() => {}); } : undefined}
-                onPointerEnter={key === "table" ? e => { if (e.pointerType === "mouse") void loadTable().catch(() => {}); } : undefined}
+                onFocus={
+                  key === "table"
+                    ? () => {
+                        void loadTable().catch(() => {});
+                      }
+                    : undefined
+                }
+                onPointerEnter={
+                  key === "table"
+                    ? (e) => {
+                        if (e.pointerType === "mouse")
+                          void loadTable().catch(() => {});
+                      }
+                    : undefined
+                }
                 onClick={() => update({ layout: key })}
               >
                 <Icon size={15} />
@@ -161,7 +189,14 @@ export function Collection({
             {s || "All books"}
           </button>
         ))}
-        {phone && view.focus && <button onClick={() => update({focus: ""})} aria-label={"Clear category " + view.focus}>{view.focus} ×</button>}
+        {phone && view.focus && (
+          <button
+            onClick={() => update({ focus: "" })}
+            aria-label={"Clear category " + view.focus}
+          >
+            {view.focus} ×
+          </button>
+        )}
         {views.length > 0 && (
           <select
             aria-label="Open saved view"
@@ -195,7 +230,12 @@ export function Collection({
         );
         if (g === "Completed" && view.sort === "Shelf order")
           group = completed(group);
-        const continuous = (g === "To Read" || view.status === "To Read" || (phone && group.length > 7 && view.layout === "spines")) && view.layout !== "table" && !arrange;
+        const continuous =
+          (g === "To Read" ||
+            view.status === "To Read" ||
+            (phone && group.length > 7 && view.layout === "spines")) &&
+          view.layout !== "table" &&
+          !arrange;
         const visible = continuous ? group : group.slice(0, remaining);
         if (!continuous) remaining -= visible.length;
         hiddenBooks += group.length - visible.length;
@@ -207,16 +247,43 @@ export function Collection({
               <span>{group.length}</span>
             </h2>
             {continuous ? (
-              <ContinuousShelf key={JSON.stringify([view.query, view.focus, view.sort, view.layout, view.status])}
-                label={g} books={group} covers={view.layout === "shelf"} turned={turned} turn={setTurned} open={open}/>
+              <ContinuousShelf
+                key={JSON.stringify([
+                  view.query,
+                  view.focus,
+                  view.sort,
+                  view.layout,
+                  view.status,
+                ])}
+                label={g}
+                books={group}
+                covers={view.layout === "shelf"}
+                turned={turned}
+                turn={setTurned}
+                open={open}
+              />
             ) : view.layout === "table" ? (
               <Suspense fallback={<p role="status">Opening table…</p>}>
-                <LibraryTable books={visible} view={view} open={open} mutate={mutate} labels={labels}/>
+                <LibraryTable
+                  books={visible}
+                  view={view}
+                  open={open}
+                  mutate={mutate}
+                  labels={labels}
+                />
               </Suspense>
             ) : view.layout === "spines" ? (
               <div className="owner-rack">
-                {visible.map((book, index) => <ShelfSpine key={book.id} book={book} selected={turned === book.id}
-                  exposedEnd={index === visible.length - 1} open={open} turn={setTurned}/> )}
+                {visible.map((book, index) => (
+                  <ShelfSpine
+                    key={book.id}
+                    book={book}
+                    selected={turned === book.id}
+                    exposedEnd={index === visible.length - 1}
+                    open={open}
+                    turn={setTurned}
+                  />
+                ))}
               </div>
             ) : (
               <div className="covers">
@@ -243,8 +310,11 @@ export function Collection({
                     }}
                   >
                     <button className="bookcard" onClick={() => open(b.id)}>
-                      <span className="cover-model"><BoundVolume book={b}/></span>
-                      <strong>{displayTitle(b.title)}</strong><small>{b.author || "Author unlisted"}</small>
+                      <span className="cover-model">
+                        <BoundVolume book={b} />
+                      </span>
+                      <strong>{displayTitle(b.title)}</strong>
+                      <small>{b.author || "Author unlisted"}</small>
                     </button>
                     {arrange && (
                       <div className="arrange-controls">
@@ -283,7 +353,10 @@ export function Collection({
         </button>
       )}
       {options && (
-        <Dialog title={phone ? "Filters & view" : "View options"} onClose={() => setOptions(false)}>
+        <Dialog
+          title={phone ? "Filters & view" : "View options"}
+          onClose={() => setOptions(false)}
+        >
           <div className="fields">
             {phone && <label>Category{categoryPicker}</label>}
             <label>

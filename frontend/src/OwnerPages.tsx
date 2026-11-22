@@ -11,11 +11,28 @@ type Props = {
   mutate: Mutate;
 };
 
-export default function OwnerPages({ page, library, view, setView, open, mutate }: Props) {
-  if (page === "queue") return <Queues library={library} mutate={mutate} open={open} />;
+export default function OwnerPages({
+  page,
+  library,
+  view,
+  setView,
+  open,
+  mutate,
+}: Props) {
+  if (page === "queue")
+    return <Queues library={library} mutate={mutate} open={open} />;
   if (page === "history") return <Timeline books={library.books} open={open} />;
-  return <>
-    <Collection books={library.books} views={library.views} view={view} setView={setView} open={open} mutate={mutate} />
-    {page === "room" && <Feature library={library} open={open} />}
-  </>;
+  return (
+    <>
+      <Collection
+        books={library.books}
+        views={library.views}
+        view={view}
+        setView={setView}
+        open={open}
+        mutate={mutate}
+      />
+      {page === "room" && <Feature library={library} open={open} />}
+    </>
+  );
 }
