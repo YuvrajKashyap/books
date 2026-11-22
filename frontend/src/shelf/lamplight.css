@@ -1,0 +1,105 @@
+/* Lamplight over the public bookcase. Two layers sit above the shelves: a
+   shade that dims the room and a warm glow that lifts the books near the lamp.
+   Each holds one large disc that moves by transform only. */
+.lamplight {
+  --lamp: translate3d(50%, 150px, 0);
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease);
+}
+.lamplight.is-lit {
+  opacity: 1;
+  transition-duration: 0.5s;
+}
+.lamplight.is-waking {
+  opacity: 1;
+  transition-duration: 0s;
+}
+.lamplight > span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  transform: var(--lamp);
+  will-change: transform;
+}
+
+.lamp-shade > span {
+  width: 1040px;
+  height: 1040px;
+  margin: -520px 0 0 -520px;
+  background: radial-gradient(
+    closest-side,
+    transparent 0,
+    transparent 17%,
+    #0a060447 40%,
+    #0a06048c 70%,
+    #0a0604b8 100%
+  );
+  box-shadow: 0 0 0 3000px #0a0604b8;
+}
+/* While the room wakes the shade is nearly opaque, so the first thing seen is
+   the light itself crossing the top shelf. */
+.lamp-shade.is-waking > span {
+  background: radial-gradient(
+    closest-side,
+    transparent 0,
+    transparent 18%,
+    #070403a8 46%,
+    #070403eb 100%
+  );
+  box-shadow: 0 0 0 3000px #070403eb;
+}
+
+.lamp-glow {
+  mix-blend-mode: soft-light;
+}
+.lamp-glow > span {
+  width: 720px;
+  height: 720px;
+  margin: -360px 0 0 -360px;
+  background: radial-gradient(
+    closest-side,
+    #ffe9c2 0,
+    #ffcf8fa6 34%,
+    #ffb25c33 68%,
+    transparent 100%
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Books are set down on the shelf one after another, left to right. */
+  .gallery-volumes > .volume-slot {
+    animation: set-down 0.62s var(--ease) backwards;
+    animation-delay: calc(min(var(--n, 0), 46) * 14ms + 120ms);
+  }
+  @keyframes set-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
+}
+
+/* The book travels between the shelf and the reader as one object. */
+.book-dialog .jacket-object {
+  view-transition-name: open-book;
+}
+::view-transition-group(open-book) {
+  animation-duration: 0.62s;
+  animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+}
+::view-transition-old(open-book),
+::view-transition-new(open-book) {
+  height: 100%;
+  object-fit: contain;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.42s;
+}
