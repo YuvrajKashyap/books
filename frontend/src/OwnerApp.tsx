@@ -503,7 +503,7 @@ export default function OwnerApp() {
             </div>
           )}
           <button
-            className="setting"
+            className="setting is-leaving"
             onClick={async () => {
               await auth?.auth.signOut({ scope: "local" });
               setSettings(false);

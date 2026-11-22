@@ -45,9 +45,6 @@ nav .active,
 }
 .reading-gallery {
   min-height: 100dvh;
-  background:
-    radial-gradient(ellipse at 55% 0%, var(--surface), transparent 62vw),
-    var(--paper);
 }
 .gallery-main {
   max-width: 1540px;
@@ -431,26 +428,6 @@ nav .active,
   margin-top: 16px;
   padding-top: 12px;
 }
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes unseal {
-    from {
-      clip-path: inset(0 100% 0 0);
-    }
-    to {
-      clip-path: inset(0);
-    }
-  }
-  @keyframes book-settle {
-    from {
-      opacity: 0.45;
-      transform: rotateX(10deg) translateY(-6px);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-}
 @media (max-width: 580px) {
   .catalog-search {
     min-width: 0;
@@ -503,10 +480,6 @@ nav .active,
 }
 
 /* A solid walnut carcase, with a recessed back and a projecting nosing. */
-.reading-gallery {
-  background:
-    radial-gradient(ellipse at 35% 0, #fffaf1 0, transparent 52rem), #eee8dc;
-}
 .gallery-main {
   max-width: 1340px;
 }

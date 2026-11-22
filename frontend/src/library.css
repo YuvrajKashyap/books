@@ -85,10 +85,6 @@ h3,
   width: 24px;
   background: #ac925e;
 }
-.reading-gallery {
-  background:
-    radial-gradient(ellipse at 50% 0, #30473a 0, transparent 65rem), #162a24;
-}
 .reading-gallery .gallery-main {
   padding-bottom: 26px;
 }

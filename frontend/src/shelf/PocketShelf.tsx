@@ -158,10 +158,16 @@ export function PocketShelf({
     let touching = false;
     function settle() {
       if (!loop || touching) return;
-      // Jumping copies would unmount a focused book button and drop keyboard
-      // focus to the page. Wait until focus leaves the books.
+      // Jumping copies would unmount a keyboard-focused book button and drop
+      // focus to the page. Wait until it leaves. A tap also focuses the
+      // button on some phones, but not visibly, so it must not hold the loop.
       const focused = document.activeElement;
-      if (focused !== el && el.contains(focused)) return;
+      if (
+        focused !== el &&
+        el.contains(focused) &&
+        focused?.matches(":focus-visible")
+      )
+        return;
       const copy = Math.floor((el.scrollLeft + width / 2) / length);
       if (copy !== 1) {
         el.scrollLeft += (1 - copy) * length;
