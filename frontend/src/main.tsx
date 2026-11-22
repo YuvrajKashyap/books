@@ -11,12 +11,17 @@ import "./shelf/room.css";
 import "./library.css";
 
 const OwnerApp = lazy(() => import("./OwnerApp"));
-const measureSynopsis = location.pathname === "/" && new URLSearchParams(location.search).get("measure") === "synopsis";
-if (measureSynopsis) void import("./shelf/measureSynopsis").then(probe => probe.measure());
+const measureSynopsis =
+  location.pathname === "/" &&
+  new URLSearchParams(location.search).get("measure") === "synopsis";
+if (measureSynopsis)
+  void import("./shelf/measureSynopsis").then((probe) => probe.measure());
 
 function sessionMayExist() {
   try {
-    return Object.keys(localStorage).some(key => /^sb-.+-auth-token$/.test(key));
+    return Object.keys(localStorage).some((key) =>
+      /^sb-.+-auth-token$/.test(key),
+    );
   } catch {
     return true;
   }
@@ -28,12 +33,29 @@ function Entry() {
   const ownerRoute = pathname !== "/";
   useEffect(() => {
     if (ownerRoute) setOwner(true);
-    const changed = () => { if (sessionMayExist()) setOwner(true); };
+    const changed = () => {
+      if (sessionMayExist()) setOwner(true);
+    };
     window.addEventListener("storage", changed);
     return () => window.removeEventListener("storage", changed);
   }, [ownerRoute]);
   if (!ownerRoute && (!owner || measureSynopsis)) return <PublicShelf />;
-  return <Suspense fallback={<div className="loading"><Brand /><p>Opening the reading room…</p></div>}><OwnerApp /></Suspense>;
+  return (
+    <Suspense
+      fallback={
+        <div className="loading">
+          <Brand />
+          <p>Opening the reading room…</p>
+        </div>
+      }
+    >
+      <OwnerApp />
+    </Suspense>
+  );
 }
 
-createRoot(document.getElementById("root")!).render(<BrowserRouter><Entry /></BrowserRouter>);
+createRoot(document.getElementById("root")!).render(
+  <BrowserRouter>
+    <Entry />
+  </BrowserRouter>,
+);

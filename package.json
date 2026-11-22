@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "format": "prettier --write \"frontend/src/**/*.{ts,tsx,css}\" \"shared/**/*.ts\" \"backend/**/*.ts\" \"tests/**/*.ts\" \"build/**/*.ts\""
+    "format": "prettier --write \"frontend/src/**/*.{ts,tsx,css}\""
   },
   "license": "ISC",
   "type": "module",
