@@ -97,26 +97,6 @@
   border: 1px solid var(--desk-rule);
   border-top: 3px double #a58a57;
 }
-.private-room .next-bottom {
-  border-top: 3px double #c2b38e;
-}
-.private-room .reading-gauge {
-  margin: -4px 0 14px;
-  width: min(145px, 100%);
-  height: 5px;
-  background:
-    repeating-linear-gradient(90deg, #c9bc8b85 0 1px, transparent 1px 10%),
-    #173327;
-  border-bottom: 1px solid #ac9c735e;
-}
-.reading-gauge i {
-  display: block;
-  height: 2px;
-  background: linear-gradient(90deg, #96815b, #f0d497);
-}
-.private-room .feature-text .light {
-  box-shadow: 0 0 8px #e4b75c99;
-}
 
 /* A bound index sits beside the queue. The needle follows the saved rotation. */
 .queue-desk,

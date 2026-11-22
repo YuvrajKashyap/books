@@ -36,7 +36,6 @@ button:hover {
 .brand,
 nav a,
 .next p,
-.next-top,
 .next .kicker {
   color: var(--ink);
 }
@@ -56,9 +55,6 @@ nav .active,
   background: var(--inset);
   color: var(--ink);
   border-color: var(--line);
-}
-.feature {
-  background-color: color-mix(in srgb, var(--forest) 62%, #0c211c);
 }
 .queue-row {
   background-color: var(--paper);

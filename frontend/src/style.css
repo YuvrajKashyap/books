@@ -192,8 +192,6 @@ main {
 }
 .page-title,
 .section-head,
-.next-top,
-.next-bottom,
 .form-actions,
 .dialog-head,
 .setting-intro,
@@ -209,57 +207,10 @@ main {
 .page-title h1 {
   margin-top: 4px;
 }
-.feature-grid {
-  display: grid;
-  grid-template-columns: 1.75fr 1fr;
-  gap: 16px;
-}
-.feature,
 .next {
   border-radius: 12px;
   overflow: hidden;
   position: relative;
-}
-.feature {
-  display: flex;
-  align-items: center;
-  background: #223e34;
-  color: #fffbe9;
-  isolation: isolate;
-  min-height: 265px;
-}
-.feature-art {
-  width: 41%;
-  min-width: 160px;
-  align-self: stretch;
-  display: grid;
-  place-items: center;
-  position: relative;
-  background: radial-gradient(ellipse at 32% 34%, #75835b70, transparent 77%);
-}
-.etch {
-  position: absolute;
-  inset: 0 -12% 0 0;
-  background: repeating-radial-gradient(
-    ellipse at 48% 68%,
-    transparent 0 8px,
-    #d9d3a828 8.6px,
-    transparent 9.4px 14px
-  );
-  mask-image: linear-gradient(90deg, #000 55%, transparent);
-}
-.feature-art .cover {
-  width: clamp(100px, 10vw, 145px);
-  transform: perspective(850px) rotateY(-10deg) rotate(-7deg);
-  box-shadow:
-    7px 9px 1px -5px #d9cbb3,
-    13px 18px 20px #071a12a3;
-}
-.feature-text {
-  padding: 25px 25px 36px 7px;
-}
-.feature-text .kicker {
-  color: #e8d8aa;
 }
 .light {
   width: 6px;
@@ -267,46 +218,11 @@ main {
   background: #d4c68c;
   border-radius: 50%;
 }
-.feature h2 {
-  font-size: clamp(38px, 3.8vw, 58px);
-  margin: 12px 0 3px;
-  line-height: 1;
-}
-.feature p {
-  color: #d9e0d4;
-}
 .meta {
   font-size: 12px;
   color: #c5d2c1;
   display: block;
   margin: 10px 0;
-}
-.feature-text button {
-  background: transparent;
-  color: #fff9e9;
-  border-color: #8eaa9170;
-  font-size: 12px;
-}
-.pager {
-  position: absolute;
-  right: 12px;
-  bottom: 9px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  color: #c4d2c3;
-  font-variant-numeric: tabular-nums;
-}
-.pager button {
-  padding: 3px;
-  border: 0;
-  color: inherit;
-  background: none;
-}
-.pager svg {
-  width: 14px;
-  height: 14px;
 }
 .next {
   display: flex;
@@ -316,7 +232,6 @@ main {
   background: #eee7d8;
   border: 1px solid #dcd3bf;
 }
-.next-top,
 .next .kicker {
   color: #736646;
 }
@@ -326,17 +241,6 @@ main {
 }
 .next p {
   color: #615d4f;
-}
-.next-bottom {
-  border-top: 1px solid #d7cbb6;
-  padding-top: 13px;
-  font-size: 12px;
-}
-.next-bottom button {
-  background: none;
-  border: 0;
-  padding: 0;
-  white-space: nowrap;
 }
 .section-head {
   margin: 30px 0 14px;
@@ -841,20 +745,8 @@ dialog h3 {
   }
 }
 @media (max-width: 900px) {
-  .feature-grid {
-    grid-template-columns: 1.45fr 1fr;
-  }
-  .feature-art {
-    min-width: 125px;
-  }
-  .feature-text {
-    padding-right: 14px;
-  }
   .next {
     padding: 18px;
-  }
-  .next-bottom {
-    flex-wrap: wrap;
   }
   .bookmat {
     height: 164px;
@@ -893,22 +785,6 @@ dialog h3 {
     font-size: 12px;
     padding: 9px 12px;
   }
-  .feature-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .feature {
-    min-height: 205px;
-  }
-  .feature h2 {
-    font-size: 40px;
-  }
-  .feature-art {
-    width: 39%;
-  }
-  .feature-art .cover {
-    width: 96px;
-  }
   .next {
     padding: 13px 16px;
     gap: 4px;
@@ -919,10 +795,6 @@ dialog h3 {
   }
   .next p {
     margin: 0;
-  }
-  .next-bottom {
-    margin-top: 5px;
-    padding-top: 7px;
   }
   .section-head {
     align-items: flex-end;
