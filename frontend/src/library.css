@@ -1415,3 +1415,14 @@ html:has(.book-dialog[open]) {
     background-color: #bda56b38;
   }
 }
+
+/* The owner's room opens from the dark, like the public shelf. */
+body:has(.loading, .private-room, .library-login) {
+  background: #142820;
+}
+.loading {
+  color: #d9cfb4;
+}
+.loading .brand {
+  color: #f1e6c9;
+}
