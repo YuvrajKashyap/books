@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { build } from "vite";
 import { bookNotes } from "../build/book-notes.ts";
-import notes from "../frontend/src/shelf/synopses.json" with { type: "json" };
-import { readNote, readOwnerNote } from "../frontend/src/shelf/bookNote.ts";
+import notes from "../frontend/src/shared/synopses.json" with { type: "json" };
+import { readNote, readOwnerNote } from "../frontend/src/shared/bookNote.ts";
 import { createHash } from "node:crypto";
 
 test("each manuscript entry builds into a separate public note at its stable ID", async () => {

@@ -1,62 +1,52 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, useLocation } from "react-router-dom";
-import { PublicShelf } from "./PublicShelf";
-import { Brand } from "./components";
-import "@fontsource-variable/dm-sans/wght.css";
-import "@fontsource/cormorant-garamond/latin-500.css";
-import "@fontsource/cormorant-garamond/latin-500-italic.css";
-import "./tokens.css";
-import "./style.css";
-import "./shelf/room.css";
-import "./library.css";
+import { BrowserRouter, Navigate, useLocation } from "react-router-dom";
+import { ACTIVE, frontends, type Frontend } from "./frontends/registry";
+import { sessionMayExist } from "./shared/session";
 
-const OwnerApp = lazy(() => import("./OwnerApp"));
-const measureSynopsis =
-  location.pathname === "/" &&
-  new URLSearchParams(location.search).get("measure") === "synopsis";
-if (measureSynopsis)
-  void import("./shelf/measureSynopsis").then((probe) => probe.measure());
+// "/" wears the active frontend. "/d/<slug>" previews any of them, and
+// "/directions" lists them all.
+const path = location.pathname.replace(/\/$/, "") || "/";
+const previewed = path.match(/^\/d\/([^/]+)/)?.[1];
+const chosen =
+  path === "/directions"
+    ? undefined
+    : (frontends.find((f) => f.slug === (previewed ?? ACTIVE)) ??
+      frontends.find((f) => f.slug === ACTIVE) ??
+      frontends[0]);
+const preview = Boolean(previewed && chosen?.slug === previewed);
 
-function sessionMayExist() {
-  try {
-    return Object.keys(localStorage).some((key) =>
-      /^sb-.+-auth-token$/.test(key),
-    );
-  } catch {
-    return true;
-  }
+// lazy() must keep one identity per loader across renders.
+const loaded = new Map<Frontend["load"], ReturnType<typeof lazy>>();
+function once(load: Frontend["load"]) {
+  if (!loaded.has(load)) loaded.set(load, lazy(load));
+  return loaded.get(load)!;
 }
 
-function Entry() {
+function Site({ frontend }: { frontend: Frontend }) {
   const { pathname } = useLocation();
-  const [owner, setOwner] = useState(sessionMayExist);
-  const ownerRoute = pathname !== "/";
-  useEffect(() => {
-    if (ownerRoute) setOwner(true);
-    const changed = () => {
-      if (sessionMayExist()) setOwner(true);
-    };
-    window.addEventListener("storage", changed);
-    return () => window.removeEventListener("storage", changed);
-  }, [ownerRoute]);
-  if (!ownerRoute && (!owner || measureSynopsis)) return <PublicShelf />;
-  return (
-    <Suspense
-      fallback={
-        <div className="loading">
-          <Brand />
-          <p>Opening the reading room…</p>
-        </div>
-      }
-    >
-      <OwnerApp />
-    </Suspense>
-  );
+  const Main = once(frontend.load);
+  if (!frontend.rooms) return <Main />;
+  // A paired frontend: the public page at "/", the owner's rooms elsewhere.
+  // A signed-in owner goes straight to the reading room, except in a preview,
+  // where "/" always shows the public page so it can be reviewed. "/shelf"
+  // shows the public page to anyone.
+  if (
+    pathname === "/shelf" ||
+    (pathname === "/" && (preview || !sessionMayExist()))
+  )
+    return <Main />;
+  if (pathname === "/") return <Navigate to="/room" replace />;
+  const Rooms = once(frontend.rooms);
+  return <Rooms />;
 }
+
+const Picker = lazy(() => import("./frontends/picker"));
 
 createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <Entry />
+  <BrowserRouter basename={preview ? "/d/" + chosen!.slug : "/"}>
+    <Suspense fallback={null}>
+      {chosen ? <Site frontend={chosen} /> : <Picker />}
+    </Suspense>
   </BrowserRouter>,
 );

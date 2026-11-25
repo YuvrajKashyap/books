@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { scrollShelfWheel } from "../frontend/src/shelf/wheel.ts";
+import { scrollShelfWheel } from "../frontend/src/frontends/current/shelf/wheel.ts";
 
 const wheel = (deltaY: number, options = {}) => ({
   deltaY, deltaX: 0, deltaMode: 0, ctrlKey: false, shiftKey: false,

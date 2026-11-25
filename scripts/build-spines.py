@@ -8,7 +8,7 @@ import textwrap
 from PIL import Image, ImageDraw, ImageFont
 
 public = Path("frontend/public")
-manifest = Path("frontend/src/shelf/jackets.json")
+manifest = Path("frontend/src/shared/jackets.json")
 jackets = json.loads(manifest.read_text(encoding="utf-8"))
 out = public / "bindings"
 out.mkdir(exist_ok=True)

@@ -1,0 +1,1745 @@
+/* Spectrum: a daylight optics bench. Chalk paper, graphite ink, and colour
+   only where light has been split. Every selector lives under .fx-spectrum. */
+
+html:has(.fx-spectrum) {
+  background: #f3f1ea;
+  scrollbar-width: none;
+  overscroll-behavior-x: none;
+}
+html:has(.fx-spectrum)::-webkit-scrollbar {
+  display: none;
+}
+html:has(.fx-spectrum) body {
+  margin: 0;
+  background: #f3f1ea;
+}
+html:has(.fx-spectrum[data-reading]) {
+  overflow: hidden;
+}
+
+.fx-spectrum,
+.fx-spectrum *,
+.fx-spectrum *::before,
+.fx-spectrum *::after {
+  box-sizing: border-box;
+}
+
+.fx-spectrum {
+  --paper: #f3f1ea;
+  --ink: #22262e;
+  --ink-2: rgba(34, 38, 46, 0.64);
+  --hair: rgba(34, 38, 46, 0.17);
+  --hair-2: rgba(34, 38, 46, 0.42);
+  --r0: #ee3b2b;
+  --r1: #f2a200;
+  --r2: #00a3ad;
+  --r3: #6b43f2;
+  --serif: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --out: cubic-bezier(0.2, 0.85, 0.25, 1);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-variation-settings:
+    "opsz" 18,
+    "SOFT" 40,
+    "WONK" 0;
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.fx-spectrum button {
+  font: inherit;
+  color: inherit;
+  font-variation-settings: inherit;
+}
+.fx-spectrum p,
+.fx-spectrum h1,
+.fx-spectrum h2,
+.fx-spectrum h3,
+.fx-spectrum dl,
+.fx-spectrum dd {
+  margin: 0;
+}
+.fx-spectrum :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.fx-spectrum .sp-mono {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  color: var(--ink-2);
+}
+
+/* ---------- The bench ---------- */
+
+.fx-spectrum .sp-space {
+  position: relative;
+}
+.fx-spectrum .sp-view {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--paper);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.fx-spectrum .sp-paper {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(34, 38, 46, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 38, 46, 0.05) 1px, transparent 1px),
+    linear-gradient(to right, rgba(34, 38, 46, 0.075) 1px, transparent 1px),
+    radial-gradient(
+      circle at 1px 1px,
+      rgba(34, 38, 46, 0.34) 1px,
+      transparent 1.6px
+    );
+  background-size:
+    40px 40px,
+    40px 40px,
+    240px 240px,
+    240px 120px;
+}
+.fx-spectrum .sp-paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      90% 70% at 18% 8%,
+      rgba(255, 255, 255, 0.95),
+      transparent 62%
+    ),
+    radial-gradient(
+      80% 60% at 90% 100%,
+      rgba(255, 255, 255, 0.6),
+      transparent 60%
+    );
+}
+.fx-spectrum .sp-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+.fx-spectrum .sp-scroller {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.fx-spectrum .sp-scroller[data-dragging] {
+  cursor: grabbing;
+}
+.fx-spectrum .sp-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  will-change: transform;
+}
+
+/* ---------- Identity ---------- */
+
+.fx-spectrum .sp-title {
+  position: absolute;
+  left: max(22px, 5.6vw);
+  pointer-events: none;
+}
+.fx-spectrum .sp-title h1 {
+  font-size: clamp(46px, min(8.4vw, 12.5vh), 132px);
+  line-height: 0.88;
+  font-weight: 340;
+  letter-spacing: -0.04em;
+  font-variation-settings:
+    "opsz" 144,
+    "SOFT" 100,
+    "WONK" 1;
+  /* Finished state is the default; the warm-up only thickens the strokes. */
+  animation: spectrum-warm 1.1s var(--out);
+}
+.fx-spectrum .sp-title h1 span {
+  display: block;
+  white-space: nowrap;
+}
+.fx-spectrum .sp-title h1 span + span {
+  font-style: italic;
+  padding-left: 0.62em;
+  font-weight: 300;
+}
+.fx-spectrum .sp-lede {
+  position: absolute;
+  pointer-events: none;
+  font-size: clamp(16px, 1.4vw, 21px);
+  line-height: 1.3;
+  font-variation-settings:
+    "opsz" 30,
+    "SOFT" 60;
+  font-weight: 380;
+  text-wrap: balance;
+}
+.fx-spectrum .sp-note {
+  position: absolute;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.fx-spectrum .sp-note-beam {
+  transform-origin: 0 100%;
+}
+.fx-spectrum .sp-note-prism {
+  display: grid;
+  gap: 3px;
+}
+.fx-spectrum .sp-note-how {
+  margin-top: 6px;
+  color: var(--ink);
+}
+.fx-spectrum .sp-note-prism b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.fx-spectrum .sp-prism {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.fx-spectrum .sp-prism:active {
+  cursor: grabbing;
+}
+.fx-spectrum .sp-prism svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.fx-spectrum .sp-prism svg g {
+  transform-origin: 0 0;
+}
+.fx-spectrum .sp-prism-fallback {
+  fill: none;
+  stroke: none;
+}
+.fx-spectrum .sp-prism-arc {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.8;
+  stroke-dasharray: 1.5 3;
+  opacity: 0.45;
+  transition: opacity 0.3s;
+}
+.fx-spectrum .sp-prism-arc + .sp-prism-arc {
+  stroke-dasharray: none;
+}
+.fx-spectrum .sp-prism:hover .sp-prism-arc,
+.fx-spectrum .sp-prism:focus-visible .sp-prism-arc {
+  opacity: 1;
+}
+.fx-spectrum .sp-prism:focus-visible {
+  outline: 1.5px dashed var(--ink);
+  outline-offset: 8px;
+}
+
+.fx-spectrum .sp-wait {
+  position: absolute;
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  max-width: 260px;
+}
+.fx-spectrum .sp-wait strong {
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 340;
+  font-variation-settings:
+    "opsz" 60,
+    "SOFT" 100,
+    "WONK" 1;
+  line-height: 1.1;
+}
+.fx-spectrum .sp-wait[role="status"] strong {
+  animation: spectrum-pulse 1.6s ease-in-out infinite;
+}
+.fx-spectrum .sp-wait .sp-btn {
+  margin-top: 8px;
+}
+
+/* ---------- Shelves and books ---------- */
+
+.fx-spectrum .sp-shelf {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  will-change: transform, opacity;
+}
+.fx-spectrum .sp-shelf[data-hidden] {
+  pointer-events: none;
+}
+.fx-spectrum .sp-shelf-glass {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 7px;
+  background: linear-gradient(
+    var(--ray) 0 2px,
+    color-mix(in srgb, var(--ray) 22%, transparent) 2px
+  );
+  border-bottom: 1px solid var(--hair-2);
+}
+.fx-spectrum .sp-shelf-label {
+  position: absolute;
+  left: 0;
+  top: 13px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+.fx-spectrum .sp-shelf-label h2 {
+  font-size: 15px;
+  font-weight: 420;
+  font-style: italic;
+  font-variation-settings:
+    "opsz" 20,
+    "SOFT" 80,
+    "WONK" 1;
+  color: var(--ink);
+  padding: 0 6px;
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  border-left: 2px solid var(--ray);
+}
+.fx-spectrum .sp-shelf-label .sp-mono:first-child {
+  color: var(--ray);
+  font-weight: 500;
+  filter: saturate(1.1) brightness(0.86);
+}
+.fx-spectrum .sp-shelf-books {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+.fx-spectrum .sp-shelf-end {
+  position: absolute;
+  top: -20px;
+  white-space: nowrap;
+  transform: scale(var(--inv, 1));
+  transform-origin: 0 100%;
+}
+
+.fx-spectrum .sp-book {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.85s var(--out) var(--wave, 0s);
+}
+.fx-spectrum .sp-book:hover,
+.fx-spectrum .sp-book:focus-visible {
+  z-index: 4;
+}
+.fx-spectrum .sp-book:focus-visible {
+  outline: 1.5px solid var(--ink);
+  outline-offset: 5px;
+}
+.fx-spectrum .sp-book[data-away] {
+  visibility: hidden;
+}
+.fx-spectrum .sp-track[data-intro] .sp-book[data-enter] {
+  animation: spectrum-rise 0.85s var(--out) backwards;
+}
+.fx-spectrum .sp-box {
+  position: absolute;
+  left: var(--off);
+  bottom: 0;
+  width: var(--w);
+  height: var(--h);
+  transform-style: preserve-3d;
+  transform: perspective(1100px) rotateY(var(--a));
+  transition:
+    transform 0.95s cubic-bezier(0.3, 1.25, 0.4, 1) var(--wave, 0s),
+    translate 0.35s var(--out);
+  pointer-events: none;
+}
+.fx-spectrum .sp-book:hover .sp-box,
+.fx-spectrum .sp-book:focus-visible .sp-box {
+  transform: perspective(1100px) rotateY(calc(var(--a) - var(--peek)));
+  translate: 0 -9px;
+  transition:
+    transform 0.4s var(--out),
+    translate 0.3s var(--out);
+}
+.fx-spectrum .sp-book:active .sp-box {
+  translate: 0 -3px;
+}
+.fx-spectrum .sp-face {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  backface-visibility: hidden;
+  background: var(--cloth);
+  transition: background-color 0.45s;
+}
+.fx-spectrum .sp-front {
+  left: 0;
+  width: 100%;
+  transform: translateZ(calc(var(--d) / 2));
+  border-radius: 1px 2px 2px 1px;
+}
+.fx-spectrum .sp-spine {
+  left: calc(50% - var(--d) / 2);
+  width: var(--d);
+  transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
+}
+.fx-spectrum .sp-face img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.45s;
+}
+.fx-spectrum .sp-face img[data-loading] {
+  opacity: 0;
+}
+.fx-spectrum .sp-blank {
+  position: absolute;
+  inset: 12% 10%;
+  font-size: 11px;
+  line-height: 1.15;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: left;
+  overflow: hidden;
+}
+.fx-spectrum .sp-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.45s;
+}
+.fx-spectrum .sp-front::after {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.24),
+    rgba(255, 255, 255, 0.14) 5%,
+    transparent 13%,
+    transparent 78%,
+    rgba(0, 0, 0, 0.1)
+  );
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.28);
+}
+.fx-spectrum .sp-view[data-layout="spines"] .sp-front::after {
+  background-color: rgba(26, 30, 48, 0.2);
+}
+.fx-spectrum .sp-spine::after {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.22),
+    rgba(255, 255, 255, 0.16) 28%,
+    transparent 58%,
+    rgba(0, 0, 0, 0.24)
+  );
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.22);
+}
+/* Outside the search: the book stays in place as a graphite drawing. */
+.fx-spectrum .sp-book[data-ghost] .sp-face {
+  background: rgba(246, 244, 238, 0.88);
+}
+.fx-spectrum .sp-book[data-ghost] .sp-face img,
+.fx-spectrum .sp-book[data-ghost] .sp-blank {
+  opacity: 0;
+}
+.fx-spectrum .sp-book[data-ghost] .sp-face::after {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 9px,
+    rgba(34, 38, 46, 0.13) 9px 10px
+  );
+  box-shadow: inset 0 0 0 1px rgba(34, 38, 46, 0.6);
+}
+.fx-spectrum .sp-tag {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 30px);
+  display: grid;
+  gap: 1px;
+  padding: 5px 10px 6px;
+  background: var(--paper);
+  border: 1px solid var(--hair-2);
+  border-top: 2px solid var(--ray);
+  white-space: nowrap;
+  text-align: left;
+  transform: translateX(-50%) scale(var(--inv, 1));
+  transform-origin: 50% 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  box-shadow: 0 10px 24px -12px rgba(40, 52, 78, 0.35);
+}
+.fx-spectrum .sp-tag em {
+  font-size: 14px;
+  font-weight: 420;
+  font-variation-settings:
+    "opsz" 18,
+    "SOFT" 80,
+    "WONK" 1;
+}
+.fx-spectrum .sp-tag small {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+.fx-spectrum .sp-book:hover .sp-tag,
+.fx-spectrum .sp-book:focus-visible .sp-tag {
+  opacity: 1;
+}
+
+/* The pointer as a lens: what lies under it brightens. */
+.fx-spectrum .sp-lens {
+  position: absolute;
+  left: -105px;
+  top: -105px;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 255, 255, 0.2),
+    transparent 72%
+  );
+  -webkit-backdrop-filter: brightness(1.16) saturate(1.4) contrast(1.05);
+  backdrop-filter: brightness(1.16) saturate(1.4) contrast(1.05);
+  -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent);
+  mask-image: radial-gradient(closest-side, #000 30%, transparent);
+}
+@media (hover: none) {
+  .fx-spectrum .sp-lens {
+    display: none;
+  }
+}
+
+/* ---------- The far end ---------- */
+
+.fx-spectrum .sp-colophon {
+  position: absolute;
+  display: grid;
+  gap: 12px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.fx-spectrum .sp-colophon-big {
+  font-size: clamp(30px, 3.3vw, 52px);
+  line-height: 1.02;
+  font-weight: 320;
+  letter-spacing: -0.025em;
+  font-variation-settings:
+    "opsz" 144,
+    "SOFT" 100,
+    "WONK" 1;
+}
+.fx-spectrum .sp-colophon-big b {
+  font-weight: 460;
+  font-style: italic;
+  background: linear-gradient(
+    90deg,
+    var(--r0),
+    var(--r1) 34%,
+    var(--r2) 66%,
+    var(--r3)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.06em;
+}
+.fx-spectrum .sp-colophon p:not(.sp-mono):not(.sp-colophon-big) {
+  font-size: 16px;
+  color: var(--ink-2);
+  max-width: 34em;
+}
+.fx-spectrum .sp-colophon .sp-mono {
+  line-height: 1.6;
+  max-width: 44em;
+}
+.fx-spectrum .sp-foot {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 22px;
+  white-space: nowrap;
+  transform: translateY(calc(-100% - 12px));
+}
+.fx-spectrum .sp-foot strong {
+  font-size: 19px;
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings:
+    "opsz" 40,
+    "SOFT" 100,
+    "WONK" 1;
+}
+
+/* ---------- Optical rail ---------- */
+
+.fx-spectrum .sp-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 22px 7px;
+  pointer-events: none;
+}
+.fx-spectrum .sp-rail .sp-mono {
+  white-space: nowrap;
+  color: var(--ink);
+}
+.fx-spectrum .sp-rail-hot {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+.fx-spectrum .sp-rail-carriage {
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top: 7px solid var(--ink);
+}
+.fx-spectrum .sp-rail-carriage::after {
+  content: "";
+  position: absolute;
+  left: -0.5px;
+  top: 0;
+  width: 1px;
+  height: 22px;
+  background: var(--r0);
+}
+/* ---------- Controls ---------- */
+
+.fx-spectrum .sp-hud {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 22px;
+  background: color-mix(in srgb, var(--paper) 84%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hair);
+}
+/* The first row keeps its width; the tools take what is left and scroll
+   sideways before they would ever overlap it. */
+.fx-spectrum .sp-hud-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: none;
+}
+.fx-spectrum .sp-hud-tools {
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  align-self: stretch;
+}
+.fx-spectrum .sp-hud-tools::-webkit-scrollbar {
+  display: none;
+}
+.fx-spectrum .sp-hud-tools > * {
+  flex: none;
+}
+.fx-spectrum .sp-hud-tools > :first-child {
+  margin-left: auto;
+}
+.fx-spectrum .sp-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap;
+}
+.fx-spectrum .sp-brand em {
+  font-size: 17px;
+  font-weight: 400;
+  font-variation-settings:
+    "opsz" 30,
+    "SOFT" 100,
+    "WONK" 1;
+}
+.fx-spectrum .sp-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 6px 0 12px;
+  border: 1px solid var(--hair-2);
+  background: rgba(255, 255, 255, 0.7);
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+.fx-spectrum .sp-search::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--r0),
+    var(--r1),
+    var(--r2),
+    var(--r3)
+  );
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.5s var(--out);
+}
+.fx-spectrum .sp-search:focus-within {
+  border-color: var(--ink);
+  background: #fff;
+}
+.fx-spectrum .sp-search:focus-within::after,
+.fx-spectrum .sp-search:has(input:not(:placeholder-shown))::after {
+  transform: scaleX(1);
+}
+.fx-spectrum .sp-search input {
+  width: 210px;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.fx-spectrum .sp-search input::placeholder {
+  color: var(--ink-2);
+  font-style: italic;
+}
+.fx-spectrum .sp-search input::-webkit-search-cancel-button {
+  display: none;
+}
+.fx-spectrum .sp-search kbd {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  border: 1px solid var(--hair-2);
+  font-size: 11px;
+}
+.fx-spectrum .sp-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--hair-2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    transform 0.2s;
+}
+.fx-spectrum .sp-icon:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.fx-spectrum .sp-icon:active {
+  transform: scale(0.94);
+}
+.fx-spectrum .sp-clear {
+  width: 28px;
+  height: 28px;
+  border: 0;
+}
+.fx-spectrum .sp-cats {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.fx-spectrum .sp-cats > * {
+  flex: none;
+}
+/* Phones: the two halves of the spectrum, set into the category row. */
+.fx-spectrum .sp-pairseg {
+  display: none;
+}
+.fx-spectrum .sp-cats button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  background: none;
+  font-size: 14.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+.fx-spectrum .sp-cats button::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  height: 2px;
+  background: var(
+    --ray,
+    linear-gradient(90deg, var(--r0), var(--r1), var(--r2), var(--r3))
+  );
+  transform: scaleX(0);
+  transition: transform 0.4s var(--out);
+}
+.fx-spectrum .sp-cats button:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+.fx-spectrum .sp-cats button[aria-pressed="true"] {
+  background: #fff;
+  border-color: var(--hair-2);
+}
+.fx-spectrum .sp-cats button[aria-pressed="true"]::after {
+  transform: scaleX(1);
+}
+.fx-spectrum .sp-cats i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ray);
+}
+.fx-spectrum .sp-cat-short {
+  display: none;
+}
+.fx-spectrum .sp-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.fx-spectrum .sp-select select {
+  height: 38px;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--hair-2);
+  border-radius: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position:
+    calc(100% - 15px) 50%,
+    calc(100% - 10px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14.5px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.fx-spectrum .sp-seg {
+  display: flex;
+  border: 1px solid var(--hair-2);
+}
+.fx-spectrum .sp-seg button {
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 14.5px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.fx-spectrum .sp-seg button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.fx-spectrum .sp-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.fx-spectrum .sp-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 15px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.fx-spectrum .sp-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.fx-spectrum .sp-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  text-decoration: underline;
+  text-decoration-color: var(--hair-2);
+  text-underline-offset: 4px;
+  cursor: pointer;
+  transition: text-decoration-color 0.2s;
+}
+.fx-spectrum .sp-link:hover {
+  text-decoration-color: var(--r0);
+}
+
+.fx-spectrum .sp-empty {
+  position: fixed;
+  z-index: 15;
+  left: 50%;
+  top: 50%;
+  width: min(440px, 100vw - 32px);
+  padding: 24px 26px 26px;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  text-align: center;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  border: 1px solid var(--hair-2);
+  box-shadow: 0 30px 60px -30px rgba(40, 52, 78, 0.35);
+  transform: translate(-50%, -50%);
+}
+.fx-spectrum .sp-empty p {
+  font-size: 23px;
+  line-height: 1.2;
+  font-weight: 360;
+  font-variation-settings:
+    "opsz" 60,
+    "SOFT" 100;
+  overflow-wrap: anywhere;
+}
+.fx-spectrum .sp-empty div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.fx-spectrum .sp-arranged {
+  position: fixed;
+  z-index: 15;
+  top: 82px;
+  right: 22px;
+  padding: 5px 9px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  border-left: 2px solid transparent;
+  border-image: linear-gradient(var(--r0), var(--r1), var(--r2), var(--r3)) 1;
+}
+
+/* ---------- The reader ---------- */
+
+.fx-spectrum .sp-reader {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  outline: none;
+}
+.fx-spectrum .sp-reader-veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(243, 241, 234, 0.9);
+  -webkit-backdrop-filter: blur(9px) saturate(0.3);
+  backdrop-filter: blur(9px) saturate(0.3);
+}
+.fx-spectrum .sp-reader[data-closing] .sp-reader-veil {
+  animation: spectrum-out 0.5s 0.1s both;
+}
+.fx-spectrum .sp-reader-bar {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 0 22px;
+  pointer-events: none;
+}
+.fx-spectrum .sp-reader-bar > * {
+  pointer-events: auto;
+}
+.fx-spectrum .sp-reader-scroll {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 58px 18px 96px;
+}
+.fx-spectrum .sp-reader-nav {
+  position: absolute;
+  z-index: 3;
+  left: 18px;
+  right: 18px;
+  top: 38%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.fx-spectrum .sp-reader-nav button {
+  pointer-events: auto;
+  width: 46px;
+  height: 46px;
+}
+.fx-spectrum .sp-reader[data-closing] .sp-reader-bar,
+.fx-spectrum .sp-reader[data-closing] .sp-reader-nav {
+  animation: spectrum-out 0.25s both;
+}
+
+.fx-spectrum .sp-specimen {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.fx-spectrum .sp-stage {
+  position: relative;
+  height: calc(var(--h) + 96px);
+  display: grid;
+  place-items: center;
+  perspective: 1500px;
+}
+.fx-spectrum .sp-stage-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  text-align: center;
+}
+.fx-spectrum .sp-fly {
+  position: relative;
+  z-index: 1;
+  width: var(--w);
+  height: var(--h);
+  transform-style: preserve-3d;
+  transition:
+    translate 0.8s var(--out),
+    width 0.3s;
+  will-change: transform;
+}
+.fx-spectrum .sp-specimen[data-open] .sp-fly {
+  translate: calc(var(--w) * 0.4) 0;
+}
+.fx-spectrum .sp-hc-hit {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.fx-spectrum .sp-hc-hit:active {
+  cursor: grabbing;
+}
+.fx-spectrum .sp-hc-hit:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -16px;
+  border: 1.5px dashed var(--ink);
+  border-radius: 4px;
+}
+.fx-spectrum .sp-hc {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(-7deg) rotateY(24deg);
+}
+.fx-spectrum .sp-hc > div {
+  position: absolute;
+}
+.fx-spectrum .sp-hc-back {
+  inset: 0;
+  transform: translateZ(calc(var(--d) / -2)) rotateY(180deg);
+  border-radius: 2px 3px 3px 2px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.25),
+      transparent 8%,
+      transparent 90%,
+      rgba(0, 0, 0, 0.18)
+    ),
+    var(--cloth);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.fx-spectrum .sp-hc-spine {
+  top: 0;
+  height: 100%;
+  left: calc(50% - var(--d) / 2);
+  width: var(--d);
+  transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
+  background: var(--cloth);
+  overflow: hidden;
+}
+.fx-spectrum .sp-hc-spine img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fx-spectrum .sp-hc-spine span {
+  position: absolute;
+  inset: 8% 0;
+  display: grid;
+  place-items: center;
+  writing-mode: vertical-rl;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.fx-spectrum .sp-hc-spine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.22),
+    rgba(255, 255, 255, 0.14) 30%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.22)
+  );
+}
+.fx-spectrum .sp-hc-edge {
+  background-color: #f1ecdf;
+}
+.fx-spectrum .sp-hc-fore {
+  top: 4px;
+  bottom: 4px;
+  left: calc(50% - (var(--d) - 6px) / 2);
+  width: calc(var(--d) - 6px);
+  transform: rotateY(90deg) translateZ(calc(var(--w) / 2 - 5px));
+  background-image: repeating-linear-gradient(
+    90deg,
+    #f8f4e9 0 1px,
+    #dcd5c3 1px 2px
+  );
+}
+.fx-spectrum .sp-hc-top,
+.fx-spectrum .sp-hc-foot {
+  left: 1px;
+  right: 5px;
+  top: calc(50% - (var(--d) - 6px) / 2);
+  height: calc(var(--d) - 6px);
+  background-image: repeating-linear-gradient(
+    0deg,
+    #f8f4e9 0 1px,
+    #dcd5c3 1px 2px
+  );
+}
+.fx-spectrum .sp-hc-top {
+  transform: rotateX(90deg) translateZ(calc(var(--h) / 2 - 4px));
+}
+.fx-spectrum .sp-hc-foot {
+  transform: rotateX(-90deg) translateZ(calc(var(--h) / 2 - 4px));
+}
+.fx-spectrum .sp-hc-page {
+  inset: 4px 5px 4px 1px;
+  transform: translateZ(calc(var(--d) / 2 - 2px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12%;
+  text-align: center;
+  background: linear-gradient(90deg, #e9e3d3, #fbf8f0 9%, #fbf8f0);
+  color: #2a2620;
+}
+.fx-spectrum .sp-hc-page strong {
+  font-size: calc(var(--h) * 0.062);
+  line-height: 1.12;
+  font-weight: 420;
+  font-variation-settings:
+    "opsz" 48,
+    "SOFT" 60;
+  overflow-wrap: anywhere;
+}
+.fx-spectrum .sp-hc-page em {
+  font-size: calc(var(--h) * 0.04);
+}
+.fx-spectrum .sp-hc-page .sp-mono {
+  font-size: 8px;
+  margin-bottom: 8%;
+}
+.fx-spectrum .sp-hc-cover {
+  inset: 0;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--d) / 2)) rotateY(0deg);
+  transition: transform 0.95s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+.fx-spectrum .sp-specimen[data-open] .sp-hc-cover {
+  transform: translateZ(calc(var(--d) / 2)) rotateY(-150deg);
+}
+.fx-spectrum .sp-hc-outer,
+.fx-spectrum .sp-hc-inner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  border-radius: 2px 3px 3px 2px;
+}
+.fx-spectrum .sp-hc-outer {
+  background: var(--cloth);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.3);
+}
+.fx-spectrum .sp-hc-outer img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fx-spectrum .sp-hc-outer span {
+  position: absolute;
+  inset: 14% 12%;
+  font-size: calc(var(--h) * 0.07);
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.94);
+}
+.fx-spectrum .sp-hc-outer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.26),
+    rgba(255, 255, 255, 0.16) 4%,
+    transparent 10%,
+    transparent 55%,
+    rgba(255, 255, 255, 0.12) 70%,
+    transparent 85%
+  );
+}
+.fx-spectrum .sp-hc-inner {
+  transform: rotateY(180deg);
+  background:
+    linear-gradient(270deg, rgba(0, 0, 0, 0.14), transparent 12%),
+    color-mix(in srgb, var(--cloth) 24%, #f4efe2);
+}
+
+/* Four rays meet behind the book and leave as white light. */
+.fx-spectrum .sp-halo {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 20px);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.fx-spectrum .sp-halo i {
+  position: absolute;
+  right: 0;
+  top: -1px;
+  width: 90vw;
+  height: 2px;
+  transform-origin: 100% 50%;
+  /* Each ray is always drawn; a pulse of white runs along it to the book. */
+  background:
+    linear-gradient(90deg, transparent, #fff, transparent) -25% 0 / 16% 100%
+      no-repeat,
+    linear-gradient(90deg, transparent, var(--c) 35%, var(--c));
+  animation: spectrum-converge 1.5s linear infinite;
+}
+.fx-spectrum .sp-halo i:nth-child(1) {
+  --c: var(--r0);
+  transform: rotate(22deg);
+}
+.fx-spectrum .sp-halo i:nth-child(2) {
+  --c: var(--r1);
+  transform: rotate(7.5deg);
+}
+.fx-spectrum .sp-halo i:nth-child(3) {
+  --c: var(--r2);
+  transform: rotate(-7.5deg);
+}
+.fx-spectrum .sp-halo i:nth-child(4) {
+  --c: var(--r3);
+  transform: rotate(-22deg);
+}
+.fx-spectrum .sp-halo b {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(92vmin, 760px);
+  height: min(92vmin, 760px);
+  margin: calc(min(92vmin, 760px) / -2) 0 0 calc(min(92vmin, 760px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    #fff 0,
+    #fff 30%,
+    rgba(255, 255, 255, 0.72) 46%,
+    rgba(238, 59, 43, 0.07) 58%,
+    rgba(242, 162, 0, 0.08) 65%,
+    rgba(0, 163, 173, 0.07) 72%,
+    rgba(107, 67, 242, 0.06) 79%,
+    transparent 88%
+  );
+  animation: spectrum-bloom 0.9s var(--out);
+}
+.fx-spectrum .sp-halo u {
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 70vw;
+  height: 4px;
+  background: linear-gradient(90deg, #fff, #fff 40%, rgba(255, 255, 255, 0));
+  box-shadow: 0 0 16px 2px #fff;
+  border-top: 0.5px solid rgba(34, 38, 46, 0.22);
+  border-bottom: 0.5px solid rgba(34, 38, 46, 0.22);
+}
+.fx-spectrum .sp-specimen[data-closing] .sp-halo {
+  animation: spectrum-out 0.3s both;
+}
+
+.fx-spectrum .sp-card {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  margin: 6px auto 0;
+  padding: 24px 30px 28px;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--hair);
+  border-top: 2px solid var(--ray);
+  box-shadow: 0 34px 60px -34px rgba(40, 52, 78, 0.32);
+  animation: spectrum-card 0.6s var(--out);
+}
+.fx-spectrum .sp-specimen[data-closing] .sp-card {
+  animation: spectrum-out 0.25s both;
+}
+.fx-spectrum .sp-specimen[data-closing] .sp-stage-hint {
+  animation: spectrum-out 0.15s both;
+}
+.fx-spectrum .sp-card-over {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fx-spectrum .sp-card-over i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ray);
+}
+.fx-spectrum .sp-card h2 {
+  font-size: clamp(28px, 4.4vw, 40px);
+  line-height: 1.03;
+  font-weight: 360;
+  letter-spacing: -0.02em;
+  font-variation-settings:
+    "opsz" 96,
+    "SOFT" 100,
+    "WONK" 1;
+  outline: none;
+}
+.fx-spectrum .sp-card-author {
+  font-size: 19px;
+  font-style: italic;
+  font-variation-settings:
+    "opsz" 30,
+    "SOFT" 80,
+    "WONK" 1;
+}
+.fx-spectrum .sp-card-rule {
+  width: 100%;
+  height: 1px;
+  margin: 4px 0;
+  background: var(--hair);
+}
+.fx-spectrum .sp-card-brief {
+  font-size: 18px;
+  line-height: 1.5;
+  font-variation-settings:
+    "opsz" 20,
+    "SOFT" 50;
+}
+.fx-spectrum .sp-card-more {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  animation: spectrum-card 0.5s var(--out);
+}
+.fx-spectrum .sp-card-more p {
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: rgba(34, 38, 46, 0.88);
+}
+.fx-spectrum .sp-card-more h3 {
+  margin-top: 6px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.fx-spectrum .sp-card-meta {
+  width: 100%;
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hair);
+  display: grid;
+  gap: 8px;
+}
+.fx-spectrum .sp-card-meta div {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 10px;
+}
+.fx-spectrum .sp-card-meta dd {
+  color: var(--ink);
+}
+.fx-spectrum .sp-card-wait {
+  min-height: 54px;
+}
+
+/* ---------- Without a canvas: rays as gradients ---------- */
+
+.fx-spectrum .sp-view[data-nocanvas] .sp-shelf-glass {
+  display: block;
+}
+.fx-spectrum .sp-view[data-nocanvas] .sp-prism-fallback {
+  fill: rgba(224, 234, 240, 0.8);
+  stroke: var(--ink);
+  stroke-width: 0.8;
+}
+.fx-spectrum .sp-view[data-nocanvas] .sp-rail {
+  border-top: 1px solid var(--hair-2);
+  background:
+    repeating-linear-gradient(90deg, var(--hair-2) 0 1px, transparent 1px 10px)
+      0 0 / 100% 6px no-repeat,
+    #ebe9e1;
+}
+.fx-spectrum .sp-fallback-fan {
+  position: absolute;
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  background: linear-gradient(
+    180deg,
+    var(--r0),
+    var(--r1) 34%,
+    var(--r2) 66%,
+    var(--r3)
+  );
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes spectrum-warm {
+  from {
+    font-weight: 170;
+    letter-spacing: -0.01em;
+  }
+}
+@keyframes spectrum-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes spectrum-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes spectrum-rise {
+  from {
+    opacity: 0.16;
+    translate: 0 26px;
+    filter: saturate(0) brightness(1.35);
+  }
+}
+@keyframes spectrum-converge {
+  from {
+    background-position:
+      -25% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      125% 0,
+      0 0;
+  }
+}
+@keyframes spectrum-bloom {
+  from {
+    transform: scale(0.5);
+  }
+}
+@keyframes spectrum-card {
+  from {
+    transform: translateY(20px);
+  }
+}
+
+/* ---------- Narrower benches ---------- */
+
+@media (max-width: 1699px) {
+  .fx-spectrum .sp-cat-long {
+    display: none;
+  }
+  .fx-spectrum .sp-cat-short {
+    display: inline;
+  }
+}
+@media (max-width: 1499px) {
+  .fx-spectrum .sp-select > .sp-mono {
+    display: none;
+  }
+  .fx-spectrum .sp-hud {
+    gap: 14px;
+  }
+  .fx-spectrum .sp-hud-tools {
+    gap: 10px;
+  }
+}
+@media (max-width: 1399px) {
+  .fx-spectrum .sp-brand em {
+    display: none;
+  }
+  .fx-spectrum .sp-search input {
+    width: 190px;
+  }
+}
+@media (max-width: 1099px) {
+  .fx-spectrum .sp-search input {
+    width: 140px;
+  }
+  .fx-spectrum .sp-cats button {
+    padding: 0 8px;
+  }
+}
+@media (max-width: 719px) {
+  .fx-spectrum .sp-hud {
+    height: 116px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  .fx-spectrum .sp-hud-row {
+    gap: 10px;
+  }
+  .fx-spectrum .sp-brand em {
+    display: none;
+  }
+  .fx-spectrum .sp-search {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+  }
+  .fx-spectrum .sp-search input {
+    flex: 1;
+    width: 0;
+  }
+  .fx-spectrum .sp-search kbd {
+    display: none;
+  }
+  .fx-spectrum .sp-clear {
+    width: 40px;
+    height: 40px;
+  }
+  .fx-spectrum .sp-hud-tools {
+    flex: none;
+    align-self: auto;
+    gap: 8px;
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+  .fx-spectrum .sp-hud-tools > :first-child {
+    margin-left: 0;
+  }
+  .fx-spectrum .sp-pairseg {
+    display: inline-flex;
+    margin: 0 6px 0 2px;
+    border: 1px solid var(--hair-2);
+    background: rgba(255, 255, 255, 0.6);
+  }
+  .fx-spectrum .sp-cats .sp-pairseg button {
+    gap: 4px;
+    height: 42px;
+    padding: 0 11px;
+    border: 0;
+  }
+  .fx-spectrum .sp-cats .sp-pairseg button + button {
+    border-left: 1px solid var(--hair);
+  }
+  .fx-spectrum .sp-cats .sp-pairseg button:first-child {
+    --ray: linear-gradient(90deg, var(--r0), var(--r1));
+  }
+  .fx-spectrum .sp-cats .sp-pairseg button:last-child {
+    --ray: linear-gradient(90deg, var(--r2), var(--r3));
+  }
+  .fx-spectrum .sp-cats .sp-pairseg button::after {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+  }
+  .fx-spectrum .sp-cats .sp-pairseg i {
+    width: 9px;
+    height: 9px;
+    opacity: 0.45;
+    transition:
+      opacity 0.2s,
+      transform 0.3s var(--out);
+  }
+  .fx-spectrum .sp-cats .sp-pairseg button[aria-pressed="true"] i {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  .fx-spectrum .sp-lede {
+    font-size: 15px;
+  }
+  .fx-spectrum .sp-cats button,
+  .fx-spectrum .sp-select select,
+  .fx-spectrum .sp-seg button {
+    height: 44px;
+  }
+  .fx-spectrum .sp-select select {
+    font-size: 16px;
+  }
+  .fx-spectrum .sp-title {
+    left: 16px;
+  }
+  .fx-spectrum .sp-title h1 {
+    font-size: clamp(42px, 13vw, 58px);
+  }
+  .fx-spectrum .sp-rail {
+    height: 42px;
+    padding: 0 12px 5px;
+  }
+  .fx-spectrum .sp-rail-hot {
+    display: none;
+  }
+  .fx-spectrum .sp-arranged {
+    display: none;
+  }
+  .fx-spectrum .sp-foot {
+    white-space: normal;
+  }
+  .fx-spectrum .sp-colophon p:not(.sp-mono):not(.sp-colophon-big) {
+    font-size: 14.5px;
+  }
+  .fx-spectrum .sp-reader-scroll {
+    padding: 56px 12px 96px;
+  }
+  .fx-spectrum .sp-reader-nav {
+    position: fixed;
+    top: auto;
+    bottom: 16px;
+    left: 50%;
+    right: auto;
+    gap: 12px;
+    transform: translateX(-50%);
+  }
+  .fx-spectrum .sp-card {
+    padding: 20px 18px 24px;
+  }
+  .fx-spectrum .sp-card-brief {
+    font-size: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-spectrum *,
+  .fx-spectrum *::before,
+  .fx-spectrum *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}

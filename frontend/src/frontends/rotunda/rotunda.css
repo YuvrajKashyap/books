@@ -1,0 +1,2525 @@
+/* Rotunda. Night indigo, aged brass, lamplit wood, moonlight. Every rule is
+   scoped to .fx-rotunda. */
+
+html:has(.fx-rotunda) {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #05060d;
+}
+html:has(.fx-rotunda) body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #05060d;
+}
+
+.fx-rotunda {
+  --night: #05060d;
+  --indigo: #0d1026;
+  --indigo-2: #171b3c;
+  --brass: #c9a35a;
+  --brass-hi: #f1dca4;
+  --brass-lo: #7a5a24;
+  --moon: #d6e2ff;
+  --paper: #efe6d2;
+  --ink: #e9e3d2;
+  --plate: linear-gradient(
+    178deg,
+    #e6cd8f 0%,
+    #c39d54 42%,
+    #9a7636 78%,
+    #7f5f28 100%
+  );
+  --serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: var(--ink);
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 45%,
+    #141736 0%,
+    #090a18 55%,
+    #05060d 100%
+  );
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.fx-rotunda *,
+.fx-rotunda *::before,
+.fx-rotunda *::after {
+  box-sizing: border-box;
+}
+.fx-rotunda button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.fx-rotunda a {
+  color: inherit;
+}
+.fx-rotunda :focus-visible {
+  outline: 2px solid var(--moon);
+  outline-offset: 3px;
+}
+.fx-rotunda .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- the room ---------------------------------------------------------- */
+
+.fx-rotunda .space {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+  cursor: grab;
+  transition:
+    filter 0.8s ease,
+    opacity 0.8s ease,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.fx-rotunda.grabbing .space,
+.fx-rotunda.grabbing .space .hit {
+  cursor: grabbing;
+}
+.fx-rotunda.reading .space {
+  filter: blur(7px) brightness(0.42) saturate(0.8);
+  transform: scale(1.04);
+}
+.fx-rotunda.lite.reading .space {
+  filter: none;
+  opacity: 0.28;
+}
+
+.fx-rotunda .stage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--cy);
+  bottom: calc(var(--cy) * -1);
+  perspective: var(--P);
+  overflow: hidden;
+}
+.fx-rotunda .cam {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform-origin: 0 0 var(--P);
+}
+.fx-rotunda .ring,
+.fx-rotunda .tier,
+.fx-rotunda .slot,
+.fx-rotunda .rise,
+.fx-rotunda .vol,
+.fx-rotunda .bay,
+.fx-rotunda .bay > span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+.fx-rotunda .ring {
+  will-change: transform;
+}
+
+/* wall, boards and shelf edges */
+.fx-rotunda .wall,
+.fx-rotunda .board,
+.fx-rotunda .lip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  backface-visibility: visible;
+}
+.fx-rotunda .wall {
+  background-color: #150c07;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(3, 3, 8, 0.96) 0%,
+      rgba(5, 4, 9, 0.7) 20%,
+      rgba(14, 8, 5, 0.42) 62%,
+      rgba(30, 16, 7, 0.2) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(255, 168, 84, 0.16) 0%,
+      rgba(255, 168, 84, 0) 46%
+    ),
+    url("/materials/walnut.webp");
+  background-repeat: repeat-y, repeat-y, repeat;
+}
+.fx-rotunda .board {
+  background-color: #2a180c;
+  background-image:
+    linear-gradient(180deg, rgba(8, 4, 2, 0.82), rgba(20, 10, 4, 0.35)),
+    url("/materials/oak.webp");
+  background-size:
+    100% 100%,
+    260px auto;
+}
+.fx-rotunda .lip {
+  background-color: #4a2d16;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(255, 220, 160, 0.55) 0%,
+      rgba(255, 196, 120, 0.08) 16%,
+      rgba(0, 0, 0, 0) 45%,
+      rgba(0, 0, 0, 0.6) 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(236, 204, 132, 0.85) 0 1px,
+      rgba(0, 0, 0, 0) 1px 9px
+    ),
+    url("/materials/oak.webp");
+  background-size:
+    100% 100%,
+    9px 34%,
+    420px auto;
+  background-repeat: no-repeat, repeat-x, repeat;
+}
+.fx-rotunda .lip.cornice {
+  background-color: #8a6a2c;
+  background-image:
+    linear-gradient(180deg, rgba(255, 236, 190, 0.5), rgba(60, 40, 10, 0.5)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(40, 26, 8, 0.7) 0 1px,
+      rgba(0, 0, 0, 0) 1px 9px
+    ),
+    linear-gradient(#a8823c, #a8823c);
+}
+
+/* a book */
+.fx-rotunda .tier {
+  --shade: 0.3;
+}
+.fx-rotunda .tier.on {
+  --shade: 0;
+}
+.fx-rotunda .tier.off {
+  --shade: 0.74;
+}
+.fx-rotunda.searching .tier:not(.off) {
+  --shade: 0.06;
+}
+.fx-rotunda .tier .slot.sunk {
+  --shade: 0.88;
+}
+.fx-rotunda .slot {
+  transition: transform 1.05s cubic-bezier(0.6, 0, 0.2, 1) var(--wave, 0ms);
+}
+.fx-rotunda .vol {
+  transition: transform 0.95s cubic-bezier(0.45, 0, 0.2, 1.16) var(--wave, 0ms);
+}
+.fx-rotunda .rise {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fx-rotunda .slot[data-front] .rise {
+  transform: translate3d(0, -5px, 18px);
+}
+.fx-rotunda .slot:hover .rise,
+.fx-rotunda .slot:focus-within .rise {
+  transform: translate3d(0, -7px, 26px);
+}
+/* Once the room is still, the spine ahead is drawn out of the row and turned
+   so its cover catches the light. */
+.fx-rotunda.settled.as-spines .tier.on .slot[data-front]:not(.sunk) .rise {
+  transform: translate3d(calc(var(--cw) * -0.2), -4px, calc(var(--cw) * 0.84))
+    rotateY(-40deg);
+  transition: transform 0.85s cubic-bezier(0.3, 0.9, 0.25, 1) 0.12s;
+}
+.fx-rotunda .vol {
+  cursor: pointer;
+}
+.fx-rotunda.grabbing .slot:hover:not([data-front]) .rise {
+  transform: none;
+}
+.fx-rotunda .slot.sunk .rise,
+.fx-rotunda .slot.sunk[data-front] .rise {
+  transform: translate3d(0, 0, -46px);
+  transition-duration: 0.8s;
+}
+.fx-rotunda .slot.sunk:hover .rise,
+.fx-rotunda .slot.sunk:focus-within .rise {
+  transform: translate3d(0, 0, -20px);
+}
+.fx-rotunda .slot.out .vol,
+.fx-rotunda .slot.out .hit {
+  visibility: hidden;
+}
+
+.fx-rotunda .face {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  overflow: hidden;
+  background: var(--cloth, #394c55);
+  animation: fx-rotunda-face 0.5s backwards;
+}
+.fx-rotunda .face img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.fx-rotunda .face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.fx-rotunda .face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #04050c;
+  opacity: var(--shade, 0);
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.fx-rotunda .face.front::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.34) 0,
+      rgba(255, 255, 255, 0.16) 2.5%,
+      rgba(0, 0, 0, 0) 7%
+    ),
+    linear-gradient(
+      105deg,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0) 34%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+}
+.fx-rotunda .face.spine::before {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.46) 0%,
+    rgba(255, 255, 255, 0.1) 26%,
+    rgba(0, 0, 0, 0) 52%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+.fx-rotunda .face.back::before {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45));
+}
+.fx-rotunda .face.head,
+.fx-rotunda .face.pages {
+  background: #d9cdb0;
+}
+.fx-rotunda .face.head::before {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(90, 70, 40, 0.28) 0 1px,
+      rgba(0, 0, 0, 0) 1px 2.5px
+    ),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 20%);
+}
+.fx-rotunda .face.pages::before {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(90, 70, 40, 0.3) 0 1px,
+    rgba(0, 0, 0, 0) 1px 2.5px
+  );
+}
+.fx-rotunda .spine-title {
+  position: absolute;
+  inset: 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  color: rgba(244, 236, 214, 0.92);
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.fx-rotunda .front-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 12%;
+  color: rgba(244, 236, 214, 0.94);
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.08;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.fx-rotunda .front-title i {
+  font-family: var(--mono);
+  font-size: 0.5em;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.fx-rotunda .hit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  transform: translateZ(2px);
+  border-radius: 2px;
+  transition:
+    width 0.9s cubic-bezier(0.45, 0, 0.2, 1) var(--wave, 0ms),
+    margin 0.9s cubic-bezier(0.45, 0, 0.2, 1) var(--wave, 0ms);
+}
+.fx-rotunda .hit:focus-visible {
+  outline: 2px solid var(--moon);
+  outline-offset: 4px;
+  box-shadow: 0 0 26px 4px rgba(214, 226, 255, 0.45);
+}
+
+/* the brass plate where each tier begins */
+.fx-rotunda .plaque {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(6px * var(--u));
+  padding: calc(10px * var(--u));
+  border-radius: 999px 999px 3px 3px;
+  background: var(--plate);
+  box-shadow:
+    inset 0 0 0 calc(4px * var(--u)) rgba(60, 40, 12, 0.22),
+    inset 0 0 0 calc(5px * var(--u)) rgba(255, 240, 200, 0.4);
+  color: #24180a;
+  text-align: center;
+}
+.fx-rotunda .plaque b {
+  font-family: var(--serif);
+  font-size: calc(40px * var(--u));
+  font-weight: 500;
+  line-height: 0.9;
+}
+.fx-rotunda .plaque span {
+  font-size: calc(8.6px * var(--u));
+  letter-spacing: 0.14em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.fx-rotunda .plaque i {
+  font-family: var(--serif);
+  font-size: calc(15px * var(--u));
+  font-style: italic;
+}
+.fx-rotunda .tier:not(.on) .plaque {
+  filter: brightness(0.5);
+}
+
+/* dark towards the edges of the curve, and above and below */
+.fx-rotunda .shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 62% 78% at 50% 50%,
+      rgba(5, 6, 13, 0) 0%,
+      rgba(5, 6, 13, 0) 36%,
+      rgba(5, 6, 13, 0.4) 74%,
+      rgba(5, 6, 13, 0.86) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5, 6, 13, 0.5) 0%,
+      rgba(5, 6, 13, 0) 20%,
+      rgba(5, 6, 13, 0) 80%,
+      rgba(5, 6, 13, 0.5) 100%
+    );
+}
+
+/* the shaft of moonlight */
+.fx-rotunda .shaft-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  transform-origin: 50% 0;
+  transition:
+    transform 1.3s cubic-bezier(0.7, 0, 0.2, 1),
+    opacity 0.9s ease;
+}
+.fx-rotunda.phase-dark .shaft-wrap {
+  transform: scaleY(0);
+  opacity: 0;
+}
+.fx-rotunda .shaft {
+  --sw: clamp(280px, 50vw, 760px);
+  position: absolute;
+  left: 50%;
+  top: -4%;
+  width: var(--sw);
+  height: 112%;
+  margin-left: calc(var(--sw) / -2 + 3vw);
+  transform-origin: 46% 0;
+  filter: blur(16px);
+  will-change: transform, opacity;
+}
+.fx-rotunda.lite .shaft {
+  filter: blur(8px);
+}
+.fx-rotunda .shaft::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(214, 226, 255, 0.4) 0%,
+    rgba(206, 220, 255, 0.14) 34%,
+    rgba(206, 220, 255, 0.07) 62%,
+    rgba(206, 220, 255, 0.03) 100%
+  );
+  clip-path: polygon(41% 0, 57% 0, 100% 100%, 4% 100%);
+}
+.fx-rotunda .shaft::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 34%;
+  height: 34%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(222, 232, 255, 0.14),
+    rgba(222, 232, 255, 0) 70%
+  );
+}
+
+.fx-rotunda .veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #030409;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2.4s cubic-bezier(0.5, 0, 0.3, 1) 0.15s;
+}
+.fx-rotunda.phase-dark .veil {
+  opacity: 1;
+  transition: none;
+}
+.fx-rotunda .stage.xfade {
+  animation: fx-rotunda-xfade 0.28s ease-out !important;
+  animation-duration: 0.28s !important;
+}
+
+/* ---- the oculus -------------------------------------------------------- */
+
+.fx-rotunda .dome {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 4;
+  height: calc(var(--ow) * 0.19);
+  pointer-events: none;
+  will-change: transform;
+}
+.fx-rotunda .dome-shell {
+  --dw: max(190vw, 1500px);
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: var(--dw);
+  height: calc(var(--dw) * 0.3);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      from 0deg at 50% calc(100% - var(--ow) * 0.26),
+      rgba(201, 163, 90, 0.13) 0deg 0.35deg,
+      rgba(201, 163, 90, 0) 0.35deg 10deg
+    ),
+    radial-gradient(
+      ellipse 60% 100% at 50% 100%,
+      #171b40 0%,
+      #0d1028 28%,
+      #07080f 62%,
+      #05060d 100%
+    );
+  box-shadow:
+    0 10px 34px 6px rgba(4, 5, 12, 0.8),
+    inset 0 -1.5px 0 rgba(222, 190, 120, 0.7),
+    inset 0 -7px 0 rgba(10, 12, 30, 0.9),
+    inset 0 -8px 0 rgba(201, 163, 90, 0.35),
+    inset 0 -40px 60px rgba(120, 140, 230, 0.07);
+}
+.fx-rotunda .oculus {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--ow) * 0.08);
+  transform: translateX(-50%);
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 55% 70%,
+    #1d2560 0%,
+    #0e1233 45%,
+    #05060f 100%
+  );
+}
+.fx-rotunda .oculus canvas {
+  display: block;
+}
+.fx-rotunda .armillary,
+.fx-rotunda .iris {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.fx-rotunda .armillary * {
+  fill: none;
+  stroke: rgba(226, 196, 128, 0.62);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.fx-rotunda .armillary .bead {
+  fill: var(--brass-hi);
+  stroke: none;
+}
+.fx-rotunda .iris path {
+  fill: #04050b;
+}
+.fx-rotunda .iris .iris-edge {
+  fill: none;
+  stroke: rgba(214, 180, 108, 0.6);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.fx-rotunda .rim {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--ow) * -0.01);
+  width: calc(var(--ow) * 1.2);
+  height: calc(var(--ow) * 0.54);
+  margin: 0;
+  transform: translateX(-50%);
+  font-weight: 500;
+}
+.fx-rotunda .rim svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.fx-rotunda .rim-band {
+  fill: #0b0d22;
+}
+.fx-rotunda .rim-line {
+  fill: none;
+  stroke: url(#fx-rotunda-brass);
+  stroke-width: 2.4;
+}
+.fx-rotunda .rim-line.bright {
+  stroke-width: 3.4;
+  filter: drop-shadow(0 0 6px rgba(214, 226, 255, 0.5));
+}
+.fx-rotunda .rim-hair {
+  fill: none;
+  stroke: rgba(201, 163, 90, 0.45);
+  stroke-width: 0.9;
+}
+.fx-rotunda .rim-ticks line {
+  stroke: #cfae6b;
+  stroke-width: 1.2;
+}
+.fx-rotunda .rim-name {
+  fill: #f0dfb0;
+  font-family: var(--serif);
+  font-size: 47px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  paint-order: stroke;
+  stroke: rgba(11, 13, 34, 0.9);
+  stroke-width: 5px;
+}
+
+/* ---- the floor --------------------------------------------------------- */
+
+.fx-rotunda .floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: calc(var(--fw) * 0.22);
+  pointer-events: none;
+  will-change: transform;
+}
+.fx-rotunda .floor-shell {
+  --dw: max(190vw, 1500px);
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  width: var(--dw);
+  height: calc(var(--dw) * 0.3);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 60% 100% at 50% 0%,
+    #151939 0%,
+    #0b0d22 30%,
+    #06070f 64%,
+    #05060d 100%
+  );
+  box-shadow:
+    0 -10px 34px 6px rgba(4, 5, 12, 0.8),
+    inset 0 1.5px 0 rgba(222, 190, 120, 0.6),
+    inset 0 7px 0 rgba(10, 12, 30, 0.9),
+    inset 0 8px 0 rgba(201, 163, 90, 0.3);
+}
+.fx-rotunda .floor-persp {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 0;
+  perspective: 1400px;
+}
+.fx-rotunda .disc {
+  position: absolute;
+  left: 0;
+  top: calc(var(--fw) * -0.213);
+  border-radius: 50%;
+  transform: rotateX(58deg);
+  pointer-events: auto;
+}
+.fx-rotunda .rose {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.fx-rotunda .rose svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.fx-rotunda .rose .band {
+  fill: none;
+  stroke: var(--brass);
+  stroke-width: 1.6;
+}
+.fx-rotunda .rose .band.thick {
+  stroke-width: 5;
+}
+.fx-rotunda .rose .band.faint {
+  stroke-width: 1;
+  opacity: 0.45;
+}
+.fx-rotunda .rose .marks line {
+  stroke: #d2b06a;
+  stroke-width: 1.7;
+}
+.fx-rotunda .rose .deg {
+  fill: #e2c98f;
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-anchor: middle;
+}
+.fx-rotunda .rose .legend {
+  fill: rgba(226, 201, 143, 0.72);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.fx-rotunda .rose .cardinal {
+  fill: var(--brass-hi);
+  font-family: var(--serif);
+  font-size: 58px;
+  font-weight: 500;
+  text-anchor: middle;
+}
+.fx-rotunda .rose .p1.lightside {
+  fill: #ecd59b;
+}
+.fx-rotunda .rose .p1.darkside {
+  fill: #8d6c2e;
+}
+.fx-rotunda .rose .p2.lightside {
+  fill: #c9a35a;
+}
+.fx-rotunda .rose .p2.darkside {
+  fill: #694d1d;
+}
+.fx-rotunda .rose .p3.lightside {
+  fill: #96763a;
+}
+.fx-rotunda .rose .p3.darkside {
+  fill: #4b3714;
+}
+.fx-rotunda .rose .hub {
+  fill: var(--brass-hi);
+  stroke: #5d4418;
+  stroke-width: 3;
+}
+.fx-rotunda .tick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 28px;
+  margin: -14px 0 0 -4px;
+  border-radius: 4px;
+  background: var(--moon);
+  box-shadow: 0 0 14px 3px rgba(214, 226, 255, 0.85);
+  animation: fx-rotunda-tick 0.5s backwards;
+}
+.fx-rotunda .tick::before {
+  content: "";
+  position: absolute;
+  inset: -12px -10px;
+}
+.fx-rotunda .tick.here {
+  width: 10px;
+  height: 40px;
+  margin: -20px 0 0 -5px;
+  background: #fff;
+}
+.fx-rotunda .tick:hover {
+  background: #fff;
+}
+.fx-rotunda .lubber {
+  position: absolute;
+  left: 50%;
+  top: -3%;
+  width: 0;
+  height: 0;
+  margin-left: -11px;
+  border: 11px solid transparent;
+  border-top: 26px solid var(--moon);
+  border-bottom: 0;
+  filter: drop-shadow(0 0 8px rgba(214, 226, 255, 0.8));
+}
+
+/* ---- instruments ------------------------------------------------------- */
+
+.fx-rotunda .hud {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+.fx-rotunda .hud > * {
+  pointer-events: auto;
+  transition: opacity 1s ease;
+}
+.fx-rotunda:not(.phase-live) .hud > :not(.wait):not(.error) {
+  opacity: 0;
+  pointer-events: none;
+}
+.fx-rotunda:not(.phase-live) .hud .plate {
+  visibility: hidden;
+}
+.fx-rotunda.reading .hud {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.fx-rotunda .hud {
+  transition: opacity 0.7s ease 0.2s;
+}
+.fx-rotunda.phase-live .hud > .find {
+  transition-delay: 0.12s;
+}
+.fx-rotunda.phase-live .hud > .ladder {
+  transition-delay: 0.24s;
+}
+.fx-rotunda.phase-live .hud > .readout {
+  transition-delay: 0.36s;
+}
+
+.fx-rotunda .lede {
+  position: absolute;
+  left: 30px;
+  top: 24px;
+  display: grid;
+  gap: 4px;
+  max-width: 250px;
+  margin: 0;
+}
+.fx-rotunda .lede b {
+  color: var(--brass-hi);
+  font-family: var(--serif);
+  font-size: 25px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+}
+.fx-rotunda .lede span {
+  color: rgba(233, 227, 210, 0.66);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+.fx-rotunda .find {
+  position: absolute;
+  right: 30px;
+  top: 22px;
+  display: grid;
+  gap: 9px;
+  width: 306px;
+}
+.fx-rotunda .search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 42px;
+  padding: 0 10px 0 13px;
+  border: 1px solid rgba(201, 163, 90, 0.55);
+  border-radius: 3px;
+  background: rgba(9, 11, 27, 0.78);
+  box-shadow:
+    inset 0 0 0 3px rgba(9, 11, 27, 0.9),
+    inset 0 0 0 4px rgba(201, 163, 90, 0.16),
+    0 12px 30px rgba(0, 0, 0, 0.45);
+  color: var(--brass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+.fx-rotunda .search:focus-within {
+  border-color: var(--moon);
+  box-shadow:
+    inset 0 0 0 3px rgba(9, 11, 27, 0.9),
+    inset 0 0 0 4px rgba(214, 226, 255, 0.25),
+    0 0 34px rgba(160, 180, 255, 0.28);
+}
+.fx-rotunda .search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  user-select: text;
+  -webkit-user-select: text;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.fx-rotunda .search input::placeholder {
+  color: rgba(233, 227, 210, 0.42);
+}
+.fx-rotunda .search input::-webkit-search-cancel-button {
+  display: none;
+}
+.fx-rotunda .search kbd {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(201, 163, 90, 0.4);
+  border-radius: 3px;
+  color: rgba(201, 163, 90, 0.8);
+  font: inherit;
+  font-size: 11px;
+}
+.fx-rotunda .search .clear {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: var(--ink);
+}
+.fx-rotunda .search .clear:hover {
+  background: rgba(201, 163, 90, 0.2);
+}
+.fx-rotunda .hits {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+  padding: 0 4px;
+  border-radius: 2px;
+  background: var(--plate);
+  color: #20160a;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: fx-rotunda-drop 0.4s backwards;
+}
+.fx-rotunda .hits button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 24px;
+  border-radius: 2px;
+}
+.fx-rotunda .hits button:hover {
+  background: rgba(30, 20, 6, 0.18);
+}
+.fx-rotunda .hits :focus-visible {
+  outline-color: #0b0d22;
+  outline-offset: -1px;
+}
+.fx-rotunda .switches {
+  display: flex;
+  gap: 9px;
+}
+.fx-rotunda .toggle {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 1fr 1fr;
+  height: 34px;
+  border: 1px solid rgba(201, 163, 90, 0.5);
+  border-radius: 3px;
+  background: rgba(9, 11, 27, 0.78);
+  overflow: hidden;
+}
+.fx-rotunda .toggle button {
+  color: rgba(233, 227, 210, 0.7);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+.fx-rotunda .toggle button[aria-pressed="true"] {
+  background: var(--plate);
+  color: #20160a;
+  font-weight: 500;
+}
+.fx-rotunda .toggle button:focus-visible {
+  outline-offset: -3px;
+}
+.fx-rotunda .sort {
+  position: relative;
+  display: block;
+  flex: 1;
+}
+.fx-rotunda .sort::after {
+  content: "";
+  position: absolute;
+  right: 11px;
+  top: 14px;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid var(--brass);
+  border-bottom: 1px solid var(--brass);
+  transform: rotate(45deg) translate(-2px, -2px);
+  pointer-events: none;
+}
+.fx-rotunda .sort select {
+  width: 100%;
+  height: 34px;
+  padding: 0 24px 0 10px;
+  border: 1px solid rgba(201, 163, 90, 0.5);
+  border-radius: 3px;
+  background: rgba(9, 11, 27, 0.78);
+  color: var(--ink);
+  font: inherit;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+.fx-rotunda .sort select option {
+  background: #0b0d22;
+  color: var(--ink);
+  text-transform: none;
+}
+
+/* the ladder: the four tiers */
+.fx-rotunda .ladder {
+  --rung: 54px;
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  display: grid;
+  gap: 10px;
+  width: 238px;
+  transform: translateY(-50%);
+}
+.fx-rotunda .ladder .rail {
+  position: absolute;
+  left: -13px;
+  top: -8px;
+  bottom: -8px;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(201, 163, 90, 0),
+    rgba(201, 163, 90, 0.7) 12%,
+    rgba(201, 163, 90, 0.7) 88%,
+    rgba(201, 163, 90, 0)
+  );
+}
+.fx-rotunda .ladder::after {
+  content: "";
+  position: absolute;
+  inset: -40px -70px -40px -40px;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at 0% 50%,
+    rgba(5, 6, 13, 0.92),
+    rgba(5, 6, 13, 0) 72%
+  );
+  pointer-events: none;
+}
+.fx-rotunda.phone .ladder::after,
+.fx-rotunda.flat-mode .ladder::after {
+  display: none;
+}
+.fx-rotunda .rungs {
+  position: relative;
+  display: grid;
+}
+.fx-rotunda .carriage {
+  position: absolute;
+  left: -17px;
+  top: 0;
+  width: 9px;
+  height: var(--rung);
+  transform: translateY(calc(var(--lift, 0) * var(--rung)));
+  pointer-events: none;
+}
+.fx-rotunda .carriage::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 9px;
+  height: 24px;
+  margin-top: -12px;
+  border-radius: 2px;
+  background: var(--plate);
+  box-shadow: 0 0 16px rgba(241, 220, 164, 0.6);
+}
+.fx-rotunda .rung {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  height: var(--rung);
+  padding: 0 10px 0 8px;
+  border-top: 1px solid rgba(201, 163, 90, 0.2);
+  color: rgba(233, 227, 210, 0.62);
+  text-align: left;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+.fx-rotunda .rung.all {
+  height: 40px;
+  border: 1px solid rgba(201, 163, 90, 0.3);
+  border-radius: 3px;
+}
+.fx-rotunda .rungs .rung:last-child {
+  border-bottom: 1px solid rgba(201, 163, 90, 0.2);
+}
+.fx-rotunda .rung b {
+  color: var(--brass);
+  font-family: var(--serif);
+  font-size: 23px;
+  font-weight: 500;
+  line-height: 1;
+}
+.fx-rotunda .rung.all b {
+  font-size: 18px;
+  font-style: italic;
+}
+.fx-rotunda .rung span {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.fx-rotunda .rung em {
+  font-style: normal;
+}
+.fx-rotunda .rung .narrow {
+  display: none;
+}
+.fx-rotunda .rung i {
+  color: rgba(201, 163, 90, 0.85);
+  font-size: 10.5px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+.fx-rotunda .rung:hover,
+.fx-rotunda .rung.here {
+  color: var(--ink);
+}
+.fx-rotunda .rung:hover {
+  background: rgba(201, 163, 90, 0.1);
+}
+.fx-rotunda .rung.here b {
+  color: var(--brass-hi);
+  text-shadow: 0 0 14px rgba(241, 220, 164, 0.55);
+}
+.fx-rotunda .rung[aria-pressed="true"] {
+  background: var(--plate);
+  color: #20160a;
+}
+.fx-rotunda .rung[aria-pressed="true"] b,
+.fx-rotunda .rung[aria-pressed="true"] i {
+  color: #20160a;
+  text-shadow: none;
+}
+.fx-rotunda .rung:focus-visible {
+  outline-offset: -2px;
+}
+
+/* the plate under the book straight ahead */
+.fx-rotunda .plate {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  display: grid;
+  gap: 1px;
+  max-width: min(82vw, 440px);
+  padding: 6px 18px 8px;
+  border-radius: 2px;
+  background: var(--plate);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.7),
+    inset 0 -1px 0 rgba(60, 40, 10, 0.5),
+    0 10px 26px rgba(0, 0, 0, 0.65);
+  color: #1e1408;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none !important;
+  transition: none !important;
+  will-change: transform, opacity;
+}
+.fx-rotunda .plate::before,
+.fx-rotunda .plate::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff3cf, #6a4d1c 70%);
+}
+.fx-rotunda .plate::before {
+  left: 6px;
+}
+.fx-rotunda .plate::after {
+  right: 6px;
+}
+.fx-rotunda .plate b {
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+}
+.fx-rotunda .plate span {
+  overflow: hidden;
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+}
+
+/* the bearing readout */
+.fx-rotunda .readout {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  display: flex;
+  align-items: stretch;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: var(--plate);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.75),
+    inset 0 0 0 3px rgba(60, 40, 10, 0.16),
+    0 16px 44px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(40, 26, 8, 0.8);
+  color: #1e1408;
+}
+.fx-rotunda .readout dl {
+  display: flex;
+  margin: 0;
+}
+.fx-rotunda .readout dl > div {
+  display: grid;
+  align-content: center;
+  gap: 1px;
+  padding: 7px 16px 8px;
+  border-left: 1px solid rgba(60, 40, 10, 0.3);
+  box-shadow: inset 1px 0 0 rgba(255, 244, 210, 0.35);
+}
+.fx-rotunda .readout dt {
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+.fx-rotunda .readout dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.fx-rotunda .readout .where dd {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+.fx-rotunda .readout .turn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  border-left: 1px solid rgba(60, 40, 10, 0.3);
+  transition: background 0.2s;
+}
+.fx-rotunda .readout .turn:first-child {
+  border-left: 0;
+}
+.fx-rotunda .readout .turn:hover {
+  background: rgba(30, 20, 6, 0.16);
+}
+.fx-rotunda .readout .turn:active {
+  background: rgba(30, 20, 6, 0.3);
+}
+.fx-rotunda .readout :focus-visible {
+  outline-color: var(--moon);
+  outline-offset: 2px;
+}
+
+.fx-rotunda .foot {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(233, 227, 210, 0.5);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  pointer-events: none !important;
+}
+.fx-rotunda .foot > * {
+  max-width: 24vw;
+  pointer-events: auto;
+}
+.fx-rotunda .foot a {
+  padding: 4px 0;
+  color: rgba(201, 163, 90, 0.8);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201, 163, 90, 0.3);
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.fx-rotunda .foot a:hover {
+  color: var(--brass-hi);
+  border-color: var(--brass-hi);
+}
+
+.fx-rotunda .wait {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--ow) * 0.19 + 46px);
+  margin: 0;
+  color: rgba(201, 163, 90, 0.8);
+  font-size: 10.5px;
+  letter-spacing: 0.42em;
+  text-align: center;
+  text-transform: uppercase;
+  animation: fx-rotunda-breathe 2.4s ease-in-out infinite;
+}
+.fx-rotunda .empty {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  gap: 10px;
+  width: min(88vw, 410px);
+  padding: 28px 28px 24px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(201, 163, 90, 0.7);
+  border-radius: 3px;
+  background: rgba(8, 10, 24, 0.93);
+  box-shadow:
+    inset 0 0 0 4px rgba(8, 10, 24, 1),
+    inset 0 0 0 5px rgba(201, 163, 90, 0.22),
+    0 30px 80px rgba(0, 0, 0, 0.75);
+  text-align: center;
+  animation: fx-rotunda-drop 0.5s backwards;
+}
+.fx-rotunda .empty b {
+  color: var(--brass-hi);
+  font-family: var(--serif);
+  font-size: 29px;
+  font-weight: 500;
+  line-height: 1.05;
+}
+.fx-rotunda .empty p {
+  margin: 0;
+  color: rgba(233, 227, 210, 0.75);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.fx-rotunda .empty div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+.fx-rotunda .empty button {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 2px;
+  background: var(--plate);
+  color: #20160a;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.fx-rotunda .empty button + button {
+  background: none;
+  color: var(--brass-hi);
+  box-shadow: inset 0 0 0 1px rgba(201, 163, 90, 0.6);
+}
+
+/* ---- the reader -------------------------------------------------------- */
+
+.fx-rotunda .reader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  padding: 0 16px 72px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  outline: none;
+  background:
+    radial-gradient(
+      ellipse 75% 60% at 50% 0%,
+      rgba(70, 86, 170, 0.3),
+      rgba(70, 86, 170, 0) 72%
+    ),
+    rgba(4, 5, 12, 0.5);
+  user-select: text;
+  -webkit-user-select: text;
+  animation: fx-rotunda-fade 0.6s backwards;
+  transition: background 0.5s ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 163, 90, 0.5) transparent;
+}
+.fx-rotunda .reader.closing {
+  background: rgba(4, 5, 12, 0);
+  pointer-events: none;
+}
+.fx-rotunda .reader-beam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(96vw, 680px);
+  height: min(80vh, 660px);
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
+  background: linear-gradient(
+    180deg,
+    rgba(214, 226, 255, 0.4) 0%,
+    rgba(214, 226, 255, 0.16) 52%,
+    rgba(214, 226, 255, 0) 100%
+  );
+  clip-path: polygon(39% 0, 61% 0, 100% 100%, 0 100%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: fx-rotunda-beam 0.9s cubic-bezier(0.7, 0, 0.2, 1) backwards;
+  transition: opacity 0.35s;
+}
+.fx-rotunda .reader-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px 52px 0;
+  animation: fx-rotunda-fade 0.6s 0.4s backwards;
+  transition: opacity 0.3s;
+}
+.fx-rotunda .round {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(201, 163, 90, 0.6);
+  border-radius: 50%;
+  background: rgba(9, 11, 27, 0.85);
+  color: var(--brass-hi);
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.fx-rotunda .round:hover {
+  background: rgba(201, 163, 90, 0.25);
+}
+.fx-rotunda .round:active {
+  transform: scale(0.94);
+}
+.fx-rotunda .round.close {
+  position: absolute;
+  right: 0;
+  top: 16px;
+}
+.fx-rotunda .reader-place {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--brass);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.fx-rotunda .reader-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.fx-rotunda .fly {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 10px;
+  will-change: transform;
+}
+.fx-rotunda .jacket {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.fx-rotunda .jacket:active {
+  cursor: grabbing;
+}
+.fx-rotunda .jacket:focus-visible {
+  outline: 1px dashed rgba(214, 226, 255, 0.7);
+  outline-offset: -6px;
+}
+.fx-rotunda .jacket-floor {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 62%;
+  height: 26px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+.fx-rotunda .jacket-persp {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 0;
+  height: 0;
+  perspective: 1500px;
+}
+.fx-rotunda .rb,
+.fx-rotunda .lid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+.fx-rotunda .rb {
+  will-change: transform;
+}
+.fx-rotunda .lid {
+  transition: transform 1.05s cubic-bezier(0.5, 0, 0.15, 1);
+}
+.fx-rotunda .rf {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  overflow: hidden;
+  background: var(--cloth, #394c55);
+}
+.fx-rotunda .rf img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+.fx-rotunda .rf::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.fx-rotunda .rf.cover,
+.fx-rotunda .rf.endpaper {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1px 3px 3px 1px;
+}
+.fx-rotunda .rf.cover::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.36) 0,
+      rgba(255, 255, 255, 0.2) 2.2%,
+      rgba(0, 0, 0, 0.1) 4.5%,
+      rgba(0, 0, 0, 0) 8%
+    ),
+    linear-gradient(
+      108deg,
+      rgba(235, 240, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0) 38%,
+      rgba(0, 0, 0, 0.22) 100%
+    );
+}
+.fx-rotunda .rf.endpaper {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(120, 96, 50, 0.1) 0 2px,
+      rgba(0, 0, 0, 0) 2px 9px
+    ),
+    linear-gradient(90deg, #d6c8a6, #ece1c7);
+}
+.fx-rotunda .rf.back::before {
+  background: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.4),
+    rgba(255, 255, 255, 0.05) 60%,
+    rgba(0, 0, 0, 0.3)
+  );
+}
+.fx-rotunda .rf.spine::before {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(255, 255, 255, 0.12) 28%,
+    rgba(0, 0, 0, 0) 55%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+.fx-rotunda .rf.leaves {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(110, 88, 50, 0.3) 0 1px,
+      rgba(0, 0, 0, 0) 1px 3px
+    ),
+    #e4d9bd;
+}
+.fx-rotunda .rf.leaves.top {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(110, 88, 50, 0.3) 0 1px,
+      rgba(0, 0, 0, 0) 1px 3px
+    ),
+    #dccfb0;
+}
+.fx-rotunda .rf.halftitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 14% 12%;
+  background: linear-gradient(90deg, #d8ccae 0%, #f1e8d3 9%, #f4ecd9 100%);
+  color: #221a10;
+  text-align: center;
+}
+.fx-rotunda .rf.halftitle strong {
+  font-family: var(--serif);
+  font-size: clamp(17px, 2.6vh, 25px);
+  font-weight: 500;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+.fx-rotunda .rf.halftitle em {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-style: normal;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.fx-rotunda .rf .spine-title {
+  font-size: 14px;
+}
+.fx-rotunda .rf .front-title {
+  font-size: 24px;
+}
+.fx-rotunda .reader-hint {
+  position: relative;
+  margin: 0 0 20px;
+  color: rgba(214, 226, 255, 0.5);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  user-select: none;
+  -webkit-user-select: none;
+  animation: fx-rotunda-fade 0.8s 0.9s backwards;
+  transition: opacity 0.3s;
+}
+.fx-rotunda .card {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 38px 46px 30px;
+  border-radius: 2px;
+  background:
+    radial-gradient(
+      ellipse 90% 50% at 50% 0%,
+      rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0) 70%
+    ),
+    linear-gradient(180deg, #f4ecd9, #e7dbc0);
+  box-shadow:
+    0 0 0 1px #7a5a24,
+    0 0 0 6px #c9a35a,
+    0 0 0 7px #f1dca4,
+    0 0 0 8px #6b4f1e,
+    0 40px 90px rgba(0, 0, 0, 0.75);
+  color: #1f1810;
+  animation: fx-rotunda-card 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.42s backwards;
+  transition: opacity 0.3s;
+}
+.fx-rotunda .reader.closing .card,
+.fx-rotunda .reader.closing .reader-bar,
+.fx-rotunda .reader.closing .reader-hint,
+.fx-rotunda .reader.closing .reader-beam {
+  opacity: 0;
+}
+.fx-rotunda .card-corner {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff3cf, #8a6a2c 60%, #4b3714);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+}
+.fx-rotunda .card-corner.tl {
+  left: 10px;
+  top: 10px;
+}
+.fx-rotunda .card-corner.tr {
+  right: 10px;
+  top: 10px;
+}
+.fx-rotunda .card-corner.bl {
+  left: 10px;
+  bottom: 10px;
+}
+.fx-rotunda .card-corner.br {
+  right: 10px;
+  bottom: 10px;
+}
+.fx-rotunda .card h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(32px, 5.2vw, 48px);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-wrap: balance;
+}
+.fx-rotunda .card .byline {
+  margin: 14px 0 0;
+  color: #6b4f1e;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.fx-rotunda .card .byline::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin: 20px auto 0;
+  background: #a8823c;
+}
+.fx-rotunda .card .brief {
+  margin: 22px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(21px, 2.6vw, 25px);
+  font-style: italic;
+  line-height: 1.28;
+  text-align: center;
+  text-wrap: balance;
+}
+.fx-rotunda .card .long {
+  margin-top: 22px;
+  animation: fx-rotunda-drop 0.5s backwards;
+}
+.fx-rotunda .card .long p {
+  margin: 0 0 14px;
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.46;
+  text-wrap: pretty;
+}
+.fx-rotunda .card h3 {
+  margin: 24px 0 8px;
+  color: #6b4f1e;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.fx-rotunda .card .more,
+.fx-rotunda .card .brass-link {
+  color: #5d4418;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #a8823c;
+}
+.fx-rotunda .card .more {
+  display: block;
+  margin: 20px auto 0;
+  padding: 6px 2px 4px;
+}
+.fx-rotunda .card .more:hover,
+.fx-rotunda .card .brass-link:hover {
+  color: #1f1810;
+  border-color: #1f1810;
+}
+.fx-rotunda .card :focus-visible {
+  outline-color: #2a3470;
+}
+.fx-rotunda .card .source a,
+.fx-rotunda .card .imprint a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #5d4418;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(168, 130, 60, 0.7);
+}
+.fx-rotunda .card .source a:hover,
+.fx-rotunda .card .imprint a:hover {
+  color: #1f1810;
+  border-color: #1f1810;
+}
+.fx-rotunda .card .source {
+  font-family: var(--mono) !important;
+  font-size: 10.5px !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.fx-rotunda .card .note-missing {
+  margin: 24px 0 0;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: italic;
+  text-align: center;
+}
+.fx-rotunda .card .note-wait {
+  display: grid;
+  gap: 10px;
+  margin: 26px auto 0;
+  max-width: 420px;
+}
+.fx-rotunda .card .note-wait span {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(122, 90, 36, 0.14),
+    rgba(122, 90, 36, 0.34),
+    rgba(122, 90, 36, 0.14)
+  );
+  background-size: 200% 100%;
+  animation: fx-rotunda-shimmer 1.4s linear infinite;
+}
+.fx-rotunda .card .note-wait span:nth-child(2) {
+  width: 86%;
+  margin: 0 auto;
+}
+.fx-rotunda .card .note-wait span:nth-child(3) {
+  width: 58%;
+  margin: 0 auto;
+}
+.fx-rotunda .card .imprint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 22px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(122, 90, 36, 0.4);
+  color: #5d4418;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.fx-rotunda .card .imprint small {
+  flex-basis: 100%;
+  font-size: 9.5px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* ---- phones ------------------------------------------------------------ */
+
+.fx-rotunda.phone .lede {
+  left: 0;
+  right: 0;
+  top: calc(var(--ow) * 0.19 + 10px);
+  max-width: none;
+  text-align: center;
+}
+.fx-rotunda.phone .lede b {
+  display: none;
+}
+.fx-rotunda.phone .lede span {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px #000;
+}
+.fx-rotunda.phone .find {
+  left: 10px;
+  right: 10px;
+  top: auto;
+  bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  width: auto;
+}
+.fx-rotunda.phone .search {
+  height: 40px;
+}
+.fx-rotunda.phone .search input {
+  font-size: 16px;
+}
+.fx-rotunda.phone .search kbd {
+  display: none;
+}
+.fx-rotunda.phone .switches {
+  gap: 6px;
+}
+.fx-rotunda.phone .toggle {
+  width: 124px;
+  height: 40px;
+  flex: none;
+}
+.fx-rotunda.phone .toggle button {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.fx-rotunda.phone .sort {
+  width: 44px;
+  flex: none;
+}
+.fx-rotunda.phone .sort select {
+  height: 40px;
+  padding: 0;
+  color: transparent;
+}
+.fx-rotunda.phone .sort::after {
+  right: 17px;
+  top: 15px;
+  width: 8px;
+  height: 8px;
+}
+.fx-rotunda.phone .ladder {
+  --rung: 46px;
+  left: 10px;
+  right: 10px;
+  top: auto;
+  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 6px;
+  width: auto;
+  transform: none;
+}
+.fx-rotunda.phone .ladder .rail {
+  display: none;
+}
+.fx-rotunda.phone .rungs {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+}
+.fx-rotunda.phone .rung,
+.fx-rotunda.phone .rung.all {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-content: center;
+  gap: 1px;
+  height: var(--rung);
+  padding: 0 2px;
+  border: 1px solid rgba(201, 163, 90, 0.45);
+  border-radius: 3px;
+  background: rgba(9, 11, 27, 0.82);
+  text-align: center;
+}
+.fx-rotunda.phone .rung b {
+  font-size: 17px;
+}
+.fx-rotunda.phone .rung.all b {
+  font-size: 15px;
+}
+.fx-rotunda.phone .rung span {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fx-rotunda.phone .rung.all span,
+.fx-rotunda.phone .rung i,
+.fx-rotunda.phone .rung .wide {
+  display: none;
+}
+.fx-rotunda.phone .rung.all i {
+  display: block;
+  font-size: 9px;
+}
+.fx-rotunda.phone .rung .narrow {
+  display: inline;
+}
+.fx-rotunda.phone .rung[aria-pressed="true"] {
+  background: var(--plate);
+}
+.fx-rotunda.phone .carriage {
+  left: 0;
+  top: auto;
+  bottom: -6px;
+  width: calc((100% - 12px) / 4);
+  height: 3px;
+  transform: translateX(calc(var(--lift, 0) * (100% + 4px)));
+}
+.fx-rotunda.phone .carriage::before {
+  left: 20%;
+  top: 0;
+  width: 60%;
+  height: 3px;
+  margin: 0;
+}
+.fx-rotunda.phone .floor {
+  bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .readout {
+  bottom: calc(132px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .readout dl > div {
+  padding: 4px 9px 5px;
+}
+.fx-rotunda.phone .readout dt {
+  font-size: 7.5px;
+  letter-spacing: 0.14em;
+}
+.fx-rotunda.phone .readout dd {
+  font-size: 12px;
+}
+.fx-rotunda.phone .readout .where dd {
+  font-size: 14px;
+}
+.fx-rotunda.phone .readout .turn {
+  width: 34px;
+}
+.fx-rotunda.phone.searching .readout {
+  opacity: 0;
+  pointer-events: none;
+}
+.fx-rotunda.phone .hits {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  height: 36px;
+}
+.fx-rotunda.phone .plate b {
+  font-size: 17px;
+}
+.fx-rotunda.phone .foot {
+  left: 12px;
+  right: 12px;
+  bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+}
+.fx-rotunda.phone .foot > * {
+  max-width: 62vw;
+}
+.fx-rotunda.phone .foot a {
+  padding: 2px 0;
+}
+.fx-rotunda.phone .rim-name {
+  font-size: 50px;
+  letter-spacing: 0.24em;
+}
+.fx-rotunda.phone .card {
+  padding: 30px 22px 24px;
+}
+.fx-rotunda.phone .reader {
+  padding: 0 14px 56px;
+}
+.fx-rotunda.phone .empty {
+  top: 40%;
+}
+
+/* ---- without 3D: flat bays --------------------------------------------- */
+
+.fx-rotunda.flat-mode .flat-scroll {
+  position: absolute;
+  inset: 0;
+  padding: 30px clamp(16px, 4vw, 60px) 40px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: radial-gradient(
+    ellipse 80% 40% at 50% 0%,
+    rgba(70, 86, 170, 0.28),
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+.fx-rotunda.flat-mode .flat-head {
+  display: grid;
+  gap: 18px;
+  max-width: 980px;
+  margin: 0 auto 30px;
+}
+.fx-rotunda.flat-mode h1 {
+  margin: 0;
+  color: var(--brass-hi);
+  font-family: var(--serif);
+  font-size: clamp(40px, 8vw, 76px);
+  font-weight: 500;
+  line-height: 0.95;
+}
+.fx-rotunda.flat-mode .lede,
+.fx-rotunda.flat-mode .find,
+.fx-rotunda.flat-mode .ladder,
+.fx-rotunda.flat-mode .foot,
+.fx-rotunda.flat-mode .empty {
+  position: static;
+  width: auto;
+  max-width: none;
+  transform: none;
+}
+.fx-rotunda.flat-mode .find {
+  max-width: 420px;
+}
+.fx-rotunda.flat-mode .ladder {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fx-rotunda.flat-mode .rungs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fx-rotunda.flat-mode .rail,
+.fx-rotunda.flat-mode .carriage {
+  display: none;
+}
+.fx-rotunda.flat-mode .rung,
+.fx-rotunda.flat-mode .rung.all {
+  height: 44px;
+  border: 1px solid rgba(201, 163, 90, 0.4);
+  border-radius: 3px;
+}
+.fx-rotunda.flat-mode .empty {
+  margin: 30px auto;
+}
+.fx-rotunda.flat-mode .foot {
+  margin-top: 40px;
+}
+.fx-rotunda .flat-wait {
+  color: var(--brass);
+  letter-spacing: 0.3em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.fx-rotunda .flat-tier {
+  margin: 0 calc(clamp(16px, 4vw, 60px) * -1) 34px;
+}
+.fx-rotunda .flat-tier header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 0 clamp(16px, 4vw, 60px) 10px;
+}
+.fx-rotunda .flat-tier header b {
+  color: var(--brass);
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 500;
+}
+.fx-rotunda .flat-tier h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 500;
+}
+.fx-rotunda .flat-tier header span {
+  color: rgba(201, 163, 90, 0.8);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.fx-rotunda .flat-bay {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  padding: 34px clamp(16px, 4vw, 60px) 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 18px solid #4a2d16;
+  background:
+    linear-gradient(180deg, rgba(3, 3, 8, 0.95), rgba(20, 10, 4, 0.5)),
+    url("/materials/walnut.webp");
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 163, 90, 0.5) transparent;
+}
+.fx-rotunda .flat-bay.covers {
+  gap: 16px;
+}
+.fx-rotunda .flat-book {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  border-radius: 1px;
+  box-shadow: inset 2px 0 3px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.25s,
+    opacity 0.4s;
+}
+.fx-rotunda .flat-book img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fx-rotunda .flat-book:hover,
+.fx-rotunda .flat-book:focus-visible {
+  transform: translateY(-8px);
+}
+.fx-rotunda .flat-book:focus-visible {
+  outline-offset: -2px;
+}
+.fx-rotunda .flat-book.sunk {
+  opacity: 0.18;
+}
+
+/* ---- motion ------------------------------------------------------------ */
+
+@keyframes fx-rotunda-face {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fx-rotunda-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fx-rotunda-xfade {
+  from {
+    opacity: 0.15;
+  }
+}
+@keyframes fx-rotunda-drop {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+@keyframes fx-rotunda-card {
+  from {
+    opacity: 0;
+    translate: 0 46px;
+  }
+}
+@keyframes fx-rotunda-beam {
+  from {
+    opacity: 0;
+    scale: 1 0;
+  }
+}
+@keyframes fx-rotunda-tick {
+  from {
+    opacity: 0;
+    scale: 1 0.1;
+  }
+}
+@keyframes fx-rotunda-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes fx-rotunda-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.fx-rotunda.calm .slot,
+.fx-rotunda.calm .vol,
+.fx-rotunda.calm .rise,
+.fx-rotunda.calm .hit,
+.fx-rotunda.calm .lid,
+.fx-rotunda.calm .space,
+.fx-rotunda.calm .shaft-wrap,
+.fx-rotunda.calm .veil {
+  transition-duration: 0.01ms;
+  transition-delay: 0ms;
+}
+.fx-rotunda.calm .face,
+.fx-rotunda.calm .wait,
+.fx-rotunda.calm .card,
+.fx-rotunda.calm .reader-beam,
+.fx-rotunda.calm .tick {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fx-rotunda *,
+  .fx-rotunda *::before,
+  .fx-rotunda *::after {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- second pass ------------------------------------------------------- */
+
+/* The shaft crosses the floor, and pools where it lands. */
+.fx-rotunda .shaft-wrap {
+  z-index: 3;
+}
+.fx-rotunda .shaft::before {
+  background: linear-gradient(
+    180deg,
+    rgba(214, 226, 255, 0.4) 0%,
+    rgba(206, 220, 255, 0.13) 34%,
+    rgba(206, 220, 255, 0.08) 66%,
+    rgba(206, 220, 255, 0.08) 100%
+  );
+}
+.fx-rotunda .pool {
+  position: absolute;
+  left: 50%;
+  top: 4%;
+  width: clamp(220px, 36vw, 560px);
+  height: 92%;
+  margin-left: calc(clamp(220px, 36vw, 560px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(226, 236, 255, 0.62) 0%,
+    rgba(206, 220, 255, 0.26) 38%,
+    rgba(206, 220, 255, 0) 70%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transition: opacity 0.9s ease;
+}
+.fx-rotunda.phase-dark .pool {
+  opacity: 0 !important;
+}
+
+/* The ladder stands on its own panel so nothing on the wall shows through. */
+.fx-rotunda .ladder::after {
+  inset: -16px -14px -16px -26px;
+  border: 1px solid rgba(201, 163, 90, 0.38);
+  border-radius: 4px;
+  background: rgba(6, 7, 18, 0.93);
+  box-shadow:
+    inset 0 0 0 4px rgba(6, 7, 18, 1),
+    inset 0 0 0 5px rgba(201, 163, 90, 0.14),
+    0 20px 50px rgba(0, 0, 0, 0.6);
+}
+.fx-rotunda .readout {
+  bottom: 16px;
+}
+
+/* Phones: lift the fog, and give every instrument its own row. From the
+   bottom: footer line, tier tabs, search, readout, then the floor. */
+.fx-rotunda.phone .shade {
+  background:
+    radial-gradient(
+      ellipse 150% 80% at 50% 46%,
+      rgba(5, 6, 13, 0) 0%,
+      rgba(5, 6, 13, 0) 55%,
+      rgba(5, 6, 13, 0.6) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5, 6, 13, 0.35) 0%,
+      rgba(5, 6, 13, 0) 14%,
+      rgba(5, 6, 13, 0) 100%
+    );
+}
+.fx-rotunda.phone .tier {
+  --shade: 0.2;
+}
+.fx-rotunda.phone .tier.on {
+  --shade: 0;
+}
+.fx-rotunda.phone .tier.off {
+  --shade: 0.66;
+}
+.fx-rotunda.phone .tier .slot.sunk {
+  --shade: 0.86;
+}
+.fx-rotunda.phone .dome-shell {
+  box-shadow:
+    0 6px 18px 2px rgba(4, 5, 12, 0.7),
+    inset 0 -1.5px 0 rgba(222, 190, 120, 0.7),
+    inset 0 -7px 0 rgba(10, 12, 30, 0.9),
+    inset 0 -8px 0 rgba(201, 163, 90, 0.35);
+}
+.fx-rotunda.phone .floor-shell {
+  box-shadow:
+    0 -6px 18px 2px rgba(4, 5, 12, 0.7),
+    inset 0 1.5px 0 rgba(222, 190, 120, 0.6),
+    inset 0 7px 0 rgba(10, 12, 30, 0.9),
+    inset 0 8px 0 rgba(201, 163, 90, 0.3);
+}
+.fx-rotunda.phone .lede {
+  display: none;
+}
+.fx-rotunda.phone .foot {
+  bottom: calc(7px + env(safe-area-inset-bottom, 0px));
+  align-items: center;
+  height: 16px;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.fx-rotunda.phone .foot > span {
+  min-width: 0;
+  max-width: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fx-rotunda.phone .foot a {
+  flex: none;
+  max-width: none;
+  padding: 0;
+}
+.fx-rotunda.phone .ladder {
+  bottom: calc(38px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .find {
+  bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .readout {
+  bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .floor {
+  bottom: calc(184px + env(safe-area-inset-bottom, 0px));
+}
