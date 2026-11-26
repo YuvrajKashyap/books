@@ -10,8 +10,14 @@ import "./base.css";
 import "./rooms.css";
 import "./sheet.css";
 
-import { useEffect, useState } from "react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useNavigationType,
+} from "react-router-dom";
 import {
   BookOpen,
   Clock3,
@@ -118,6 +124,28 @@ function Shell({
   const library = owner.library!;
   const sheet = useBookParam();
   const [settings, setSettings] = useState(false);
+  // The browser's Back button would close the editor and lose what was
+  // typed. While it has unsaved changes, Back keeps the sheet, steps forward
+  // again, and the editor asks first, as its own Cancel does.
+  const navigate = useNavigate();
+  const navType = useNavigationType();
+  const unsaved = useRef(false);
+  const kept = useRef<string | null>(null);
+  const [backed, setBacked] = useState(0);
+  const heldBack =
+    !sheet.id && kept.current !== null && unsaved.current && navType === "POP";
+  const sheetId = heldBack ? kept.current : sheet.id;
+  kept.current = sheetId;
+  useEffect(() => {
+    if (!heldBack) return;
+    navigate(1);
+    setBacked((n) => n + 1);
+  }, [heldBack]);
+  function closeSheet() {
+    unsaved.current = false;
+    kept.current = null;
+    sheet.close();
+  }
   const value: RoomsValue = { owner, library, open: sheet.open, reduced };
 
   // A new room starts at the top.
@@ -197,8 +225,14 @@ function Shell({
         {path === "/history" && <History />}
       </main>
 
-      {sheet.id && (
-        <Editor key={sheet.id} id={sheet.id} onClose={sheet.close} />
+      {sheetId && (
+        <Editor
+          key={sheetId}
+          id={sheetId}
+          onClose={closeSheet}
+          onDirty={(v) => (unsaved.current = v)}
+          asked={backed}
+        />
       )}
       {settings && <Settings onClose={() => setSettings(false)} />}
     </RoomsContext.Provider>

@@ -53,7 +53,17 @@ function check(draft: BookFields): Errors {
   return errors;
 }
 
-export function Editor({ id, onClose }: { id: string; onClose: () => void }) {
+export function Editor({
+  id,
+  onClose,
+  onDirty,
+  asked = 0,
+}: {
+  id: string;
+  onClose: () => void;
+  onDirty?: (dirty: boolean) => void;
+  asked?: number; // goes up when the browser's Back was held for unsaved changes
+}) {
   const { library, reduced } = useRooms();
   const fresh = id === "new";
   const existing = fresh ? undefined : library.books.find((b) => b.id === id);
@@ -68,6 +78,9 @@ export function Editor({ id, onClose }: { id: string; onClose: () => void }) {
     else if (!dirty.current) onClose();
   }
   useDialog(panel, () => (asking ? setAsking(false) : requestClose()));
+  useEffect(() => {
+    if (asked) setAsking(true);
+  }, [asked]);
   useTitle(
     fresh ? "New book" : existing ? bookArt(existing).title : "Book not found",
   );
@@ -96,7 +109,10 @@ export function Editor({ id, onClose }: { id: string; onClose: () => void }) {
             reduced={reduced}
             asking={asking}
             setAsking={setAsking}
-            setDirty={(v) => (dirty.current = v)}
+            setDirty={(v) => {
+              dirty.current = v;
+              onDirty?.(v);
+            }}
             requestClose={requestClose}
             leave={() => {
               setLeaving(true);
