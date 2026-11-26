@@ -20,7 +20,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { LayoutGrid, Library, Search, X } from "lucide-react";
+import { ArrowDownUp, LayoutGrid, Library, Search, X } from "lucide-react";
 import {
   bookArt,
   focuses,
@@ -33,11 +33,14 @@ import {
   type Focus,
   type ShelfBook,
   type Sort,
-} from "../../shared/catalogue";
-import { site, useTitle } from "../../shared/site";
+} from "../../../../shared/catalogue";
+import { site, useTitle } from "../../../../shared/site";
+import { ViewSwitch } from "../../ViewSwitch";
 import { Bookcase, pack, type Layout } from "./Bookcase";
+import { Pull, type PullHandle } from "./Pull";
 import { LampView } from "./LampView";
 import { Reader } from "./Reader";
+import { Walnut } from "./Walnut";
 import type { Lamp } from "./lamp";
 
 type Reading = { id: string; closing: boolean; fly: boolean };
@@ -86,7 +89,7 @@ export default function OneLamp() {
   const pedimentRef = useRef<HTMLElement>(null);
   const floorRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const peekRef = useRef<HTMLDivElement>(null);
+  const pullRef = useRef<PullHandle | null>(null);
 
   const [on, setOn] = useState(true);
   const [adjusted, setAdjusted] = useState(false);
@@ -174,29 +177,41 @@ export default function OneLamp() {
     [order, arts, width, layout],
   );
 
+  // A new arrangement of the case puts any book that is out back first.
+  useEffect(() => {
+    pullRef.current?.release();
+  }, [packing]);
+
   // ---- the lamp follows what the visitor is doing ------------------------
 
   useEffect(() => {
     const lamp = lampRef.current;
     if (!lamp) return;
-    const stops = [pedimentRef.current, corniceRef.current, floorRef.current]
+    const stops = [
+      pedimentRef.current,
+      corniceRef.current,
+      floorRef.current,
+      pullRef.current?.el() ?? null,
+    ]
       .filter((el): el is HTMLElement => Boolean(el))
       .map((el) => lamp.follow(el));
-    return () => stops.forEach((stop) => stop());
+    // The lamp hangs above the case: once the control bar is pinned at the
+    // top of the window, the bulb rests just under it, beside the rows.
+    lamp.setCeiling(corniceRef.current);
+    return () => {
+      stops.forEach((stop) => stop());
+      lamp.setCeiling(null);
+    };
   }, [ok, env]);
 
   useEffect(() => {
     const lamp = lampRef.current;
     if (!lamp) return;
-    const row = packing?.rows[0];
-    if (!matches?.length || !row || !packing) {
+    if (!matches?.length || !packing) {
       lamp.setSearchTarget(null);
       return;
     }
-    const last = row[Math.min(matches.length, row.length) - 1];
-    let x = last.x + last.w + 46;
-    if (x > packing.width - 54) x = packing.width / 2;
-    lamp.setSearchTarget({ x, y: packing.shelfH - packing.boardH + 12 });
+    lamp.setSearchTarget({ y: packing.shelfH * 0.42 });
   }, [matches, packing]);
 
   useEffect(() => {
@@ -251,7 +266,9 @@ export default function OneLamp() {
 
   const open = useCallback(
     (id: string) => {
-      peek(null);
+      const pull = pullRef.current;
+      if (pull?.current() === id) pull.hold(id);
+      else pull?.release();
       setParams(
         (old) => {
           const next = new URLSearchParams(old);
@@ -281,52 +298,39 @@ export default function OneLamp() {
     setReading((r) => {
       if (r) {
         const el = bookEls.current.get(r.id);
-        window.requestAnimationFrame(() =>
-          el
-            ?.querySelector<HTMLElement>(".bk-hit")
-            ?.focus({ preventScroll: true }),
-        );
+        window.requestAnimationFrame(() => {
+          const hit = el?.querySelector<HTMLElement>(".bk-hit");
+          if (!hit) return;
+          // Focus comes home with the book; it must not draw it out again.
+          hit.dataset.quiet = "1";
+          hit.focus({ preventScroll: true });
+        });
       }
       return null;
     });
   }, []);
   const origin = useCallback((id: string) => {
+    // A book already drawn out flies from where it is held.
+    const held = pullRef.current?.take(id);
+    if (held) return { rect: held, facing: true };
     const el = bookEls.current.get(id);
     if (!el || !el.querySelector(".bk-box")) return null;
     const r = el.getBoundingClientRect();
     if (r.bottom < 0 || r.top > window.innerHeight || r.width === 0)
       return null;
-    return r;
+    return { rect: r, facing: false };
+  }, []);
+  const bounds = useCallback(() => {
+    const box = shelvesRef.current?.getBoundingClientRect();
+    const bar = corniceRef.current?.getBoundingClientRect();
+    return {
+      left: box ? box.left : 0,
+      right: box ? box.right : document.documentElement.clientWidth,
+      top: bar ? Math.max(0, bar.bottom) : 0,
+    };
   }, []);
 
   // ---- small things -------------------------------------------------------
-
-  function peek(el: HTMLElement | null, title?: string, author?: string) {
-    const tip = peekRef.current;
-    if (!tip) return;
-    if (!el || !title) {
-      tip.classList.remove("is-shown");
-      return;
-    }
-    const r = el.getBoundingClientRect();
-    const vw = document.documentElement.clientWidth;
-    const bar = corniceRef.current?.getBoundingClientRect().bottom ?? 0;
-    const below = r.top < Math.max(bar, 0) + 84;
-    (tip.children[0] as HTMLElement).textContent = title;
-    (tip.children[1] as HTMLElement).textContent = author ?? "";
-    tip.style.left =
-      Math.max(130, Math.min(vw - 130, r.left + r.width / 2)) + "px";
-    tip.style.top = (below ? r.bottom + 12 : r.top - 12) + "px";
-    tip.classList.toggle("is-below", below);
-    tip.classList.add("is-shown");
-  }
-  const peekStable = useRef(peek);
-  peekStable.current = peek;
-  const onPeek = useCallback(
-    (el: HTMLElement | null, title?: string, author?: string) =>
-      peekStable.current(el, title, author),
-    [],
-  );
 
   useShelfKeys({
     paused: Boolean(reading),
@@ -373,7 +377,9 @@ export default function OneLamp() {
       <div className="room" aria-hidden="true" />
       <div className="page" inert={isReading}>
         <header className="pediment" ref={pedimentRef}>
-          <div className="pediment-wood" aria-hidden="true" />
+          <div className="pediment-wood" aria-hidden="true">
+            <Walnut seed={11} />
+          </div>
           <div className="name-wrap">
             <span className="name-shadow" aria-hidden="true">
               {site.name}
@@ -396,16 +402,19 @@ export default function OneLamp() {
         {ok && (
           <main className="case">
             <div className="cornice" ref={corniceRef}>
-              <div className="cornice-wood" aria-hidden="true" />
+              <div className="cornice-wood" aria-hidden="true">
+                <Walnut seed={23} />
+              </div>
               <div className="cornice-light" aria-hidden="true" />
               <div className="tools">
+                <ViewSwitch />
                 <div className="find">
                   <Search size={15} aria-hidden="true" />
                   <input
                     ref={searchRef}
                     type="search"
                     value={q}
-                    placeholder="Search title or author"
+                    placeholder="Title or author"
                     aria-label="Search the shelf by title or author"
                     autoComplete="off"
                     spellCheck={false}
@@ -438,11 +447,13 @@ export default function OneLamp() {
                     <kbd aria-hidden="true">/</kbd>
                   )}
                 </div>
-                <p className="status" role="status" aria-live="polite">
-                  {status}
-                </p>
                 <label className="sort">
                   <span>Order</span>
+                  <ArrowDownUp
+                    className="sort-icon"
+                    size={16}
+                    aria-hidden="true"
+                  />
                   <select
                     value={sort}
                     onChange={(e) =>
@@ -488,28 +499,33 @@ export default function OneLamp() {
                   </button>
                 </div>
               </div>
-              <div className="plates" role="group" aria-label="Category">
-                <button
-                  type="button"
-                  className="plate"
-                  aria-pressed={focus === null}
-                  onClick={() => patch({ focus: null })}
-                >
-                  <span>All</span>
-                  <b>{total}</b>
-                </button>
-                {focuses.map((f) => (
+              <div className="plates-row">
+                <div className="plates" role="group" aria-label="Category">
                   <button
                     type="button"
                     className="plate"
-                    key={f}
-                    aria-pressed={focus === f}
-                    onClick={() => patch({ focus: focus === f ? null : f })}
+                    aria-pressed={focus === null}
+                    onClick={() => patch({ focus: null })}
                   >
-                    <span>{f}</span>
-                    <b>{counts.get(f) ?? 0}</b>
+                    <span>All</span>
+                    <b>{total}</b>
                   </button>
-                ))}
+                  {focuses.map((f) => (
+                    <button
+                      type="button"
+                      className="plate"
+                      key={f}
+                      aria-pressed={focus === f}
+                      onClick={() => patch({ focus: focus === f ? null : f })}
+                    >
+                      <span>{f}</span>
+                      <b>{counts.get(f) ?? 0}</b>
+                    </button>
+                  ))}
+                </div>
+                <p className="status" role="status" aria-live="polite">
+                  {status}
+                </p>
               </div>
               {empty && (
                 <div className="empty" role="status">
@@ -547,15 +563,17 @@ export default function OneLamp() {
                     lampRef={lampRef}
                     bookEls={bookEls}
                     rootRef={shelvesRef}
+                    pullRef={pullRef}
                     onOpen={open}
-                    onPeek={onPeek}
                   />
                 )}
               </div>
             </div>
 
             <footer className="plinth">
-              <div className="plinth-wood" aria-hidden="true" />
+              <div className="plinth-wood" aria-hidden="true">
+                <Walnut seed={37} />
+              </div>
               <div className="plinth-plate">
                 <p className="plinth-name">{site.name}</p>
                 <p className="plinth-count">
@@ -603,10 +621,7 @@ export default function OneLamp() {
         </div>
       )}
 
-      <div className="peek" ref={peekRef} aria-hidden="true">
-        <b />
-        <i />
-      </div>
+      <Pull ref={pullRef} bounds={bounds} onOpen={open} />
 
       {reading && readingBook && readingArt && (
         <Reader

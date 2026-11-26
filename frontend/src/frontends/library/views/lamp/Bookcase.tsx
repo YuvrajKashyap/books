@@ -9,8 +9,14 @@ import {
   type CSSProperties,
   type RefObject,
 } from "react";
-import { warmNote, type BookArt, type ShelfBook } from "../../shared/catalogue";
+import {
+  warmNote,
+  type BookArt,
+  type ShelfBook,
+} from "../../../../shared/catalogue";
 import type { Lamp, SceneShelf } from "./lamp";
+import type { PullHandle } from "./Pull";
+import { Walnut } from "./Walnut";
 
 export type Layout = "spines" | "covers";
 export type Placed = {
@@ -30,6 +36,7 @@ export type Packing = {
   shelfH: number;
   bookH: number;
   boardH: number;
+  pad: number; // clear space between a case side and the first book
   width: number;
 };
 
@@ -114,7 +121,7 @@ export function pack(
       x += p.w + gap;
     }
   });
-  return { rows, shelfH, bookH, boardH, width };
+  return { rows, shelfH, bookH, boardH, pad, width };
 }
 
 type Props = {
@@ -126,8 +133,8 @@ type Props = {
   lampRef: RefObject<Lamp | null>;
   bookEls: RefObject<Map<string, HTMLDivElement>>;
   rootRef: RefObject<HTMLDivElement | null>;
+  pullRef: RefObject<PullHandle | null>;
   onOpen: (id: string) => void;
-  onPeek: (el: HTMLElement | null, title?: string, author?: string) => void;
 };
 
 export const Bookcase = memo(function Bookcase({
@@ -139,10 +146,16 @@ export const Bookcase = memo(function Bookcase({
   lampRef,
   bookEls,
   rootRef,
+  pullRef,
   onOpen,
-  onPeek,
 }: Props) {
-  const { rows, shelfH, bookH, boardH } = packing;
+  const { rows, shelfH, bookH, boardH, pad } = packing;
+  // One hover at a time: a short wait so sweeping the pointer along a row
+  // does not drag every book out on the way.
+  const intent = useRef(0);
+  const lastPointer = useRef("mouse");
+  const leftAt = useRef(0); // when the pointer last left a pulled book
+  useEffect(() => () => window.clearTimeout(intent.current), []);
   const [near, setNear] = useState<Set<number>>(() => new Set([0, 1, 2, 3, 4]));
   const shelfEls = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -218,9 +231,20 @@ export const Bookcase = memo(function Bookcase({
         }),
       });
     });
-    lamp.setScene({ root, shelfH, bookH, boardH, shelves });
+    lamp.setScene({ root, shelfH, bookH, boardH, pad, shelves });
     return () => lamp.setScene(null);
-  }, [rows, near, layout, shelfH, bookH, boardH, lampRef, rootRef, bookEls]);
+  }, [
+    rows,
+    near,
+    layout,
+    shelfH,
+    bookH,
+    boardH,
+    pad,
+    lampRef,
+    rootRef,
+    bookEls,
+  ]);
 
   const covers = layout === "covers";
   return (
@@ -245,7 +269,9 @@ export const Bookcase = memo(function Bookcase({
               shelfEls.current[index] = el;
             }}
           >
-            <div className="shelf-wall" aria-hidden="true" />
+            <div className="shelf-wall" aria-hidden="true">
+              {real && <Walnut seed={101 + index * 7919} kind="wall" />}
+            </div>
             <div className="row">
               {row.map((p) => {
                 const { book, art } = p;
@@ -259,6 +285,23 @@ export const Bookcase = memo(function Bookcase({
                   (outId === book.id ? " is-out" : "");
                 const src =
                   covers && p.cw >= 130 ? art.front : (art.small ?? art.front);
+                const pull = (
+                  slot: HTMLElement,
+                  keyed: boolean,
+                  touch = false,
+                ) =>
+                  pullRef.current?.pull({
+                    id: book.id,
+                    slot,
+                    title: art.title,
+                    author: book.author,
+                    art,
+                    h: p.h,
+                    t: p.t,
+                    layout,
+                    keyed,
+                    touch,
+                  });
                 return (
                   <div
                     key={book.id}
@@ -283,10 +326,26 @@ export const Bookcase = memo(function Bookcase({
                     }
                     onPointerEnter={(e) => {
                       if (e.pointerType !== "mouse") return;
+                      const slot = e.currentTarget;
                       warmNote(book.id);
-                      onPeek(e.currentTarget, art.title, book.author);
+                      window.clearTimeout(intent.current);
+                      // Sweeping along a row hands the light from book to
+                      // book quickly; arriving from elsewhere waits a beat.
+                      const sweeping =
+                        pullRef.current?.current() ||
+                        performance.now() - leftAt.current < 260;
+                      intent.current = window.setTimeout(
+                        () => pull(slot, false),
+                        sweeping ? 55 : 120,
+                      );
                     }}
-                    onPointerLeave={() => onPeek(null)}
+                    onPointerLeave={(e) => {
+                      if (e.pointerType !== "mouse") return;
+                      window.clearTimeout(intent.current);
+                      if (pullRef.current?.current() === book.id)
+                        leftAt.current = performance.now();
+                      pullRef.current?.release(book.id);
+                    }}
                   >
                     {real ? (
                       <>
@@ -345,15 +404,43 @@ export const Bookcase = memo(function Bookcase({
                       type="button"
                       className="bk-hit"
                       aria-label={art.title + " by " + book.author}
-                      onClick={() => onOpen(book.id)}
-                      onFocus={(e) => {
+                      onPointerDown={(e) => {
+                        lastPointer.current = e.pointerType;
+                      }}
+                      onKeyDown={() => {
+                        lastPointer.current = "key";
+                      }}
+                      onClick={(e) => {
                         const slot = e.currentTarget.parentElement;
-                        if (slot && e.currentTarget.matches(":focus-visible")) {
+                        // A finger has no hover: the first tap draws the
+                        // book out, the second opens it.
+                        if (
+                          slot &&
+                          lastPointer.current !== "mouse" &&
+                          lastPointer.current !== "key" &&
+                          pullRef.current?.current() !== book.id
+                        ) {
                           warmNote(book.id);
-                          onPeek(slot, art.title, book.author);
+                          pull(slot, false, true);
+                          return;
+                        }
+                        window.clearTimeout(intent.current);
+                        onOpen(book.id);
+                      }}
+                      onFocus={(e) => {
+                        const hit = e.currentTarget;
+                        const slot = hit.parentElement;
+                        // Focus put back by the reader closing stays quiet.
+                        if (hit.dataset.quiet) {
+                          delete hit.dataset.quiet;
+                          return;
+                        }
+                        if (slot && hit.matches(":focus-visible")) {
+                          warmNote(book.id);
+                          pull(slot, true);
                         }
                       }}
-                      onBlur={() => onPeek(null)}
+                      onBlur={() => pullRef.current?.release(book.id)}
                     />
                   </div>
                 );
@@ -361,6 +448,7 @@ export const Bookcase = memo(function Bookcase({
             </div>
             <div className="shelf-shade" aria-hidden="true" />
             <div className="board" aria-hidden="true">
+              {real && <Walnut seed={503 + index * 104729} kind="rail" />}
               <span className="board-glint" />
               <span className="board-no">
                 {String(index + 1).padStart(2, "0")}

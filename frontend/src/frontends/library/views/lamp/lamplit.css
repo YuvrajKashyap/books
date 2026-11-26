@@ -1,7 +1,36 @@
 /* One Lamp. Everything is scoped under .fx-lamplit.
    Stacking, bottom to top: the page (pediment, case, plinth), the darkness
-   with its hole (20), haze and dust (21, 22), the cornice controls (30),
-   the title label (35), the reader (60), the lamp itself (69, 70). */
+   with its hole (20), haze and dust (21, 22), a pulled book (28), the lamp
+   (29, so its cord passes behind the control bar), the cornice controls
+   (30), the reader (60), and the lamp again above the reader (69, 70). */
+
+/* Stand-ins for Instrument Serif while it loads, scaled to its widths so
+   the name is the right size from the first paint and never runs off the
+   edge when the real face swaps in. Measured on "Yuvraj's Bookshelf". */
+@font-face {
+  font-family: "Lamplit Serif Georgia";
+  src: local("Georgia");
+  size-adjust: 77%;
+  ascent-override: 99%;
+  descent-override: 31%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Lamplit Serif Times";
+  src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Times");
+  size-adjust: 80%;
+  ascent-override: 99%;
+  descent-override: 31%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Lamplit Serif Noto";
+  src: local("Noto Serif"), local("NotoSerif-Regular"), local("Droid Serif");
+  size-adjust: 75%;
+  ascent-override: 99%;
+  descent-override: 31%;
+  line-gap-override: 0%;
+}
 
 html:has(.fx-lamplit) {
   background: #000;
@@ -18,7 +47,9 @@ html:has(.fx-lamplit.is-reading) {
 }
 
 .fx-lamplit {
-  --serif: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+  --serif:
+    "Instrument Serif", "Lamplit Serif Georgia", "Lamplit Serif Times",
+    "Lamplit Serif Noto", Georgia, serif;
   --text: "Cormorant Garamond", "Instrument Serif", Georgia, serif;
   --sans: "DM Sans Variable", system-ui, sans-serif;
   --gold: #ecc98a;
@@ -28,7 +59,6 @@ html:has(.fx-lamplit.is-reading) {
   --paper: #f3e4c3;
   --ink: #26170a;
   --post: 22px;
-  --wood: url("/materials/walnut.webp");
   position: relative;
   isolation: isolate;
   min-height: 100vh;
@@ -100,10 +130,13 @@ html:has(.fx-lamplit.is-reading) {
   height: 640px;
   will-change: transform;
 }
+/* Lit by default: the lamp writes the dark in before the first paint and
+   warms it away, so a page whose script never animates is still lit. */
 .fx-lamplit .lm-full {
   position: absolute;
   inset: 0;
   background: #000;
+  opacity: 0;
 }
 .fx-lamplit .lm-haze {
   position: fixed;
@@ -134,7 +167,7 @@ html:has(.fx-lamplit.is-reading) {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 69;
+  z-index: 29;
   width: 0;
   height: 0;
   pointer-events: none;
@@ -160,7 +193,7 @@ html:has(.fx-lamplit.is-reading) {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 70;
+  z-index: 29;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -169,6 +202,12 @@ html:has(.fx-lamplit.is-reading) {
   transform-origin: 0 0;
   pointer-events: none;
   will-change: transform;
+}
+.fx-lamplit.is-reading .lm-anchor {
+  z-index: 69;
+}
+.fx-lamplit.is-reading .lm-arm {
+  z-index: 70;
 }
 .fx-lamplit .lm-cord {
   flex: none;
@@ -303,21 +342,51 @@ html:has(.fx-lamplit.is-reading) {
   padding: 33vh clamp(20px, 5vw, 60px) 4vh;
   text-align: center;
 }
+/* Every wooden surface holds its own drawn walnut (a canvas, z -2) under
+   its shading (::before, z -1), inside a stacking context of its own. */
+.fx-lamplit .pediment-wood,
+.fx-lamplit .cornice-wood,
+.fx-lamplit .shelf-wall,
+.fx-lamplit .board,
+.fx-lamplit .plinth-wood {
+  isolation: isolate;
+  background-color: #2a170b;
+}
+.fx-lamplit .walnut {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.fx-lamplit .pediment-wood::before,
+.fx-lamplit .cornice-wood::before,
+.fx-lamplit .shelf-wall::before,
+.fx-lamplit .board::before,
+.fx-lamplit .plinth-wood::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
 .fx-lamplit .pediment-wood {
   position: absolute;
   inset: 0 clamp(8px, 2.4vw, 28px);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.82),
-      rgba(8, 3, 1, 0.5) 34%,
-      rgba(8, 3, 1, 0.58)
-    ),
-    var(--wood) 0 0 / 832px 46px;
+  transition: opacity 0.5s ease;
+}
+.fx-lamplit .pediment-wood::before {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.82),
+    rgba(8, 3, 1, 0.5) 34%,
+    rgba(8, 3, 1, 0.58)
+  );
   box-shadow:
     inset 0 -2px 0 rgba(201, 164, 92, 0.25),
     inset 0 -22px 30px -18px #000;
-  transition: opacity 0.5s ease;
 }
 .fx-lamplit .name-wrap {
   position: relative;
@@ -417,10 +486,10 @@ html:has(.fx-lamplit.is-reading) {
 .fx-lamplit .cornice-wood {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(8, 3, 1, 0.42), rgba(8, 3, 1, 0.74)),
-    var(--wood) 0 0 / 832px 46px;
-  opacity: calc(var(--heat, 0) * 0.95);
+  opacity: calc(var(--heat, 1) * 0.95);
+}
+.fx-lamplit .cornice-wood::before {
+  background: linear-gradient(180deg, rgba(8, 3, 1, 0.42), rgba(8, 3, 1, 0.74));
 }
 .fx-lamplit .cornice-light {
   position: absolute;
@@ -766,18 +835,18 @@ html:has(.fx-lamplit.is-reading) {
 .fx-lamplit .shelf-wall {
   position: absolute;
   inset: 0 0 var(--board-h);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.74),
-      rgba(0, 0, 0, 0.5) 34%,
-      rgba(0, 0, 0, 0.62)
-    ),
-    var(--wood) 0 0 / 832px 46px;
+  transition: opacity 0.5s ease;
+}
+.fx-lamplit .shelf-wall::before {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.74),
+    rgba(0, 0, 0, 0.5) 34%,
+    rgba(0, 0, 0, 0.62)
+  );
   box-shadow:
     inset 16px 0 26px -10px #000,
     inset -16px 0 26px -10px #000;
-  transition: opacity 0.5s ease;
 }
 .fx-lamplit .row {
   position: absolute;
@@ -809,16 +878,16 @@ html:has(.fx-lamplit.is-reading) {
   bottom: 0;
   height: var(--board-h);
   overflow: hidden;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 214, 150, 0.26) 0 1px,
-      rgba(0, 0, 0, 0.08) 2px,
-      rgba(0, 0, 0, 0.62)
-    ),
-    var(--wood) 30% 50% / 832px 46px;
   box-shadow: 0 7px 12px rgba(0, 0, 0, 0.75);
   transition: opacity 0.5s ease;
+}
+.fx-lamplit .board::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 214, 150, 0.26) 0 1px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.62)
+  );
 }
 .fx-lamplit .board-glint {
   position: absolute;
@@ -895,16 +964,25 @@ html:has(.fx-lamplit.is-reading) {
   --z: -28px;
   --veil: 0.86;
 }
+/* The beat before a pull: the book under the pointer eases forward. */
 @media (hover: hover) {
   .fx-lamplit .bk:hover {
-    --z: 28px;
+    --z: 16px;
   }
   .fx-lamplit .bk:hover .gilt {
     opacity: 1;
   }
 }
 .fx-lamplit .bk:has(.bk-hit:focus-visible) {
-  --z: 28px;
+  --z: 16px;
+}
+/* Out of the row: its place is an empty slot showing the wall behind. */
+.fx-lamplit .bk[data-pulled] .bk-box,
+.fx-lamplit .bk[data-pulled] .bk-cast {
+  visibility: hidden;
+}
+.fx-lamplit .bk[data-pulled] .bk-hit:focus-visible {
+  outline-color: transparent;
 }
 .fx-lamplit .bk:has(.bk-hit:active) {
   --z: 8px;
@@ -1240,16 +1318,16 @@ html:has(.fx-lamplit.is-reading) {
 .fx-lamplit .plinth-wood {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 214, 150, 0.2) 0 1px,
-      rgba(8, 3, 1, 0.4) 3px,
-      rgba(8, 3, 1, 0.7) 60%,
-      #000
-    ),
-    var(--wood) 0 0 / 832px 46px;
   transition: opacity 0.5s ease;
+}
+.fx-lamplit .plinth-wood::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 214, 150, 0.2) 0 1px,
+    rgba(8, 3, 1, 0.4) 3px,
+    rgba(8, 3, 1, 0.7) 60%,
+    #000
+  );
 }
 .fx-lamplit .plinth-plate {
   position: relative;
@@ -1525,6 +1603,39 @@ html:has(.fx-lamplit.is-reading) {
   height: calc(var(--H) + 190px);
   padding-top: 56px;
   perspective: 1500px;
+}
+/* The book lands in a bloom of lamplight that settles to a steady glow. */
+.fx-lamplit .rd-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(56px + var(--H) / 2);
+  width: calc(var(--H) * 2.4);
+  height: calc(var(--H) * 1.7);
+  margin: calc(var(--H) * -0.85) 0 0 calc(var(--H) * -1.2);
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 196, 118, 0.24),
+    rgba(255, 160, 70, 0.07) 55%,
+    rgba(255, 160, 70, 0)
+  );
+  opacity: 0.7;
+  pointer-events: none;
+  animation: lamplit-bloom 1.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s backwards;
+  transition: opacity 0.3s ease;
+}
+@keyframes lamplit-bloom {
+  from {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+.fx-lamplit .rd.is-closing .rd-stage::before {
+  opacity: 0;
 }
 .fx-lamplit .rd-glow {
   position: absolute;
@@ -2241,8 +2352,6 @@ html:has(.fx-lamplit.is-reading) {
 }
 .fx-lamplit .pediment-wood {
   box-shadow:
-    inset 0 -2px 0 rgba(201, 164, 92, 0.25),
-    inset 0 -22px 30px -18px #000,
     54px 0 80px -26px rgba(0, 0, 0, 0.95),
     -54px 0 80px -26px rgba(0, 0, 0, 0.95);
 }
@@ -2275,7 +2384,14 @@ html:has(.fx-lamplit.is-reading) {
       rgba(201, 164, 92, 0.5) 9px 10px,
       rgba(0, 0, 0, 0.7) 10px
     ),
-    var(--wood) 40% 50% / 832px 46px;
+    repeating-linear-gradient(
+      180deg,
+      rgba(20, 8, 2, 0.35) 0 1px,
+      rgba(0, 0, 0, 0) 1px 2.6px,
+      rgba(150, 96, 52, 0.12) 2.6px 3.4px,
+      rgba(0, 0, 0, 0) 3.4px 4.9px
+    ),
+    linear-gradient(90deg, #4a2a15, #5b3519 37%, #43250f 61%, #573216);
   box-shadow: 0 8px 14px rgba(0, 0, 0, 0.7);
 }
 .fx-lamplit .plinth::after {
@@ -2290,7 +2406,14 @@ html:has(.fx-lamplit.is-reading) {
       rgba(0, 0, 0, 0.2) 2px,
       rgba(0, 0, 0, 0.72)
     ),
-    var(--wood) 70% 50% / 832px 46px;
+    repeating-linear-gradient(
+      180deg,
+      rgba(20, 8, 2, 0.35) 0 1px,
+      rgba(0, 0, 0, 0) 1px 3.1px,
+      rgba(150, 96, 52, 0.12) 3.1px 3.8px,
+      rgba(0, 0, 0, 0) 3.8px 5.3px
+    ),
+    linear-gradient(90deg, #4f2d16, #3f230f 29%, #5a3418 66%, #45260f);
 }
 /* The floor: boards running away under the case, and the lamp's pool. */
 .fx-lamplit .floor {
@@ -2376,5 +2499,611 @@ html:has(.fx-lamplit.is-reading) {
   .fx-lamplit .floor-pool {
     width: 620px;
     transform: translate3d(calc(var(--lx, 50vw) - 310px), 0, 0);
+  }
+}
+
+/* ------------------------------------------------------------- the pull */
+
+/* A book drawn out of its row. It is drawn in its own layer above the
+   shelves (see Pull.tsx), so no neighbour, shelf or case side clips it.
+   .pull > .pull-item (two: one can go home while the next comes out)
+     > .pull-shadow, .pull-fly > .pull-book > .pull-spine, .pull-cover
+   and one shared .pull-plate. */
+.fx-lamplit .pull {
+  position: fixed;
+  inset: 0;
+  z-index: 28;
+  pointer-events: none;
+}
+.fx-lamplit .pull [hidden] {
+  display: none !important;
+}
+.fx-lamplit .pull-item {
+  --W: 160px;
+  --H: 240px;
+  --D: 20px;
+  --px: 50vw;
+  --py: 50vh;
+  --cloth: #5a2a14;
+  position: absolute;
+  inset: 0;
+  perspective: 1300px;
+  visibility: hidden;
+}
+.fx-lamplit .pull-item.is-on {
+  visibility: visible;
+}
+/* The book coming out is always in front of the one going home. */
+.fx-lamplit .pull-item.is-out {
+  z-index: 1;
+}
+.fx-lamplit .pull-fly {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--W);
+  height: var(--H);
+  transform-origin: 0 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.58s cubic-bezier(0.18, 0.8, 0.16, 1);
+  will-change: transform;
+}
+/* It comes forward first, then turns on its spine edge and settles. */
+.fx-lamplit .pull-book {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50% 0;
+  transform-style: preserve-3d;
+  transition: transform 0.74s cubic-bezier(0.3, 0.9, 0.22, 1.07) 0.08s;
+}
+.fx-lamplit .pull-item.is-on:not(.is-out) .pull-fly {
+  transition: transform 0.42s cubic-bezier(0.5, 0, 0.25, 1);
+}
+.fx-lamplit .pull-item.is-on:not(.is-out) .pull-book {
+  transition: transform 0.36s cubic-bezier(0.5, 0, 0.3, 1);
+}
+/* A finger can tap the cover it drew out to open it. */
+.fx-lamplit .pull-item.is-touch.is-out .pull-book {
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fx-lamplit .pull-spine {
+  position: absolute;
+  top: 0;
+  left: calc(var(--D) * -1);
+  display: grid;
+  place-items: center;
+  width: var(--D);
+  height: 100%;
+  overflow: hidden;
+  transform-origin: 100% 50%;
+  transform: rotateY(-90deg);
+  border-radius: 3px 0 0 3px;
+  background-color: var(--cloth);
+  background-color: color-mix(in oklab, var(--cloth) 60%, #8c4516);
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.5),
+      rgba(255, 236, 200, 0.1) 30%,
+      rgba(0, 0, 0, 0.45)
+    ),
+    url("/materials/binding-grain.png");
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.fx-lamplit .pull-spine img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fx-lamplit .pull-spine span {
+  max-height: 84%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  writing-mode: vertical-rl;
+  font: 400 clamp(9px, calc(var(--D) * 0.5), 22px) / 1 var(--serif);
+  color: #f4d595;
+}
+.fx-lamplit .pull-spine-light {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(255, 210, 150, 0.12) 40%,
+    rgba(0, 0, 0, 0.5)
+  );
+}
+.fx-lamplit .pull-spine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+.fx-lamplit .pull-item.is-out .pull-spine::after {
+  opacity: 0.32;
+}
+
+.fx-lamplit .pull-cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 1px 4px 4px 1px;
+  background: var(--cloth);
+  outline: 2px solid transparent;
+  outline-offset: 8px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: outline-color 0.25s ease;
+}
+.fx-lamplit .pull-item.is-key .pull-cover {
+  outline-color: #ffd995;
+}
+.fx-lamplit .pull-front {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: center / cover no-repeat;
+}
+/* The hinge, where the board meets the spine. */
+.fx-lamplit .pull-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 2;
+  width: 9%;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.5),
+    rgba(255, 240, 210, 0.14) 38%,
+    rgba(0, 0, 0, 0.2) 62%,
+    rgba(0, 0, 0, 0)
+  );
+  pointer-events: none;
+}
+/* Still in the row it shares the row's shadow; out, it is in the light. */
+.fx-lamplit .pull-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: #000;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.fx-lamplit .pull-item.is-out .pull-cover::after {
+  opacity: 0;
+  transition: opacity 0.6s ease 0.05s;
+}
+/* A book with no jacket image: a plain cloth front, set like a title page. */
+.fx-lamplit .pull-plain {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--H) * 0.04);
+  padding: 16% 12%;
+  text-align: center;
+  color: #f6dca0;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+  background:
+    linear-gradient(rgba(255, 226, 170, 0.55), rgba(255, 226, 170, 0.55)) 50%
+      8% / 66% 1px no-repeat,
+    linear-gradient(rgba(255, 226, 170, 0.3), rgba(255, 226, 170, 0.3)) 50%
+      9.6% / 66% 1px no-repeat,
+    linear-gradient(rgba(255, 226, 170, 0.55), rgba(255, 226, 170, 0.55)) 50%
+      92% / 66% 1px no-repeat,
+    linear-gradient(rgba(255, 226, 170, 0.3), rgba(255, 226, 170, 0.3)) 50%
+      90.4% / 66% 1px no-repeat,
+    radial-gradient(
+      ellipse 90% 70% at 38% 28%,
+      rgba(255, 235, 200, 0.16),
+      rgba(0, 0, 0, 0) 70%
+    ),
+    url("/materials/binding-grain.png"),
+    color-mix(in oklab, var(--cloth) 74%, #5a2a10);
+}
+.fx-lamplit .pull-plain b {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  font: 400 calc(var(--W) * 0.13) / 1.04 var(--serif);
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+.fx-lamplit .pull-plain i {
+  display: block;
+  width: 22%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.fx-lamplit .pull-plain em {
+  font: italic 500 calc(var(--W) * 0.072) / 1.2 var(--text);
+  opacity: 0.92;
+}
+/* Lamplight on the cover: warm, brightest on the side facing the bulb,
+   falling off away from it, with a gleam that follows the bulb across. */
+.fx-lamplit .pull-warm {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #ffd9aa;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.fx-lamplit .pull-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(
+    140% 115% at
+      calc(50% + clamp(-110px, (var(--lx, 50vw) - var(--px)) * 0.3, 110px))
+      calc(50% + clamp(-150px, (var(--ly, 20vh) - var(--py)) * 0.3, 150px)),
+    rgba(255, 200, 128, 0.2),
+    rgba(0, 0, 0, 0) 36%,
+    rgba(10, 4, 1, 0.52) 100%
+  );
+  pointer-events: none;
+}
+.fx-lamplit .pull-sheen {
+  position: absolute;
+  inset: 0 -60%;
+  z-index: 3;
+  background: linear-gradient(
+    104deg,
+    rgba(255, 230, 180, 0) 40%,
+    rgba(255, 234, 190, 0.36) 50%,
+    rgba(255, 230, 180, 0) 60%
+  );
+  mix-blend-mode: screen;
+  transform: translate3d(-48%, 0, 0);
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s ease;
+  pointer-events: none;
+}
+.fx-lamplit .pull-item.is-out .pull-sheen {
+  opacity: calc(var(--heat, 1) * 0.9);
+  transform: translate3d(
+    clamp(-130px, (var(--lx, 50vw) - var(--px)) * 0.3, 130px),
+    0,
+    0
+  );
+  transition:
+    opacity 0.5s ease 0.2s,
+    transform 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.12s;
+}
+/* Its shadow, thrown away from the bulb across the neighbours and shelf. */
+.fx-lamplit .pull-shadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--W);
+  height: var(--H);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.84);
+  filter: blur(18px);
+  opacity: 0;
+  transform: translate3d(
+      calc(clamp(-70px, (var(--px) - var(--lx, 50vw)) * 0.09, 70px) + 6px),
+      calc(clamp(0px, (var(--py) - var(--ly, 20vh)) * 0.05, 40px) + 24px),
+      0
+    )
+    scale(1.07, 0.97);
+  transition: opacity 0.25s ease;
+}
+.fx-lamplit .pull-shadow::after {
+  content: "";
+  position: absolute;
+  left: -18%;
+  right: -18%;
+  bottom: -14px;
+  height: 30px;
+  background: radial-gradient(closest-side, #000, rgba(0, 0, 0, 0));
+}
+.fx-lamplit .pull-item.is-out .pull-shadow {
+  opacity: 0.88;
+  transition: opacity 0.6s ease 0.16s;
+}
+/* The brass plate beneath, with the title and author. */
+.fx-lamplit .pull-plate {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max-content;
+  max-width: 300px;
+  padding: 9px 28px 10px;
+  border-radius: 2px;
+  background:
+    radial-gradient(
+      circle at 11px 50%,
+      #6b4d1e 0 1.6px,
+      #f7e6b8 2px 2.8px,
+      rgba(0, 0, 0, 0) 3.2px
+    ),
+    radial-gradient(
+      circle at calc(100% - 11px) 50%,
+      #6b4d1e 0 1.6px,
+      #f7e6b8 2px 2.8px,
+      rgba(0, 0, 0, 0) 3.2px
+    ),
+    linear-gradient(168deg, #f8e6b6, #d2aa5e 40%, #a67d38 62%, #dcb970);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 240, 200, 0.5),
+    inset 0 -1px 0 rgba(70, 44, 10, 0.5),
+    0 12px 24px rgba(0, 0, 0, 0.8),
+    0 0 34px rgba(255, 176, 86, 0.2);
+  color: #23160a;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-50%, 10px, 0);
+  transition:
+    opacity 0.15s ease,
+    transform 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+.fx-lamplit .pull.has-plate .pull-plate {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(-50%, 0, 0);
+  transition:
+    opacity 0.32s ease 0.3s,
+    transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s,
+    visibility 0s;
+}
+.fx-lamplit .pull-plate b {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font: 400 1.2rem / 1.08 var(--serif);
+  text-shadow: 0 1px 0 rgba(255, 240, 204, 0.55);
+  text-wrap: balance;
+}
+.fx-lamplit .pull-plate i {
+  display: block;
+  margin-top: 5px;
+  overflow: hidden;
+  font: 600 0.56rem / 1.3 var(--sans);
+  font-style: normal;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #5b3d14;
+}
+.fx-lamplit.is-off .pull-cover::after,
+.fx-lamplit.is-off .pull-spine::after {
+  opacity: 0.86;
+}
+.fx-lamplit.is-off .pull-sheen,
+.fx-lamplit.is-off .pull-shadow {
+  visibility: hidden;
+}
+.fx-lamplit.is-off .pull-plate {
+  filter: brightness(0.4);
+}
+.fx-lamplit.is-reading .pull {
+  visibility: hidden;
+}
+@media (max-width: 719px) {
+  .fx-lamplit .pull-item {
+    perspective: 900px;
+  }
+  .fx-lamplit .pull-plate {
+    padding: 8px 24px 9px;
+  }
+  .fx-lamplit .pull-plate b {
+    font-size: 1.08rem;
+  }
+}
+
+/* ---------------------------------------------------------- view switch */
+
+/* The three rooms, as brass plaques like the category tabs. */
+.fx-lamplit .view-switch {
+  flex: none;
+  display: flex;
+  gap: 6px;
+}
+.fx-lamplit .view-switch button {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 20px 0 22px;
+  border-radius: 2px;
+  background:
+    radial-gradient(
+      circle at 9px 50%,
+      #b8944f 0 1.5px,
+      #201508 1.9px 2.7px,
+      rgba(0, 0, 0, 0) 2.9px
+    ),
+    radial-gradient(
+      circle at calc(100% - 9px) 50%,
+      #b8944f 0 1.5px,
+      #201508 1.9px 2.7px,
+      rgba(0, 0, 0, 0) 2.9px
+    ),
+    linear-gradient(180deg, #3b2b13, #1d1408);
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 164, 92, 0.42),
+    inset 0 1px 0 rgba(255, 232, 176, 0.16),
+    0 2px 5px rgba(0, 0, 0, 0.6);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #cfb173;
+  transition:
+    color 0.25s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease;
+}
+.fx-lamplit .view-switch button svg {
+  flex: none;
+  opacity: 0.9;
+}
+.fx-lamplit .view-switch button:hover {
+  color: var(--gold-hi);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 0 0 1px rgba(243, 215, 154, 0.6),
+    inset 0 1px 0 rgba(255, 232, 176, 0.2),
+    0 0 18px rgba(255, 176, 86, 0.16),
+    0 2px 5px rgba(0, 0, 0, 0.6);
+}
+.fx-lamplit .view-switch button:active {
+  transform: translateY(1px);
+}
+.fx-lamplit .view-switch button[aria-pressed="true"] {
+  background:
+    radial-gradient(
+      circle at 9px 50%,
+      #6b4d1e 0 1.5px,
+      #f7e6b8 1.9px 2.7px,
+      rgba(0, 0, 0, 0) 2.9px
+    ),
+    radial-gradient(
+      circle at calc(100% - 9px) 50%,
+      #6b4d1e 0 1.5px,
+      #f7e6b8 1.9px 2.7px,
+      rgba(0, 0, 0, 0) 2.9px
+    ),
+    linear-gradient(180deg, #f8e6b6, #d2aa5e 44%, #a67d38 56%, #dcb970);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 240, 200, 0.5),
+    0 0 22px rgba(255, 180, 90, 0.28),
+    0 2px 5px rgba(0, 0, 0, 0.6);
+  color: #23160a;
+  text-shadow: 0 1px 0 rgba(255, 240, 204, 0.5);
+  cursor: default;
+}
+
+/* Narrower cases: the order and stance controls drop their words, then the
+   rooms take a row of their own above the search. */
+@media (min-width: 720px) and (max-width: 1139px) {
+  .fx-lamplit .sort span,
+  .fx-lamplit .turn button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .fx-lamplit .turn button {
+    position: relative;
+  }
+}
+@media (max-width: 1019px) {
+  .fx-lamplit .tools {
+    flex-wrap: wrap;
+  }
+  .fx-lamplit .view-switch {
+    flex: 1 0 100%;
+  }
+  .fx-lamplit .view-switch button {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+@media (max-width: 719px) {
+  .fx-lamplit .view-switch {
+    gap: 5px;
+  }
+  .fx-lamplit .view-switch button {
+    gap: 6px;
+    height: 40px;
+    padding: 0 6px;
+    background-size:
+      0 0,
+      0 0,
+      auto;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+  }
+  .fx-lamplit .view-switch button[aria-pressed="true"] {
+    background-size:
+      0 0,
+      0 0,
+      auto;
+  }
+}
+
+/* ------------------------------------------------- tabs, status, order */
+
+.fx-lamplit .plates-row .status {
+  margin-top: 9px;
+}
+.fx-lamplit .sort-icon {
+  display: none;
+}
+/* Narrower desktops: the tabs tighten up, and wrap rather than clip. */
+@media (min-width: 720px) and (max-width: 1279px) {
+  .fx-lamplit .plates {
+    flex-wrap: wrap;
+    gap: 6px;
+    overflow: visible;
+  }
+  .fx-lamplit .plate {
+    gap: 7px;
+    padding: 0 16px;
+    letter-spacing: 0.1em;
+  }
+}
+@media (max-width: 719px) {
+  /* The count is read out to screen readers; on a phone the tabs say it. */
+  .fx-lamplit .plates-row .status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  /* Search, order and stance share one row: order becomes an icon that
+     opens the native list of orders. */
+  .fx-lamplit .find {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .fx-lamplit .sort {
+    position: relative;
+  }
+  .fx-lamplit .sort select {
+    width: 44px;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: transparent;
+  }
+  .fx-lamplit .sort-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: block;
+    color: var(--gold);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
   }
 }
