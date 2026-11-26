@@ -144,6 +144,7 @@ function Shell({
   function closeSheet() {
     unsaved.current = false;
     kept.current = null;
+    setBacked(0);
     sheet.close();
   }
   const value: RoomsValue = { owner, library, open: sheet.open, reduced };

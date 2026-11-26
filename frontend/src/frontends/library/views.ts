@@ -50,3 +50,19 @@ export function rememberView(view: ViewSlug) {
     // Nothing to do: the address still carries the choice.
   }
 }
+
+// Give each history entry a stable view and translate bookmarks saved on
+// the original public shelf. An explicit current parameter wins.
+export function canonicalShelfParams(params: URLSearchParams) {
+  const next = new URLSearchParams(params);
+  next.set("view", readView(params));
+  for (const [old, current] of [
+    ["pick", "book"],
+    ["category", "focus"],
+  ]) {
+    const value = next.get(old);
+    if (value && !next.has(current)) next.set(current, value);
+    next.delete(old);
+  }
+  return next;
+}

@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import {
   columns,
+  completed,
   focuses,
   initialView,
   statuses,
@@ -78,15 +79,18 @@ function arrange(books: Book[], view: View) {
     );
   return found;
 }
-function groups(books: Book[], group: View["group"]) {
+function groups(books: Book[], group: View["group"], sort: View["sort"]) {
   if (group === "None") return [{ name: "", books }];
   const names: readonly string[] = group === "Status" ? statuses : focuses;
   return names
     .map((name) => ({
       name,
-      books: books.filter((b) =>
-        group === "Status" ? b.status === name : b.focus === name,
-      ),
+      books:
+        name === "Completed" && sort === "Shelf order"
+          ? completed(books)
+          : books.filter((b) =>
+              group === "Status" ? b.status === name : b.focus === name,
+            ),
     }))
     .filter((g) => g.books.length);
 }
@@ -443,10 +447,8 @@ export function Collection() {
         </div>
       ) : arrangeOn ? (
         <ArrangeGrid books={library.books} phone={phone} />
-      ) : view.layout === "table" ? (
-        <Table books={found} view={view} set={set} open={open} />
       ) : (
-        groups(found, view.group).map((g) => (
+        groups(found, view.group, view.sort).map((g) => (
           <section
             className="group"
             key={g.name || "all"}
@@ -459,7 +461,9 @@ export function Collection() {
                 <small>{String(g.books.length).padStart(2, "0")}</small>
               </h2>
             )}
-            {view.layout === "spines" ? (
+            {view.layout === "table" ? (
+              <Table books={g.books} view={view} set={set} open={open} />
+            ) : view.layout === "spines" ? (
               <div
                 className="shelf shelf-spines"
                 style={{ "--row": (phone ? 168 : 210) + "px" } as CSSProperties}

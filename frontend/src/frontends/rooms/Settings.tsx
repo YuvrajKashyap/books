@@ -1,6 +1,6 @@
 // Settings: what the library holds, taking a copy out, putting a copy back,
 // and leaving. Restore replaces everything, so it asks twice.
-import { useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Download, FileUp, LogOut, X } from "lucide-react";
 import { readBackup, type Backup } from "../../shared/owner";
@@ -17,6 +17,13 @@ export function Settings({ onClose }: { onClose: () => void }) {
   );
   const [agreed, setAgreed] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const selection = useRef(0);
+  useEffect(
+    () => () => {
+      selection.current++;
+    },
+    [],
+  );
   useDialog(panel, onClose);
 
   const books = library.books;
@@ -29,10 +36,12 @@ export function Settings({ onClose }: { onClose: () => void }) {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    const backup = await readBackup(file);
+    const current = ++selection.current;
+    setChosen(null);
     setAgreed(false);
+    const backup = await readBackup(file);
+    if (current !== selection.current) return;
     if (!backup) {
-      setChosen(null);
       owner.notify("Choose a valid bookshelf JSON backup.");
       return;
     }
@@ -48,8 +57,8 @@ export function Settings({ onClose }: { onClose: () => void }) {
   }
   async function leave() {
     setLeaving(true);
-    await owner.signOut();
-    navigate("/");
+    if (await owner.signOut()) navigate("/shelf", { replace: true });
+    else setLeaving(false);
   }
 
   return (
@@ -205,6 +214,7 @@ export function Settings({ onClose }: { onClose: () => void }) {
                     type="button"
                     className="btn"
                     onClick={() => {
+                      selection.current++;
                       setChosen(null);
                       setAgreed(false);
                     }}

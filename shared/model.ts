@@ -86,5 +86,9 @@ export function nextPick(books: Book[], rotation: number) {
 export function completed(books: Book[]) {
   return books
     .filter((b) => b.status === "Completed")
-    .sort((a, b) => (a.finished || "9999").localeCompare(b.finished || "9999"));
+    .sort((a, b) => {
+      if (!a.finished || !b.finished)
+        return Number(!a.finished) - Number(!b.finished);
+      return a.finished.localeCompare(b.finished);
+    });
 }

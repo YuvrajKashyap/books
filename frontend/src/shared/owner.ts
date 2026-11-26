@@ -228,8 +228,15 @@ export function useOwner() {
     signIn,
     // Signs out on this device only.
     signOut: async () => {
-      await auth?.auth.signOut({ scope: "local" });
-      setLibrary(null);
+      try {
+        if (!auth) return false;
+        const { error } = await auth.auth.signOut({ scope: "local" });
+        if (error) throw error;
+        return true;
+      } catch {
+        setMessage("Could not sign out. Please try again.");
+        return false;
+      }
     },
     mutate,
     exportLibrary: () => {

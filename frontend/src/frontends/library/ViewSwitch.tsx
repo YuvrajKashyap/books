@@ -2,7 +2,7 @@
 // view places it in its own controls and styles `.view-switch` to match.
 import { useSearchParams } from "react-router-dom";
 import { Lamp, Orbit, Rotate3d } from "lucide-react";
-import { firstView, readView, views, type ViewSlug } from "./views";
+import { readView, views, type ViewSlug } from "./views";
 
 const icons = { lamp: Lamp, rotunda: Rotate3d, gravity: Orbit };
 
@@ -16,8 +16,7 @@ export function useShelfView(): [ViewSlug, (view: ViewSlug) => void] {
     // view it was opened in. Search, category and sort carry over.
     q.delete("layout");
     q.delete("book");
-    if (next === firstView) q.delete("view");
-    else q.set("view", next);
+    q.set("view", next);
     setParams(q);
   }
   return [view, setView];

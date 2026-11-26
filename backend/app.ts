@@ -1,4 +1,5 @@
 import { ownerLogin } from "./login.js";
+import { movedPositions } from "./reorder.js";
 import { publicBookKey } from "../shared/public-book-key.js";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
@@ -174,7 +175,9 @@ app.post("/api/command", async (c) => {
         : old.status !== b.status
           ? "Moved to " + b.status
           : changes.includes("progress")
-            ? "Progress updated to " + (b.progress ?? 0) + "%"
+            ? b.progress === null
+              ? "Progress cleared"
+              : "Progress updated to " + b.progress + "%"
             : "Edited " + (changes.join(", ") || "book");
       const history = [
         ...(old?.history || []),
@@ -221,7 +224,7 @@ app.post("/api/command", async (c) => {
     } else if (action.op === "move" || action.op === "shelfMove") {
       const isQueue = action.op === "move";
       const books =
-        await tx`select id,position,queue_position,focus,status from books.titles order by ${isQueue ? tx`queue_position` : tx`position`},id`;
+        await tx<{ id: string; position: number; queue_position: number; focus: string; status: string }[]>`select id,position,queue_position,focus,status from books.titles order by ${isQueue ? tx`queue_position,position` : tx`position`},id`;
       const moving = books.find((b) => b.id === action.id),
         target = books.find((b) => b.id === action.target);
       if (!moving || !target) throw new HTTPException(404);
@@ -240,13 +243,7 @@ app.post("/api/command", async (c) => {
           )
         : Array.from(books);
       const col = isQueue ? "queue_position" : "position";
-      const slots = lane.map((b) => Number(b[col]));
-      const to = lane.indexOf(target);
-      lane.splice(lane.indexOf(moving), 1);
-      lane.splice(to, 0, moving);
-      const changes = lane.flatMap((b, i) =>
-        b[col] === slots[i] ? [] : [{ id: b.id, pos: slots[i] }],
-      );
+      const changes = movedPositions(lane, lane.indexOf(moving), lane.indexOf(target), col);
       if (changes.length)
         await tx`update books.titles t set ${tx(col)}=p.pos from jsonb_to_recordset(${tx.json(changes)}::jsonb) as p(id text,pos integer) where t.id=p.id`;
     } else if (action.op === "rotation")

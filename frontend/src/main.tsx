@@ -24,7 +24,9 @@ function once(load: Frontend["load"]) {
 }
 
 function Site({ frontend }: { frontend: Frontend }) {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const pathname = location.pathname.replace(/\/+$/, "") || "/";
+  const params = new URLSearchParams(location.search);
   const Main = once(frontend.load);
   if (!frontend.rooms) return <Main />;
   // A paired frontend: the public page at "/", the owner's rooms elsewhere.
@@ -33,10 +35,18 @@ function Site({ frontend }: { frontend: Frontend }) {
   // shows the public page to anyone.
   if (
     pathname === "/shelf" ||
-    (pathname === "/" && (preview || !sessionMayExist()))
+    (pathname === "/" &&
+      (preview ||
+        ["pick", "view", "category", "focus", "q"].some((key) =>
+          params.has(key),
+        ) ||
+        !sessionMayExist()))
   )
     return <Main />;
-  if (pathname === "/") return <Navigate to="/room" replace />;
+  if (pathname === "/")
+    return (
+      <Navigate to={{ pathname: "/room", search: location.search }} replace />
+    );
   const Rooms = once(frontend.rooms);
   return <Rooms />;
 }

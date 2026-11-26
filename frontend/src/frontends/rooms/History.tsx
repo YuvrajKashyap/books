@@ -1,4 +1,4 @@
-// Finished books laid along a worldline: now at the top, the past below,
+// Finished books laid along a worldline: oldest first,
 // each year a strip of film. Dates are shown only when they are recorded.
 import { useMemo, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
@@ -30,18 +30,13 @@ export function History() {
         map.set(y, { key: y, year: b.finished ? Number(y) : null, books: [] });
       map.get(y)!.books.push(b);
     }
-    const list = [...map.values()];
-    for (const y of list)
-      y.books.sort((a, b) =>
-        (b.finished ?? "").localeCompare(a.finished ?? ""),
-      );
-    return list.sort((a, b) => (b.year ?? -1) - (a.year ?? -1));
+    return [...map.values()];
   }, [done]);
 
   const dated = years.filter((y) => y.year !== null);
   const undated = years.find((y) => y.year === null);
   const span = dated.length
-    ? { from: dated[dated.length - 1].year!, to: dated[0].year! }
+    ? { from: dated[0].year!, to: dated[dated.length - 1].year! }
     : null;
   const scale = span
     ? Array.from({ length: span.to - span.from + 1 }, (_, i) => {
@@ -139,9 +134,6 @@ export function History() {
       )}
 
       <ol className="line">
-        <li className="line-now" aria-hidden="true">
-          <span>now</span>
-        </li>
         {years.map((y) => (
           <li className="yr" id={"year-" + y.key} key={y.key}>
             <div className="yr-mark">

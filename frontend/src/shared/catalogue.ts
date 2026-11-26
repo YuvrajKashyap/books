@@ -47,6 +47,7 @@ function shelfOrder(a: ShelfBook, b: ShelfBook) {
 }
 
 let cached: ShelfBook[] | undefined;
+let fetchedAt = 0;
 export function useShelf() {
   const [books, setBooks] = useState<ShelfBook[]>(cached ?? []);
   const [state, setState] = useState<"loading" | "ok" | "error">(
@@ -54,19 +55,21 @@ export function useShelf() {
   );
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    if (cached && !attempt) return;
+    if (cached && !attempt && Date.now() - fetchedAt < 30_000) return;
     const ac = new AbortController();
-    setState("loading");
+    if (!cached) setState("loading");
     fetch("/api/shelf", { signal: ac.signal })
       .then(async (r) => {
         if (!r.ok) throw Error();
         const data = await r.json();
+        if (ac.signal.aborted) return;
         cached = (data.books as ShelfBook[]).sort(shelfOrder);
+        fetchedAt = Date.now();
         setBooks(cached);
         setState("ok");
       })
       .catch(() => {
-        if (!ac.signal.aborted) setState("error");
+        if (!ac.signal.aborted && !cached) setState("error");
       });
     return () => ac.abort();
   }, [attempt]);
@@ -157,27 +160,26 @@ export function bookArt(book: ShelfBook): BookArt {
 
 // The published synopsis for one book. Pass owner=true with a private book id.
 export function useNote(id: string | undefined, owner = false) {
-  const [note, setNote] = useState<Note | null | undefined>(() =>
-    id && !owner ? cachedNote(id) : undefined,
-  );
-  const [failed, setFailed] = useState(false);
+  const [result, setResult] = useState<{
+    id: string;
+    owner: boolean;
+    note?: Note | null;
+    failed?: boolean;
+  }>();
   const [attempt, setAttempt] = useState(0);
+  const current =
+    result?.id === id && result?.owner === owner ? result : undefined;
+  const cached = id && !owner ? cachedNote(id) : undefined;
+  const note = cached === undefined ? current?.note : cached;
   useEffect(() => {
-    setFailed(false);
-    if (!id) {
-      setNote(undefined);
-      return;
-    }
-    const ready = owner ? undefined : cachedNote(id);
-    setNote(ready);
-    if (ready !== undefined) return;
+    if (!id || (!owner && cachedNote(id) !== undefined)) return;
     let active = true;
     (owner ? readOwnerNote(id) : readNote(id))
       .then((data) => {
-        if (active) setNote(data);
+        if (active) setResult({ id, owner, note: data });
       })
       .catch(() => {
-        if (active) setFailed(true);
+        if (active) setResult({ id, owner, failed: true });
       });
     return () => {
       active = false;
@@ -185,12 +187,16 @@ export function useNote(id: string | undefined, owner = false) {
   }, [id, owner, attempt]);
   return {
     note, // undefined while loading, null when the book has none
-    state: failed
-      ? ("error" as const)
-      : note === undefined
-        ? ("loading" as const)
-        : ("ok" as const),
-    retry: () => setAttempt((n) => n + 1),
+    state:
+      current?.failed && note === undefined
+        ? ("error" as const)
+        : note === undefined
+          ? ("loading" as const)
+          : ("ok" as const),
+    retry: () => {
+      setResult(undefined);
+      setAttempt((n) => n + 1);
+    },
   };
 }
 
