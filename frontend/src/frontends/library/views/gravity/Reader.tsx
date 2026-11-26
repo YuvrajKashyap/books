@@ -3,8 +3,8 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import type { KeyboardEvent, RefObject } from "react";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
-import { useNote } from "../../shared/catalogue";
-import type { BookArt, ShelfBook } from "../../shared/catalogue";
+import { useNote } from "../../../../shared/catalogue";
+import type { BookArt, ShelfBook } from "../../../../shared/catalogue";
 import { Jacket } from "./Jacket";
 import type { Pose } from "./Jacket";
 import { clamp, pad } from "./layout";
@@ -65,22 +65,33 @@ export function Reader(props: Props) {
     if (!el || still || !el.animate) return;
     const to = el.getBoundingClientRect();
     const o = props.origin;
+    // The book lifts off its shelf, arcs up toward the viewer, overshoots a
+    // touch and settles: a throw, not a slide.
+    const dx = o ? o.left + o.width / 2 - (to.left + to.width / 2) : 0;
+    const dy = o ? o.top + o.height / 2 - (to.top + to.height / 2) : 0;
+    const s0 = o ? clamp(o.height / to.height, 0.05, 2) : 1;
+    const arc = Math.min(140, 40 + Math.abs(dy) * 0.22);
     const anim = o
       ? el.animate(
           [
             {
-              transform: `translate(${o.left + o.width / 2 - (to.left + to.width / 2)}px, ${o.top + o.height / 2 - (to.top + to.height / 2)}px) scale(${clamp(o.height / to.height, 0.05, 2)})`,
+              transform: `translate(${dx}px, ${dy}px) scale(${s0})`,
               offset: 0,
-              easing: "cubic-bezier(.5,0,.75,.4)",
+              easing: "cubic-bezier(.4,0,.7,.5)",
             },
             {
-              transform: "translate(0px, 10px) scale(1.07)",
-              offset: 0.66,
+              transform: `translate(${dx * 0.42}px, ${dy * 0.42 - arc}px) scale(${s0 + (1 - s0) * 0.5})`,
+              offset: 0.4,
+              easing: "cubic-bezier(.3,.5,.4,1)",
+            },
+            {
+              transform: "translate(0px, 8px) scale(1.06)",
+              offset: 0.72,
               easing: "cubic-bezier(.2,.7,.2,1)",
             },
             { transform: "translate(0px, 0px) scale(1)", offset: 1 },
           ],
-          { duration: 980 },
+          { duration: 1000 },
         )
       : // No shelf copy to fly from (a direct link): rise into place, never hidden.
         el.animate(

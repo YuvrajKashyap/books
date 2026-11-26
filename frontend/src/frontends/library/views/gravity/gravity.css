@@ -2189,3 +2189,249 @@ html:has(.fx-gravity.is-reading) {
     display: none;
   }
 }
+
+/* ---- third pass ---- */
+
+/* The switch between the three views of the shelf, in instrument dress. */
+.fx-gravity .view-switch {
+  flex: none;
+  display: flex;
+  margin-left: auto;
+  border: 1px solid var(--faint);
+  border-radius: 2px;
+}
+.fx-gravity .view-switch + .gw-sort {
+  margin-left: 0;
+}
+.fx-gravity .view-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+.fx-gravity .view-switch button + button {
+  border-left: 1px solid rgba(169, 196, 255, 0.12);
+}
+.fx-gravity .view-switch button:hover {
+  color: var(--ink);
+}
+.fx-gravity .view-switch button[aria-pressed="true"] {
+  color: var(--warm);
+  background: var(--warm-soft);
+  box-shadow: inset 0 -1px 0 var(--warm);
+}
+.fx-gravity .view-switch svg {
+  flex: none;
+}
+
+/* The console is solid where the controls sit, so nothing reads through it. */
+.fx-gravity .gw-console {
+  background: linear-gradient(
+    to top,
+    rgba(5, 7, 12, 0.98) 0,
+    rgba(5, 7, 12, 0.96) 66%,
+    rgba(5, 7, 12, 0)
+  );
+}
+
+/* One line of introduction on a wide screen, clear of the far shelves. */
+@media (min-width: 1000px) {
+  .fx-gravity .gw-lede {
+    max-width: none;
+    white-space: nowrap;
+  }
+  .fx-gravity .gw-foot .gw-lede {
+    max-width: 60ch;
+    white-space: normal;
+  }
+}
+
+/* A pulled book comes up and forward, clear of its neighbours and of the
+   shelf in front, so the whole cover can be read. */
+.fx-gravity .gw-slot.is-pulled .gw-shift {
+  transform: translate3d(0, -42px, 76px);
+}
+.fx-gravity .gw-slot.is-spine.is-pulled .gw-shift {
+  transform: translate3d(0, -28px, 196px);
+}
+.fx-gravity .gw-slot.is-spine.is-pulled .gw-vol {
+  transform: rotateY(22deg);
+}
+.fx-gravity.is-reading .gw-slot .gw-shift {
+  transform: translate3d(0, 0, -1300px);
+}
+
+/* Scene labels step aside for the footer. */
+.fx-gravity .gw-world.is-past .gw-mark span {
+  opacity: 0;
+}
+.fx-gravity .gw-foot {
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 7, 12, 0) 0,
+    rgba(5, 7, 12, 0.72) 30%,
+    rgba(5, 7, 12, 0.9)
+  );
+}
+.fx-gravity .gw-ledger {
+  background: rgba(5, 7, 12, 0.55);
+}
+.fx-gravity .gw-ledger th:first-child {
+  padding-left: 10px;
+}
+.fx-gravity .gw-ledger td:last-child,
+.fx-gravity .gw-ledger th:last-child {
+  padding-right: 10px;
+}
+
+@media (max-width: 1180px) {
+  .fx-gravity .view-switch button {
+    padding: 0 10px;
+  }
+  .fx-gravity .view-switch span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .fx-gravity .view-switch button {
+    position: relative;
+    min-width: 38px;
+    justify-content: center;
+  }
+}
+@media (max-width: 899px) {
+  .fx-gravity .gw-console {
+    grid-template-areas:
+      "search view"
+      "chips chips"
+      "sort layout";
+    gap: 7px 10px;
+    padding: 18px 12px calc(9px + env(safe-area-inset-bottom, 0px));
+  }
+  .fx-gravity .view-switch {
+    grid-area: view;
+    margin-left: 0;
+    align-self: center;
+  }
+  .fx-gravity .view-switch button {
+    height: 36px;
+    min-width: 40px;
+  }
+  .fx-gravity .gw-search input {
+    height: 38px;
+  }
+  .fx-gravity .gw-console .gw-strata.is-chips {
+    margin: 0 -12px;
+    padding: 1px 12px;
+  }
+  .fx-gravity .gw-strata.is-chips button {
+    padding: 7px 10px;
+  }
+  .fx-gravity .gw-sort {
+    justify-self: start;
+  }
+  .fx-gravity .gw-sort select,
+  .fx-gravity .gw-layout button {
+    height: 32px;
+  }
+  .fx-gravity .gw-layout {
+    justify-self: end;
+  }
+  .fx-gravity .gw-foot {
+    padding-bottom: 190px;
+  }
+  .fx-gravity .gs-shelf {
+    padding-bottom: 60px;
+  }
+}
+
+/* ---- fourth pass ---- */
+
+/* A shelf passing under the camera dissolves face by face (faces are flat, so
+   fading them keeps every book in 3D) before it can reach the console. */
+.fx-gravity .gw-slot {
+  --near: 0;
+}
+.fx-gravity .gw-face {
+  opacity: calc(1 - var(--near));
+}
+.fx-gravity .gw-plinth {
+  opacity: calc(
+    (1 - max(var(--veil), var(--mute), var(--hush)) * 0.9) * (1 - var(--near))
+  );
+}
+
+/* Past the last shelf the scene's instruments and labels give way to the
+   footer, and the footer is backed wherever it carries text. */
+.fx-gravity .gw-stage.is-past .gw-rail-right,
+.fx-gravity:has(.gw-stage.is-past) .gw-strata.is-rail {
+  opacity: 0;
+  pointer-events: none;
+}
+.fx-gravity .gw-foot {
+  z-index: 3;
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 7, 12, 0) 0,
+    rgba(5, 7, 12, 0.82) 26vh,
+    rgba(5, 7, 12, 0.94) 42vh,
+    rgba(5, 7, 12, 0.97)
+  );
+}
+.fx-gravity .gw-ledger {
+  background: rgba(5, 7, 12, 0.96);
+  box-shadow: 0 0 0 14px rgba(5, 7, 12, 0.96);
+}
+
+/* The introduction keeps its own patch of dark, so no far shelf can cross
+   the words it sits over. */
+.fx-gravity.is-gl .gw-hero .gw-lede {
+  width: fit-content;
+  max-width: min(100%, 47ch);
+  padding: 8px 34px 10px;
+  background: radial-gradient(
+    farthest-side,
+    rgba(5, 7, 12, 0.86) 55%,
+    rgba(5, 7, 12, 0)
+  );
+}
+@media (min-width: 1000px) {
+  .fx-gravity.is-gl .gw-hero .gw-lede {
+    max-width: none;
+  }
+}
+
+/* The view switch: the same instrument dress, comfortable under a thumb. */
+.fx-gravity .view-switch button:focus-visible {
+  outline-offset: -2px;
+}
+@media (max-width: 899px) {
+  .fx-gravity .view-switch button {
+    height: 40px;
+    min-width: 44px;
+  }
+  .fx-gravity .view-switch button[aria-pressed="true"] svg {
+    filter: drop-shadow(0 0 6px rgba(255, 180, 94, 0.7));
+  }
+}
+@media (max-width: 760px) {
+  .fx-gravity.is-gl .gw-hero .gw-lede {
+    max-width: min(100%, 36ch);
+    padding: 6px 18px 8px;
+  }
+}

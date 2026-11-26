@@ -20,9 +20,10 @@ import {
   sorts,
   useShelf,
   useShelfKeys,
-} from "../../shared/catalogue";
-import type { BookArt, Sort } from "../../shared/catalogue";
-import { site, useTitle } from "../../shared/site";
+} from "../../../../shared/catalogue";
+import type { BookArt, Sort } from "../../../../shared/catalogue";
+import { site, useTitle } from "../../../../shared/site";
+import { ViewSwitch } from "../../ViewSwitch";
 import { Reader } from "./Reader";
 import { Stage } from "./Stage";
 import type { Probe, StageApi } from "./Stage";
@@ -97,8 +98,11 @@ export default function GravityWell() {
 
   // ---- the view, kept in the address ----
   const q = params.get("q") ?? "";
+  // The category travels between views by its full name; a short slug from
+  // an older link still works.
+  const focusParam = params.get("focus");
   const focusIdx = focuses.findIndex(
-    (f) => focusSlug(f) === params.get("focus"),
+    (f) => f === focusParam || focusSlug(f) === focusParam,
   );
   const sort: Sort =
     sorts.find((s) => s.value === params.get("sort"))?.value ?? "shelf";
@@ -298,7 +302,7 @@ export default function GravityWell() {
           key={row.focus}
           type="button"
           aria-pressed={focusIdx === i}
-          onClick={() => reform({ focus: focusSlug(row.focus) })}
+          onClick={() => reform({ focus: row.focus })}
         >
           <span>{row.focus}</span>
           <b>{state === "ok" ? row.count : "--"}</b>
@@ -368,8 +372,7 @@ export default function GravityWell() {
               <>
                 <p className="gw-lede">
                   A personal library of {books.length} books in four categories.
-                  They rest on a sheet of spacetime, and each one bends it by
-                  its page count.
+                  Each one bends the sheet by its page count.
                 </p>
                 <dl className="gw-facts">
                   <div>
@@ -385,11 +388,6 @@ export default function GravityWell() {
                     <dd>{num(stats.pages)}</dd>
                   </div>
                 </dl>
-                {gl && (
-                  <p className="gw-cue" aria-hidden="true">
-                    Scroll to travel the shelves
-                  </p>
-                )}
               </>
             )}
             {state === "loading" && (
@@ -502,6 +500,8 @@ export default function GravityWell() {
           </p>
 
           {strata("chips")}
+
+          <ViewSwitch />
 
           <label className="gw-sort">
             <span>Sort</span>
