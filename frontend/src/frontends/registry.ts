@@ -33,4 +33,4 @@ export const frontends: Frontend[] = [
 
 // The one switch. Change this slug, or set VITE_FRONTEND at build time, to
 // change which frontend the live site wears.
-export const ACTIVE: string = import.meta.env.VITE_FRONTEND ?? "current";
+export const ACTIVE: string = import.meta.env.VITE_FRONTEND ?? "library";
