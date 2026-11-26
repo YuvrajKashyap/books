@@ -39,8 +39,8 @@ import {
   useShelfKeys,
   type ShelfBook,
   type Sort,
-} from "../../shared/catalogue";
-import { site, useTitle } from "../../shared/site";
+} from "../../../../shared/catalogue";
+import { site, useTitle } from "../../../../shared/site";
 import {
   Motion,
   bearingOfBook,
@@ -52,6 +52,7 @@ import {
   measure,
   near,
   roman,
+  tierWindow,
   type Anchor,
   type Dims,
   type Layout,
@@ -62,6 +63,7 @@ import { Sky, type SkyHandle } from "./Sky";
 import { Compass, type Tick } from "./Compass";
 import { Reader, type Place } from "./Reader";
 import { Flat } from "./Flat";
+import { ViewSwitch } from "../../ViewSwitch";
 
 type Phase = "dark" | "opening" | "live";
 const THIRD = (Math.PI * 2) / 3;
@@ -191,6 +193,18 @@ export default function Rotunda() {
   const [active, setActive] = useState(0);
   const [win, setWin] = useState<Win>({ c: 0, lo: 0, hi: 1 });
   const [phase, setPhase] = useState<Phase>("dark");
+  // Whether this visit opens with the oculus. Decided once; the instruments
+  // and the dark only wait for the entrance while this is set, so a room that
+  // never animates is still a finished room.
+  const [entering, setEntering] = useState(
+    () =>
+      !bookParam &&
+      !flat &&
+      !(
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ),
+  );
   const [everCovers, setEverCovers] = useState(layout === "covers");
   const [waveAt, setWaveAt] = useState(0);
   const [linger, setLinger] = useState<Linger>(null);
@@ -247,6 +261,8 @@ export default function Rotunda() {
   );
   const iris = useRef(0);
   const placed = useRef(false);
+  const stalled = useRef(false);
+  const introTimers = useRef<number[]>([]);
 
   const register = useCallback((id: string, el: HTMLElement | null) => {
     if (el) registry.current.set(id, el);
@@ -367,21 +383,26 @@ export default function Rotunda() {
       motion.turn = home;
       iris.current = 1;
       setPhase("live");
+      setEntering(false);
     } else {
       motion.turn = home - THIRD;
       intro.current = { t0: performance.now(), stage: 0, home };
+      // The entrance is also on a clock, so it ends even if no frame is drawn.
+      introTimers.current = [
+        window.setTimeout(() => {
+          if (intro.current) setPhase((p) => (p === "dark" ? "opening" : p));
+        }, 1200),
+        window.setTimeout(() => endIntro(), 4800),
+      ];
     }
     setActive(at.t);
     live.current.active = at.t;
-    const w = {
-      c: motion.turn,
-      lo: Math.max(0, at.t - 1),
-      hi: Math.min(3, at.t + 1),
-    };
+    const w = { c: motion.turn, ...tierWindow(dims, at.t) };
     live.current.win = w;
     setWin(w);
   }, [shelf.state, total, tiers]);
 
+  useEffect(() => () => introTimers.current.forEach(clearTimeout), []);
   const endIntro = useCallback(() => {
     const it = intro.current;
     if (!it) return;
@@ -450,21 +471,32 @@ export default function Rotunda() {
   // ---- the reader --------------------------------------------------------
   const openBook = useCallback(
     (book: ShelfBook) => {
-      const hit = registry.current
-        .get(book.id)
-        ?.querySelector<HTMLElement>(".hit");
-      const flatHit = hit
+      // The flight starts from the copy as it is seen: a cover if it faces
+      // you (face-out, or drawn out and turned), else its spine.
+      const slot = registry.current.get(book.id);
+      const L = live.current;
+      const at = L.where.get(book.id);
+      const showsCover =
+        Boolean(slot) &&
+        ((at && L.tiers[at.t].layout === "covers") ||
+          (slot!.dataset.front === "1" &&
+            root.current?.classList.contains("settled")));
+      const seen = slot?.querySelector<HTMLElement>(
+        showsCover ? ".face.front" : ".face.spine",
+      );
+      const flatHit = slot
         ? null
         : root.current?.querySelector<HTMLElement>(`[data-book="${book.id}"]`);
-      const r = (hit ?? flatHit)?.getBoundingClientRect();
-      origin.current = r
-        ? {
-            x: r.left + r.width / 2,
-            y: r.top + r.height / 2,
-            h: r.height,
-            spine: r.width < r.height * 0.4,
-          }
-        : null;
+      const r = (seen ?? flatHit)?.getBoundingClientRect();
+      origin.current =
+        r && r.width > 0 && r.height > 0
+          ? {
+              x: r.left + r.width / 2,
+              y: r.top + r.height / 2,
+              h: r.height,
+              spine: seen ? !showsCover : r.width < r.height * 0.4,
+            }
+          : null;
       setParams(
         (prev) => {
           const next = new URLSearchParams(prev);
@@ -539,7 +571,7 @@ export default function Rotunda() {
           x: dims.vw / 2,
           y: dims.vh / 2 + dims.cy + shift + dims.H * 0.53 - h / 2,
           h,
-          spine: layout === "spines",
+          spine: tiers[t].layout === "spines",
         };
     if (at)
       readerPlace = `${roman[at.t]} · ${short(focuses[at.t])} · ${at.i + 1} of ${tiers[at.t].books.length}`;
@@ -707,8 +739,13 @@ export default function Rotunda() {
       wasSettled = false,
       lastSkyTurn = NaN,
       lastIris = -1;
+    let lastFrameAt = performance.now();
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
+      lastFrameAt = performance.now();
+      tick(now, false);
+    };
+    const tick = (now: number, forced: boolean) => {
       const dt = Math.min(0.034, Math.max(0.001, (now - last) / 1000));
       last = now;
       n++;
@@ -745,7 +782,7 @@ export default function Rotunda() {
       if (dome.current)
         dome.current.style.transform = `translateY(${(lookUp * D.ow * 0.19).toFixed(1)}px)`;
       if (floor.current)
-        floor.current.style.transform = `translateY(${(-lookDown * D.fw * 0.14).toFixed(1)}px)`;
+        floor.current.style.transform = `translateY(${(-lookDown * D.fw * 0.07).toFixed(1)}px)`;
       ladder.current?.style.setProperty("--lift", m.lift.toFixed(3));
 
       const speed = Math.min(1, Math.abs(m.vel) / 7);
@@ -848,8 +885,7 @@ export default function Rotunda() {
       }
 
       // Build only the arc that faces us.
-      const lo = Math.max(0, Math.floor(m.lift + 0.5) - 1);
-      const hi = Math.min(3, Math.ceil(m.lift - 0.5) + 1);
+      const { lo, hi } = tierWindow(D, m.lift);
       const w = L.win;
       if (Math.abs(m.turn - w.c) > 0.13 || lo !== w.lo || hi !== w.hi) {
         L.win = { c: m.turn, lo, hi };
@@ -858,9 +894,9 @@ export default function Rotunda() {
 
       // The sky wheels slowly on its own and is dragged by the room.
       if (!L.reduce) skyTime += dt;
-      const fast = m.busy || Boolean(it);
+      const fast = forced || m.busy || Boolean(it);
       const due = L.reduce
-        ? m.turn !== lastSkyTurn || iris.current !== lastIris
+        ? forced || m.turn !== lastSkyTurn || iris.current !== lastIris
         : fast || n % 3 === 0;
       if (due) {
         lastSkyTurn = m.turn;
@@ -875,17 +911,34 @@ export default function Rotunda() {
     };
     const start = () => {
       cancelAnimationFrame(raf);
-      last = performance.now();
+      last = lastFrameAt = performance.now();
       raf = requestAnimationFrame(frame);
     };
     const visible = () => {
       if (document.hidden) cancelAnimationFrame(raf);
       else start();
     };
+    // Frames can stop coming: a background tab, a throttled or frozen page.
+    // Nothing may be left half-done when they do, so a slow timer notices,
+    // drops every transition and carries the room straight to where it was
+    // heading. When frames return the motion returns with them.
+    const beat = window.setInterval(() => {
+      if (document.hidden) return;
+      const quiet = performance.now() - lastFrameAt > 1500;
+      if (quiet !== stalled.current) {
+        stalled.current = quiet;
+        root.current?.classList.toggle("stalled", quiet);
+      }
+      if (!quiet) return;
+      if (intro.current) endIntro();
+      motion.finish();
+      tick(performance.now(), true);
+    }, 750);
     start();
     document.addEventListener("visibilitychange", visible);
     return () => {
       cancelAnimationFrame(raf);
+      clearInterval(beat);
       document.removeEventListener("visibilitychange", visible);
     };
   }, [flat, motion]);
@@ -940,11 +993,16 @@ export default function Rotunda() {
           ref={searchBox}
           type="search"
           value={q}
-          placeholder="Title or author"
+          placeholder={dims.phone ? "Search" : "Title or author"}
           autoComplete="off"
           spellCheck={false}
           enterKeyHint="search"
-          onChange={(e) => setParam("q", e.target.value || null)}
+          onChange={(e) => {
+            // The shelf answers from where you stand outwards: matches step
+            // forward and the rest fall back in a ripple from the centre.
+            setWaveAt(motion.turn);
+            setParam("q", e.target.value || null);
+          }}
           onKeyDown={(e) => {
             if (e.key === "Escape" && q) {
               e.preventDefault();
@@ -1089,7 +1147,7 @@ export default function Rotunda() {
       closing={shown.closing}
       origin={origin.current}
       landing={landing}
-      still={reduce || flat}
+      still={reduce || flat || stalled.current}
       place={readerPlace}
       onClose={closeBook}
       onClosed={closed}
@@ -1137,6 +1195,7 @@ export default function Rotunda() {
           <header className="flat-head">
             <h1>{site.name}</h1>
             {lede}
+            <ViewSwitch className="views" />
             {find}
             {rungs}
           </header>
@@ -1177,6 +1236,7 @@ export default function Rotunda() {
       className={
         "fx-rotunda phase-" +
         phase +
+        (entering ? " entering" : "") +
         " as-" +
         layout +
         (shown && !shown.closing ? " reading" : "") +
@@ -1210,7 +1270,6 @@ export default function Rotunda() {
                 <Ring
                   tiers={tiers}
                   dims={dims}
-                  layout={layout}
                   win={win}
                   active={active}
                   lit={lit}
@@ -1251,6 +1310,7 @@ export default function Rotunda() {
 
       <div className="hud" inert={shown ? true : undefined}>
         {lede}
+        <ViewSwitch className="views" />
         {find}
         {rungs}
         <div className="plate" ref={plate} aria-hidden="true">

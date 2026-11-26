@@ -159,23 +159,53 @@ html:has(.fx-rotunda) body {
   display: block;
   backface-visibility: visible;
 }
+/* The walnut is a canvas per panel (see wood.ts); the light and the shadow
+   under each shelf lie over it. */
 .fx-rotunda .wall {
-  background-color: #150c07;
+  overflow: hidden;
+  background-color: #1c110a;
+  transform-style: flat;
+}
+.fx-rotunda .wall .grain {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.fx-rotunda .wall::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image:
     linear-gradient(
       180deg,
-      rgba(3, 3, 8, 0.96) 0%,
-      rgba(5, 4, 9, 0.7) 20%,
-      rgba(14, 8, 5, 0.42) 62%,
-      rgba(30, 16, 7, 0.2) 100%
+      rgba(3, 3, 8, 0.9) 0%,
+      rgba(5, 4, 9, 0.58) 18%,
+      rgba(14, 8, 5, 0.3) 60%,
+      rgba(30, 16, 7, 0.1) 100%
     ),
     linear-gradient(
       0deg,
-      rgba(255, 168, 84, 0.16) 0%,
-      rgba(255, 168, 84, 0) 46%
+      rgba(255, 170, 90, 0.2) 0%,
+      rgba(255, 170, 90, 0) 50%
     ),
-    url("/materials/walnut.webp");
-  background-repeat: repeat-y, repeat-y, repeat;
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.42) 0,
+      rgba(0, 0, 0, 0) 3px,
+      rgba(0, 0, 0, 0) calc(100% - 2px),
+      rgba(255, 214, 160, 0.08) 100%
+    );
+  background-size:
+    100% var(--pitch),
+    100% var(--pitch),
+    100% 100%;
+  background-position:
+    0 var(--wy, 0),
+    0 var(--wy, 0),
+    0 0;
+  background-repeat: repeat-y, repeat-y, no-repeat;
 }
 .fx-rotunda .board {
   background-color: #2a180c;
@@ -221,20 +251,24 @@ html:has(.fx-rotunda) body {
 }
 
 /* a book */
+/* The tier you stand at is in full light; the ones above and below are in
+   moonlit dusk, dimmer but still plainly books, so the room reads as tall. */
 .fx-rotunda .tier {
-  --shade: 0.3;
+  --shade: 0.2;
 }
 .fx-rotunda .tier.on {
   --shade: 0;
 }
 .fx-rotunda .tier.off {
-  --shade: 0.74;
+  --shade: 0.52;
 }
 .fx-rotunda.searching .tier:not(.off) {
   --shade: 0.06;
 }
+/* A book that does not answer a search falls back and dims, but stays a
+   book you can read and reach. */
 .fx-rotunda .tier .slot.sunk {
-  --shade: 0.88;
+  --shade: 0.6;
 }
 .fx-rotunda .slot {
   transition: transform 1.05s cubic-bezier(0.6, 0, 0.2, 1) var(--wave, 0ms);
@@ -267,8 +301,25 @@ html:has(.fx-rotunda) body {
 }
 .fx-rotunda .slot.sunk .rise,
 .fx-rotunda .slot.sunk[data-front] .rise {
-  transform: translate3d(0, 0, -46px);
-  transition-duration: 0.8s;
+  transform: translate3d(0, 0, -40px);
+  transition: transform 0.8s cubic-bezier(0.5, 0, 0.2, 1)
+    calc(var(--wave, 0ms) * 0.55);
+}
+/* A match steps forward off the shelf, in the same ripple, and catches the
+   moonlight along its edge. */
+.fx-rotunda .slot.match .rise {
+  transform: translate3d(0, -10px, 30px);
+  transition: transform 0.9s cubic-bezier(0.25, 1.3, 0.35, 1)
+    calc(var(--wave, 0ms) * 0.55);
+}
+.fx-rotunda .slot.match .face.spine::before,
+.fx-rotunda .slot.match .face.front::before {
+  box-shadow:
+    inset 0 0 0 1px rgba(214, 226, 255, 0.75),
+    inset 0 0 18px rgba(214, 226, 255, 0.35);
+}
+.fx-rotunda.settled.as-spines .tier.on .slot.match[data-front] .rise {
+  transition-delay: 0.12s;
 }
 .fx-rotunda .slot.sunk:hover .rise,
 .fx-rotunda .slot.sunk:focus-within .rise {
@@ -310,10 +361,14 @@ html:has(.fx-rotunda) body {
   position: absolute;
   inset: 0;
   z-index: 3;
-  background: #04050c;
+  background: #060820;
   opacity: var(--shade, 0);
   transition: opacity 0.6s ease;
   pointer-events: none;
+}
+.fx-rotunda .slot.sunk .face::after,
+.fx-rotunda .slot.match .face::after {
+  transition-delay: calc(var(--wave, 0ms) * 0.55);
 }
 .fx-rotunda .face.front::before {
   background:
@@ -454,7 +509,69 @@ html:has(.fx-rotunda) body {
   font-style: italic;
 }
 .fx-rotunda .tier:not(.on) .plaque {
-  filter: brightness(0.5);
+  filter: brightness(0.66) saturate(0.85);
+}
+
+/* The plate's bay: an arched niche, darker than the wall, with a little
+   light falling into it from above. */
+.fx-rotunda .niche {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  border-radius: 999px 999px 2px 2px;
+  background:
+    radial-gradient(
+      ellipse 60% 46% at 50% 8%,
+      rgba(255, 214, 150, 0.2),
+      rgba(255, 214, 150, 0) 100%
+    ),
+    linear-gradient(180deg, #0a0605 0%, #160d07 70%, #24150b 100%);
+  box-shadow:
+    inset 0 0 0 calc(2px * var(--u)) rgba(201, 163, 90, 0.5),
+    inset 0 0 0 calc(5px * var(--u)) rgba(10, 6, 3, 0.9),
+    inset 0 0 0 calc(6px * var(--u)) rgba(201, 163, 90, 0.22),
+    inset 0 calc(24px * var(--u)) calc(40px * var(--u)) rgba(0, 0, 0, 0.7);
+}
+.fx-rotunda .tier:not(.on) .niche {
+  filter: brightness(0.7);
+}
+
+/* A short tier stands its books face-out, each on a brass stand in a pool
+   of its own light, spaced like a small exhibition rather than a gap. */
+.fx-rotunda .halo,
+.fx-rotunda .stand {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  pointer-events: none;
+}
+.fx-rotunda .halo {
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 46%,
+    rgba(255, 206, 140, 0.26) 0%,
+    rgba(255, 190, 120, 0.1) 46%,
+    rgba(255, 190, 120, 0) 72%
+  );
+  transition: opacity 0.6s ease;
+}
+.fx-rotunda .tier:not(.on) .halo {
+  opacity: 0.55;
+}
+.fx-rotunda .slot.sunk .halo {
+  opacity: 0.2;
+}
+.fx-rotunda .stand {
+  border-radius: 1px 1px 3px 3px;
+  background: var(--plate);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.7),
+    0 6px 10px rgba(0, 0, 0, 0.55);
+}
+.fx-rotunda .tier.spaced .slot[data-front] .rise {
+  transform: translate3d(0, -8px, 24px);
 }
 
 /* dark towards the edges of the curve, and above and below */
@@ -473,10 +590,10 @@ html:has(.fx-rotunda) body {
     ),
     linear-gradient(
       180deg,
-      rgba(5, 6, 13, 0.5) 0%,
-      rgba(5, 6, 13, 0) 20%,
-      rgba(5, 6, 13, 0) 80%,
-      rgba(5, 6, 13, 0.5) 100%
+      rgba(5, 6, 13, 0.34) 0%,
+      rgba(5, 6, 13, 0) 18%,
+      rgba(5, 6, 13, 0) 82%,
+      rgba(5, 6, 13, 0.34) 100%
     );
 }
 
@@ -493,7 +610,7 @@ html:has(.fx-rotunda) body {
     transform 1.3s cubic-bezier(0.7, 0, 0.2, 1),
     opacity 0.9s ease;
 }
-.fx-rotunda.phase-dark .shaft-wrap {
+.fx-rotunda.entering.phase-dark .shaft-wrap {
   transform: scaleY(0);
   opacity: 0;
 }
@@ -548,7 +665,7 @@ html:has(.fx-rotunda) body {
   pointer-events: none;
   transition: opacity 2.4s cubic-bezier(0.5, 0, 0.3, 1) 0.15s;
 }
-.fx-rotunda.phase-dark .veil {
+.fx-rotunda.entering.phase-dark .veil {
   opacity: 1;
   transition: none;
 }
@@ -858,30 +975,38 @@ html:has(.fx-rotunda) body {
 }
 .fx-rotunda .hud > * {
   pointer-events: auto;
-  transition: opacity 1s ease;
 }
-.fx-rotunda:not(.phase-live) .hud > :not(.wait):not(.error) {
-  opacity: 0;
-  pointer-events: none;
+/* The instruments are always there. On a first visit they arrive one by one
+   once the oculus has opened; if the entrance is cut short they are simply
+   there, and if animation never runs at all, nothing is left hidden. */
+.fx-rotunda.entering .hud > :not(.wait):not(.empty):not(.plate) {
+  animation: fx-rotunda-arrive 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 2.3s
+    backwards;
 }
-.fx-rotunda:not(.phase-live) .hud .plate {
+.fx-rotunda.entering .hud > .views {
+  animation-delay: 2.42s;
+}
+.fx-rotunda.entering .hud > .find {
+  animation-delay: 2.5s;
+}
+.fx-rotunda.entering .hud > .ladder {
+  animation-delay: 2.62s;
+}
+.fx-rotunda.entering .hud > .readout {
+  animation-delay: 2.74s;
+}
+.fx-rotunda.entering.phase-live .hud > * {
+  animation-delay: 0s !important;
+}
+.fx-rotunda.entering:not(.phase-live) .hud .plate {
   visibility: hidden;
-}
-.fx-rotunda.reading .hud {
-  opacity: 0;
-  transition: opacity 0.5s ease;
 }
 .fx-rotunda .hud {
   transition: opacity 0.7s ease 0.2s;
 }
-.fx-rotunda.phase-live .hud > .find {
-  transition-delay: 0.12s;
-}
-.fx-rotunda.phase-live .hud > .ladder {
-  transition-delay: 0.24s;
-}
-.fx-rotunda.phase-live .hud > .readout {
-  transition-delay: 0.36s;
+.fx-rotunda.reading .hud {
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 .fx-rotunda .lede {
@@ -908,10 +1033,72 @@ html:has(.fx-rotunda) body {
   line-height: 1.5;
 }
 
-.fx-rotunda .find {
+/* The three ways into the shelf, as a brass selector over the search. */
+.fx-rotunda .view-switch {
   position: absolute;
   right: 30px;
   top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 306px;
+  height: 36px;
+  padding: 2px;
+  border: 1px solid rgba(201, 163, 90, 0.55);
+  border-radius: 3px;
+  background: rgba(9, 11, 27, 0.78);
+  box-shadow:
+    inset 0 0 0 1px rgba(9, 11, 27, 0.9),
+    0 10px 26px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.fx-rotunda .view-switch button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  border-radius: 2px;
+  color: rgba(233, 227, 210, 0.72);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+.fx-rotunda .view-switch button svg {
+  flex: none;
+  color: var(--brass);
+  transition: color 0.3s;
+}
+.fx-rotunda .view-switch button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fx-rotunda .view-switch button:hover {
+  background: rgba(201, 163, 90, 0.14);
+  color: var(--ink);
+}
+.fx-rotunda .view-switch button[aria-pressed="true"] {
+  background: var(--plate);
+  box-shadow: inset 0 1px 0 rgba(255, 244, 210, 0.7);
+  color: #20160a;
+  font-weight: 500;
+  cursor: default;
+}
+.fx-rotunda .view-switch button[aria-pressed="true"] svg {
+  color: #3a2808;
+}
+.fx-rotunda .view-switch button:focus-visible {
+  outline-offset: -3px;
+}
+
+.fx-rotunda .find {
+  position: absolute;
+  right: 30px;
+  top: 69px;
   display: grid;
   gap: 9px;
   width: 306px;
@@ -2279,9 +2466,6 @@ html:has(.fx-rotunda) body {
   overflow-x: auto;
   overflow-y: hidden;
   border-bottom: 18px solid #4a2d16;
-  background:
-    linear-gradient(180deg, rgba(3, 3, 8, 0.95), rgba(20, 10, 4, 0.5)),
-    url("/materials/walnut.webp");
   scrollbar-width: thin;
   scrollbar-color: rgba(201, 163, 90, 0.5) transparent;
 }
@@ -2320,6 +2504,12 @@ html:has(.fx-rotunda) body {
 @keyframes fx-rotunda-face {
   from {
     opacity: 0;
+  }
+}
+@keyframes fx-rotunda-arrive {
+  from {
+    opacity: 0;
+    filter: blur(4px);
   }
 }
 @keyframes fx-rotunda-fade {
@@ -2427,7 +2617,7 @@ html:has(.fx-rotunda) body {
   will-change: transform, opacity;
   transition: opacity 0.9s ease;
 }
-.fx-rotunda.phase-dark .pool {
+.fx-rotunda.entering.phase-dark .pool {
   opacity: 0 !important;
 }
 
@@ -2464,16 +2654,16 @@ html:has(.fx-rotunda) body {
     );
 }
 .fx-rotunda.phone .tier {
-  --shade: 0.2;
+  --shade: 0.14;
 }
 .fx-rotunda.phone .tier.on {
   --shade: 0;
 }
 .fx-rotunda.phone .tier.off {
-  --shade: 0.66;
+  --shade: 0.48;
 }
 .fx-rotunda.phone .tier .slot.sunk {
-  --shade: 0.86;
+  --shade: 0.56;
 }
 .fx-rotunda.phone .dome-shell {
   box-shadow:
@@ -2522,4 +2712,181 @@ html:has(.fx-rotunda) body {
 }
 .fx-rotunda.phone .floor {
   bottom: calc(184px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ---- third pass -------------------------------------------------------- */
+
+/* Phones: the view selector sits at the top under the dome, clear of the
+   thumb controls at the bottom, wide enough to hit. */
+.fx-rotunda.phone .view-switch {
+  left: 50%;
+  right: auto;
+  top: calc(var(--ow) * 0.19 + 8px);
+  width: min(340px, calc(100% - 32px));
+  height: 40px;
+  transform: translateX(-50%);
+}
+.fx-rotunda.phone .view-switch button {
+  gap: 6px;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+}
+.fx-rotunda.phone .wait {
+  top: calc(var(--ow) * 0.19 + 64px);
+}
+.fx-rotunda.flat-mode .view-switch {
+  position: static;
+  max-width: 420px;
+  width: auto;
+}
+
+/* When frames stop coming the room is carried to where it was going; no
+   transition may hold anything halfway. */
+.fx-rotunda.stalled *,
+.fx-rotunda.stalled *::before,
+.fx-rotunda.stalled *::after {
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
+
+/* The flat fallback's bays: walnut tones without a repeating photograph. */
+.fx-rotunda .flat-bay {
+  background:
+    linear-gradient(180deg, rgba(3, 3, 8, 0.92), rgba(20, 10, 4, 0.4)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.18) 0 1px,
+      rgba(0, 0, 0, 0) 1px 7px,
+      rgba(255, 200, 140, 0.04) 7px 9px,
+      rgba(0, 0, 0, 0) 9px 23px
+    ),
+    linear-gradient(90deg, #2a170b, #3d2414 40%, #2c190c 70%, #3a2213);
+}
+
+/* As the book lands under the oculus, moonlight runs once across its cover.
+   The glint is invisible unless the animation is running. */
+.fx-rotunda .rf.cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(236, 242, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 62%
+  );
+  background-size: 320% 100%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  animation: fx-rotunda-glint 1.3s cubic-bezier(0.4, 0, 0.2, 1) 0.85s;
+}
+@keyframes fx-rotunda-glint {
+  from {
+    opacity: 1;
+    background-position: 100% 0;
+  }
+  to {
+    opacity: 1;
+    background-position: 0% 0;
+  }
+}
+.fx-rotunda.calm .rf.cover::after {
+  animation: none;
+}
+
+/* ---- fourth pass ------------------------------------------------------- */
+
+/* The intro stops short of the oculus rim and the name set round it: its
+   width is whatever is left between the left edge and the arc of letters.
+   Where that is too little to read, it steps aside. */
+.fx-rotunda:not(.phone):not(.flat-mode) .lede {
+  max-width: min(250px, calc(50vw - var(--ow) * 0.46 - 44px));
+}
+@media (max-width: 999px) {
+  .fx-rotunda:not(.phone):not(.flat-mode) .lede {
+    display: none;
+  }
+}
+
+/* The footer line keeps to its own side of the bearing readout, wrapping
+   onto a second line rather than running under the brass. */
+.fx-rotunda:not(.phone):not(.flat-mode) .foot > span {
+  max-width: max(120px, calc(50vw - 330px));
+  line-height: 1.6;
+}
+
+/* A book that does not answer the search falls back unmistakably: dimmed by
+   the shade and drained of colour, whichever tier it is on. */
+.fx-rotunda .tier .slot.sunk .face::after {
+  opacity: 0.62;
+}
+.fx-rotunda .face img {
+  transition: filter 0.6s ease;
+}
+.fx-rotunda .slot.sunk .face img {
+  filter: saturate(0.3) brightness(0.72);
+  transition-delay: calc(var(--wave, 0ms) * 0.55);
+}
+.fx-rotunda .slot.sunk .spine-title,
+.fx-rotunda .slot.sunk .front-title {
+  opacity: 0.55;
+}
+.fx-rotunda.phone .tier .slot.sunk .face::after {
+  opacity: 0.58;
+}
+
+/* Phones: the view selector joins the bottom row beside the sign-in link,
+   so the name round the oculus stays clear. Everything above moves up a
+   few pixels to make room. */
+.fx-rotunda.phone .view-switch {
+  left: 12px;
+  right: auto;
+  top: auto;
+  bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  width: min(250px, calc(100% - 128px));
+  height: 34px;
+  transform: none;
+}
+.fx-rotunda.phone .view-switch button {
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.fx-rotunda.phone .view-switch button svg {
+  width: 13px;
+  height: 13px;
+}
+.fx-rotunda.phone .foot {
+  bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  height: 34px;
+  justify-content: flex-end;
+}
+.fx-rotunda.phone .foot > span {
+  display: none;
+}
+.fx-rotunda.phone .foot a {
+  padding: 8px 0;
+  font-size: 9px;
+}
+.fx-rotunda.phone .ladder {
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .find {
+  bottom: calc(102px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .readout {
+  bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .floor {
+  bottom: calc(194px + env(safe-area-inset-bottom, 0px));
+}
+.fx-rotunda.phone .wait {
+  top: calc(var(--ow) * 0.19 + 46px);
+}
+.fx-rotunda.phone .search input::placeholder {
+  letter-spacing: 0.04em;
 }

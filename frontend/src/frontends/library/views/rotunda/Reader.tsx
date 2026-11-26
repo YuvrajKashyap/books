@@ -15,7 +15,7 @@ import {
   useNote,
   type BookArt,
   type ShelfBook,
-} from "../../shared/catalogue";
+} from "../../../../shared/catalogue";
 import { clamp } from "./room";
 import { plane } from "./Shelf";
 
@@ -431,16 +431,24 @@ export function Reader({
     const dx = origin.x - (r.left + r.width / 2),
       dy = origin.y - (r.top + r.height / 2);
     const k = origin.h / height;
+    // Off the shelf, up towards the light in an arc, a touch past full size
+    // as it arrives, then settling into the hand.
+    const lift = Math.min(90, window.innerHeight * 0.08);
     const anim = el.animate(
       [
         { transform: `translate(${dx}px,${dy}px) scale(${k})`, offset: 0 },
         {
-          transform: `translate(${dx * 0.42}px,${dy * 0.3 - 26}px) scale(${k + (1 - k) * 0.62})`,
+          transform: `translate(${dx}px,${dy - 14}px) scale(${k * 1.06})`,
+          offset: 0.1,
+        },
+        {
+          transform: `translate(${dx * 0.46}px,${dy * 0.34 - lift}px) scale(${k + (1 - k) * 0.6})`,
           offset: 0.5,
         },
+        { transform: "translate(0,-6px) scale(1.035)", offset: 0.84 },
         { transform: "translate(0,0) scale(1)", offset: 1 },
       ],
-      { duration: 980, easing: "cubic-bezier(.3,.05,.2,1)" },
+      { duration: 1080, easing: "cubic-bezier(.32,.04,.22,1)" },
     );
     return () => anim.cancel();
   }, []);
@@ -460,6 +468,10 @@ export function Reader({
     const anim = el.animate(
       [
         { transform: "translate(0,0) scale(1)" },
+        {
+          transform: `translate(${dx * 0.5}px,${dy * 0.5 - Math.min(60, window.innerHeight * 0.05)}px) scale(${(1 + k) / 2})`,
+          offset: 0.45,
+        },
         { transform: `translate(${dx}px,${dy}px) scale(${k})` },
       ],
       { duration: 640, easing: "cubic-bezier(.5,0,.2,1)", fill: "forwards" },
