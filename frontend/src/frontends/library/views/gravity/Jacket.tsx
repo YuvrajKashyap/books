@@ -2,7 +2,7 @@
 // arrow keys, coasts, settles, and opens to its half-title page.
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import type { BookArt } from "../../shared/catalogue";
+import type { BookArt } from "../../../../shared/catalogue";
 import { aspectOf, clamp, rememberAspect } from "./layout";
 
 export type Pose = { yaw: number; pitch: number }; // degrees

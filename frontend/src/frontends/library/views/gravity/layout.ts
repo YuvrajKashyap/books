@@ -1,6 +1,6 @@
 // Where every book stands on the fabric, how heavy it is, and the one camera
 // the DOM books and the WebGL fabric both look through.
-import type { BookArt, ShelfBook } from "../../shared/catalogue";
+import type { BookArt, ShelfBook } from "../../../../shared/catalogue";
 
 export const BOOK_H = 190; // world px for an average book
 export const PITCH_X = 164; // slot width when covers face out

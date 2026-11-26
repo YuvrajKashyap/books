@@ -2,7 +2,7 @@
 // once in SVG, and every book on plain shelves of light.
 import { useMemo } from "react";
 import type { CSSProperties } from "react";
-import { warmNote } from "../../shared/catalogue";
+import { warmNote } from "../../../../shared/catalogue";
 import { BOOK_H, EYE_H, TILT, aspectOf, project } from "./layout";
 import type { Camera, Layout, Slot } from "./layout";
 

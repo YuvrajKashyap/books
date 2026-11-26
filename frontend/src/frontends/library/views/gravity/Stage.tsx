@@ -1,6 +1,6 @@
 // The fixed stage: the WebGL fabric behind, the CSS 3D shelves in front, and
 // the one loop that moves the camera, weighs the books and fills the readouts.
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { ShelfBook } from "./Book";
 import type { BookHandlers } from "./Book";
@@ -11,6 +11,7 @@ import {
   NEAR,
   OVERRUN,
   ROW_GAP,
+  SPINE_SCALE,
   STEP,
   TILT,
   aspectOf,
@@ -91,6 +92,8 @@ type Reg = {
   m: number;
   v: number;
   veil: number;
+  near: number;
+  gone: boolean;
 };
 
 export function Stage(props: Props) {
@@ -112,8 +115,14 @@ export function Stage(props: Props) {
   const resized = useRef(0);
   const namePad = useRef(0);
 
-  const [base, setBase] = useState(0);
-  const [armed, setArmed] = useState(false);
+  // The camera starts wherever the page is already scrolled to, so the first
+  // render mounts the right shelves without waiting for a frame.
+  const [base, setBase] = useState(() =>
+    Math.max(0, Math.floor(window.scrollY / STEP)),
+  );
+  // Draws one frame now. Snaps every eased value to rest when the browser has
+  // stopped producing animation frames, so a still page is never a wrong one.
+  const kickRef = useRef<(() => void) | null>(null);
   const [target, setTarget] = useState<string | null>(null);
 
   // Everything the loop reads, refreshed on every render.
@@ -121,7 +130,7 @@ export function Stage(props: Props) {
   live.current = { ...props, target };
 
   const motion = useRef({
-    s: 0,
+    s: Math.max(0, window.scrollY / STEP),
     v: 0,
     rb: 0,
     px: view.w / 2,
@@ -146,7 +155,18 @@ export function Stage(props: Props) {
 
   // At the top of the page the whole scene sits lower, under the name.
   const liftAt = (scrollY: number, h: number) =>
-    (1 - smooth(0, 1.1, scrollY / STEP)) * h * 0.13;
+    (1 - smooth(0, 1.1, scrollY / STEP)) *
+    h *
+    (live.current.lite ? 0.11 : 0.13);
+
+  // The moment the shelf arrived, noted during render so the entrance needs
+  // no timer and no effect to begin.
+  const okSeen = useRef(false);
+  if (phase === "ok" && !okSeen.current) {
+    okSeen.current = true;
+    okAt.current = performance.now();
+    entranceUntil.current = okAt.current + 600;
+  } else if (phase !== "ok") okSeen.current = false;
 
   const restCamera = (): Camera => ({
     P: live.current.view.P,
@@ -170,6 +190,8 @@ export function Stage(props: Props) {
           m: 0,
           v: 0,
           veil: -1,
+          near: -1,
+          gone: false,
         });
       },
       open(id, from) {
@@ -234,20 +256,6 @@ export function Stage(props: Props) {
     };
   });
 
-  // Entrance: the grid draws first, then the books are allowed to arrive.
-  useEffect(() => {
-    if (phase !== "ok") {
-      setArmed(false);
-      return;
-    }
-    okAt.current = performance.now();
-    const t = window.setTimeout(() => {
-      entranceUntil.current = performance.now() + 400;
-      setArmed(true);
-    }, 420);
-    return () => window.clearTimeout(t);
-  }, [phase]);
-
   // Once the fonts are in and the name has settled, hand it to the sky.
   useEffect(() => {
     if (lite) return;
@@ -279,8 +287,19 @@ export function Stage(props: Props) {
       firstPulse.current = false;
       return;
     }
+    const fabric = fabricRef.current;
+    if (!fabric) return;
     const z = -motion.current.s * ROW_GAP;
-    fabricRef.current?.ripple(0, z, 11);
+    fabric.ripple(0, z, 11);
+    // A search sends a ring out from each book it finds, as those books
+    // gather on the front shelves and their wells deepen.
+    if (!live.current.searching) return;
+    let rings = 0;
+    for (const slot of live.current.plan.slots) {
+      if (!slot.match) continue;
+      fabric.ripple(slot.x, slot.z, 7);
+      if (++rings >= 5) break;
+    }
   }, [props.pulse]);
 
   // The book that was being read lands back on its shelf.
@@ -350,12 +369,26 @@ export function Stage(props: Props) {
     let seenResize = resized.current;
     let frames = 0;
     let skyName = false;
+    let lastPast = false;
+    let lastTick = 0;
+    const mountedAt = performance.now();
+    // Where the console begins, so nothing in the scene slides in under it.
+    let floor = live.current.view.h;
+    const consoleEl = stage
+      .closest(".fx-gravity")
+      ?.querySelector<HTMLElement>(".gw-console");
+    const measureFloor = () => {
+      const r = consoleEl?.getBoundingClientRect();
+      floor = r && r.height > 0 ? r.top : live.current.view.h;
+    };
     const written = { gauge: "", coord: "", speed: "", bodies: "" };
     const order: { d: number; i: number }[] = [];
     const staged = new Float32Array(400 * 4);
 
-    const tick = (now: number) => {
-      raf = requestAnimationFrame(tick);
+    // One frame of the whole scene. With snap, nothing eases: every value is
+    // put at its resting place, which is how the first frame is drawn and how
+    // the scene stays right when the browser is not producing frames.
+    const frame = (now: number, snap: boolean) => {
       const dt = Math.min(0.05, (now - last) / 1000) || 0.016;
       last = now;
       const L = live.current;
@@ -371,6 +404,12 @@ export function Stage(props: Props) {
       if (Math.abs(want - m.s) < 0.0004) m.s = want;
       m.v += ((m.s - before) / dt - m.v) * (1 - Math.exp(-dt * 10));
       m.rb += ((L.reading ? 1 : 0) - m.rb) * (1 - Math.exp(-dt * 3.4));
+      if (snap) {
+        m.s = want;
+        m.v = 0;
+        m.rb = L.reading ? 1 : 0;
+        if (L.phase === "ok") okAt.current = Math.min(okAt.current, now - 5000);
+      }
       const rb = m.rb < 0.001 ? 0 : m.rb;
       const cam: Camera = {
         P: v.P,
@@ -379,9 +418,10 @@ export function Stage(props: Props) {
         ez: NEAR - m.s * ROW_GAP + rb * 160,
       };
       const oy = Math.round(v.originY + liftAt(window.scrollY, v.h) * (1 - rb));
-      if (seenResize !== resized.current) {
+      if (seenResize !== resized.current || frames % 45 === 1) {
+        if (seenResize !== resized.current) lastOy = -1;
         seenResize = resized.current;
-        lastOy = -1;
+        measureFloor();
       }
       if (oy !== lastOy) {
         lastOy = oy;
@@ -395,6 +435,16 @@ export function Stage(props: Props) {
         lastBase = b;
         setBase(b);
       }
+      const past = L.plan.rows > 0 && m.s > L.plan.rows - 1 + 0.3;
+      if (past !== lastPast) {
+        lastPast = past;
+        world.classList.toggle("is-past", past);
+        stage.classList.toggle("is-past", past);
+      }
+      // Near the top of the page the far shelves stay out of the name's way.
+      const heroT = (1 - smooth(0, 1.1, window.scrollY / STEP)) * (1 - rb);
+      const farA = 1500 + 400 * heroT;
+      const farB = 4300 - 1300 * heroT;
 
       // Pointer mass.
       m.px += (m.tx - m.px) * (1 - Math.exp(-dt * 11));
@@ -403,6 +453,20 @@ export function Stage(props: Props) {
       const hit = toFabric(cam, m.px - v.w / 2, m.py - oy);
       const pointerDepth = hit ? m.strength * (lite ? 52 : 68) * (1 - rb) : 0;
 
+      // How far a shelf has passed into the near zone: 0 in clear view, 1 once
+      // the middle of its books has gone under the console. Spines stand tall
+      // enough that a shelf passing under the camera would otherwise sweep
+      // giant book tops across the controls.
+      const spinesNow = L.layout === "spines";
+      const midH = (BOOK_H * (spinesNow ? SPINE_SCALE : 1)) / 2;
+      const fadeTop = floor - v.h * (spinesNow ? 0.16 : 0.12);
+      const fadeEnd = floor + (v.h - floor) * 0.2;
+      const nearAt = (z: number, d: number) => {
+        if (d < 300) return 1;
+        const pb = project(cam, 0, -midH, z);
+        return pb ? smooth(fadeTop, fadeEnd, oy + pb.y) : 1;
+      };
+
       // Books: weigh each one, fog it by distance, hand the wells to the shader.
       let n = 0;
       for (const [id, reg] of regs.current) {
@@ -410,8 +474,13 @@ export function Stage(props: Props) {
         if (!slot) continue;
         let goal = slot.well;
         if (L.searching) goal *= slot.match ? 1.75 : 0.06;
-        if (now < reg.landAt || id === L.target || id === L.awayId || L.reading)
-          goal = 0;
+        if (id === L.target || id === L.awayId || L.reading) goal = 0;
+        if (snap) {
+          reg.landed = true;
+          reg.landAt = 0;
+          reg.m = goal;
+          reg.v = 0;
+        } else if (now < reg.landAt) goal = 0;
         if (!reg.landed && now >= reg.landAt) {
           reg.landed = true;
           if (slot.col === 0 && now < entranceUntil.current + 6000)
@@ -420,10 +489,28 @@ export function Stage(props: Props) {
         reg.v += ((goal - reg.m) * 70 - reg.v * 10) * dt;
         reg.m += reg.v * dt;
         const d = cam.ez - slot.z;
-        const veil = Math.round(smooth(1500, 4300, d) * 0.9 * 50) / 50;
+        // Fog with distance. A shelf passing under the camera dissolves
+        // instead, and is not drawn at all once it would reach the console.
+        const veil =
+          Math.round(smooth(farA, farB, d) * (0.9 + 0.1 * heroT) * 50) / 50;
         if (veil !== reg.veil) {
           reg.veil = veil;
           reg.el.style.setProperty("--veil", String(veil));
+        }
+        // While the camera rises for the reader, a shelf keeps the fade it
+        // had, so the book flying home finds its neighbours as it left them.
+        const near =
+          rb > 0.01 && reg.near >= 0
+            ? reg.near
+            : Math.round(nearAt(slot.z, d) * 40) / 40;
+        if (near !== reg.near) {
+          reg.near = near;
+          reg.el.style.setProperty("--near", String(near));
+        }
+        const gone = near >= 1 || (heroT > 0.02 && d > farB + 40);
+        if (gone !== reg.gone) {
+          reg.gone = gone;
+          reg.el.style.visibility = gone ? "hidden" : "";
         }
         if (Math.abs(reg.m) > 0.4 && n < 400) {
           staged[n * 4] = slot.x;
@@ -452,6 +539,14 @@ export function Stage(props: Props) {
           fabric.wells.set(staged.subarray(i, i + 4), k * 4);
         }
         fabric.wellCount = max;
+      }
+
+      // Shelf labels dissolve with their shelf.
+      for (const mk of world.querySelectorAll<HTMLElement>(".gw-mark")) {
+        const z = Number(mk.dataset.z);
+        const a = past ? 0 : 1 - nearAt(z, cam.ez - z);
+        const o = a.toFixed(2);
+        if (mk.style.opacity !== o) mk.style.opacity = o;
       }
 
       // Lens: the pointer, or the book being read.
@@ -576,6 +671,27 @@ export function Stage(props: Props) {
       }
     };
 
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      lastTick = performance.now();
+      frame(now, false);
+    };
+    // Animation frames have stopped (a hidden tab or pane) when none has come
+    // for a while; then a drawn frame puts everything at rest.
+    const stalled = () => performance.now() - (lastTick || mountedAt) > 250;
+    const kick = () => frame(performance.now(), stalled());
+    kickRef.current = kick;
+    // Draw the first frame now, from the address and scroll position as they
+    // are, before any animation frame, scroll or timer.
+    frame(performance.now(), document.hidden);
+    const onScroll = () => {
+      if (stalled()) kick();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const watch = window.setInterval(() => {
+      if (!document.hidden && stalled()) kick();
+    }, 400);
+
     const start = () => {
       if (raf) return;
       last = performance.now();
@@ -591,6 +707,8 @@ export function Stage(props: Props) {
 
     return () => {
       stop();
+      window.clearInterval(watch);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", visible);
       canvas.removeEventListener("webglcontextlost", lost);
       window.removeEventListener("pointermove", move);
@@ -599,6 +717,7 @@ export function Stage(props: Props) {
       window.removeEventListener("touchend", release);
       window.removeEventListener("touchcancel", release);
       document.documentElement.removeEventListener("mouseleave", release);
+      kickRef.current = null;
       fabric.dispose();
       fabricRef.current = null;
       live.current.onSkyName(false);
@@ -610,8 +729,15 @@ export function Stage(props: Props) {
     resized.current++;
   }, [view.w, view.h, view.P, view.originY, lite]);
 
+  // Whenever the shelf, its arrangement, the viewport or the reader changes,
+  // draw a frame before the browser paints, so the camera, the fog, the
+  // readouts and the books always agree with the address on the first paint.
+  useLayoutEffect(() => {
+    kickRef.current?.();
+  }, [phase, plan, layout, view.w, view.h, view.P, reading, searching, base]);
+
   const mounted =
-    armed && phase === "ok"
+    phase === "ok"
       ? plan.slots.filter((s) => s.row >= base - 1 && s.row <= base + ahead)
       : [];
   const entering = performance.now() < entranceUntil.current;
@@ -633,7 +759,7 @@ export function Stage(props: Props) {
         {mounted.map((slot, k) => {
           let delay = delays.current.get(slot.id);
           if (delay === undefined) {
-            delay = entering ? 40 + k * 26 : 30 + slot.col * 22;
+            delay = entering ? 380 + k * 24 : 30 + slot.col * 22;
             delays.current.set(slot.id, delay);
           }
           return (
@@ -649,8 +775,7 @@ export function Stage(props: Props) {
             />
           );
         })}
-        {armed &&
-          phase === "ok" &&
+        {phase === "ok" &&
           !lite &&
           plan.marks
             .filter((mk) => mk.row >= base && mk.row <= base + 2)
@@ -659,6 +784,7 @@ export function Stage(props: Props) {
                 key={mk.row}
                 className={"gw-mark" + (layout === "spines" ? " is-spine" : "")}
                 aria-hidden="true"
+                data-z={mk.z.toFixed(1)}
                 style={{
                   transform: `translate3d(${mk.x.toFixed(1)}px,0,${mk.z.toFixed(1)}px) rotateY(${mk.yaw.toFixed(4)}rad) translate3d(0,9px,${layout === "spines" ? 136 : 72}px)`,
                 }}
@@ -696,7 +822,7 @@ export function Stage(props: Props) {
       </div>
 
       <aside className="gw-rail gw-rail-right" aria-hidden="true">
-        <p className="gw-label">Shelf</p>
+        <p className="gw-label">Shelf · scroll to travel</p>
         <p className="gw-gauge">
           <span ref={gaugeRef}>00 / 00</span>
         </p>

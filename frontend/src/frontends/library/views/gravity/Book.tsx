@@ -2,7 +2,7 @@
 // its facing side for the keyboard and for assistive tech.
 import { memo, useCallback, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import { warmNote } from "../../shared/catalogue";
+import { warmNote } from "../../../../shared/catalogue";
 import { BOOK_H, aspectOf, rememberAspect } from "./layout";
 import type { Layout, Slot } from "./layout";
 
