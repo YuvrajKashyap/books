@@ -11,9 +11,14 @@ import {
   type RefObject,
 } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useNote, type BookArt, type ShelfBook } from "../../shared/catalogue";
+import {
+  useNote,
+  type BookArt,
+  type ShelfBook,
+} from "../../../../shared/catalogue";
 import type { Lamp } from "./lamp";
 import type { Layout } from "./Bookcase";
+import { PULLED_TURN } from "./Pull";
 
 const REST_Y = 24;
 const REST_X = -5;
@@ -58,7 +63,8 @@ export function Reader({
   fly: boolean; // arrive from the shelf rather than out of the dark
   layout: Layout;
   reduced: boolean;
-  origin: (id: string) => DOMRect | null;
+  // Where the book is on the page, and whether its cover already faces out.
+  origin: (id: string) => { rect: DOMRect; facing: boolean } | null;
   lampRef: RefObject<Lamp | null>;
   onClose: () => void;
   onClosed: () => void;
@@ -149,13 +155,14 @@ export function Reader({
   useLayoutEffect(() => {
     const el = flyEl.current;
     if (!el) return;
-    const from = fly && !reduced ? origin(book.id) : null;
+    const found = origin(book.id);
+    const from = fly && !reduced && found ? found.rect : null;
     if (from) {
       const box = el.getBoundingClientRect();
       const dx = from.left + from.width / 2 - (box.left + box.width / 2);
       const dy = from.top + from.height / 2 - (box.top + box.height / 2);
       const s = from.height / box.height;
-      spin.ry = layout === "spines" ? 90 : 0;
+      spin.ry = found?.facing ? PULLED_TURN : layout === "spines" ? 90 : 0;
       spin.rx = 0;
       el.animate(
         [
@@ -211,7 +218,7 @@ export function Reader({
     if (!closing) return;
     setOpen(false);
     const el = flyEl.current;
-    const to = el && !reduced ? origin(book.id) : null;
+    const to = el && !reduced ? (origin(book.id)?.rect ?? null) : null;
     let wait = reduced ? 120 : 340;
     let flight: Animation | undefined;
     if (el && to) {
