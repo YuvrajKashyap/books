@@ -12,12 +12,11 @@ export default function Picker() {
       <header>
         <p className="pk-mark">Yuvraj’s Bookshelf</p>
         <h1>
-          {frontends.length - 1} directions, <em>one shelf.</em>
+          Frontends, <em>one shelf.</em>
         </h1>
         <p className="pk-lede">
-          Each is a complete public page built from a blank file. They share the
-          same books, the same reader and the same owner rooms. The live site
-          wears <b>{ACTIVE}</b>; change one line in{" "}
+          Every frontend this site can wear. They share the same books and the
+          same sign-in. The live site wears <b>{ACTIVE}</b>; change one line in{" "}
           <code>frontends/registry.ts</code> to switch.
         </p>
       </header>

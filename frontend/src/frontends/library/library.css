@@ -1,0 +1,152 @@
+/* The dark that falls between views. Every view is a night room, so the
+   handover is its light going out and the next one's coming on. The veil is
+   black with a round hole; the hole closes onto the place each room keeps its
+   light, and opens again from the place the next room keeps its own:
+     lamp     the bulb, high in the middle, ending on a warm ember
+     rotunda  the oculus at the top, ending on a pale ring of sky
+     gravity  the centre of the well, ending on a point with a grid around it
+   The finished state (no veil) is the default; nothing here can hide the page
+   if a transition never runs. */
+@property --fx-library-hole {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 160%;
+}
+.fx-library-veil {
+  --fx-library-hole: 160%;
+  --fx-library-x: 50%;
+  --fx-library-y: 42%;
+  --fx-library-tint: #000;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--fx-library-x) var(--fx-library-y),
+    transparent calc(var(--fx-library-hole) - 22%),
+    var(--fx-library-tint) var(--fx-library-hole)
+  );
+  transition: --fx-library-hole 0.44s cubic-bezier(0.22, 0.7, 0.2, 1);
+}
+.fx-library-veil.is-dark {
+  --fx-library-hole: 0%;
+  pointer-events: auto;
+  transition-duration: 0.28s;
+  transition-timing-function: cubic-bezier(0.6, 0, 0.85, 0.35);
+}
+.fx-library-veil[data-at="lamp"] {
+  --fx-library-y: 22%;
+  --fx-library-tint: #070402;
+}
+.fx-library-veil[data-at="rotunda"] {
+  --fx-library-y: -8%;
+  --fx-library-tint: #02040a;
+}
+.fx-library-veil[data-at="gravity"] {
+  --fx-library-y: 50%;
+  --fx-library-tint: #000;
+}
+
+/* The mark left in the dark: what the next room is about to be. */
+.fx-library-mark {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 8px;
+  height: 8px;
+  margin: -4px;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.3);
+  transition:
+    opacity 0.22s ease,
+    transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fx-library-veil.is-dark .fx-library-mark {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.14s;
+}
+/* Lamp: a filament ember, breathing once. */
+.fx-library-mark[data-next="lamp"] {
+  top: 22%;
+  background: #ffd08a;
+  box-shadow:
+    0 0 10px 3px #ffb860aa,
+    0 0 50px 16px #ff9a3c40,
+    0 0 140px 50px #ff8a2a14;
+}
+.fx-library-veil.is-dark .fx-library-mark[data-next="lamp"] {
+  animation: fx-library-breathe 0.5s ease-in-out 0.14s both;
+}
+@keyframes fx-library-breathe {
+  0% {
+    filter: brightness(0.6);
+  }
+  60% {
+    filter: brightness(1.5);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+/* Rotunda: a ring of sky opening where the oculus will be. */
+.fx-library-mark[data-next="rotunda"] {
+  top: 16%;
+  width: 120px;
+  height: 120px;
+  margin: -60px;
+  background: radial-gradient(circle, #cfe0ff22 0 40%, transparent 62%);
+  border: 1px solid #d7e4ff99;
+  box-shadow:
+    0 0 24px #9cbcff55,
+    inset 0 0 24px #9cbcff44;
+}
+.fx-library-veil.is-dark .fx-library-mark[data-next="rotunda"] {
+  transform: scale(1) rotate(30deg);
+}
+/* Gravity: a point of light with a grid sagging around it. */
+.fx-library-mark[data-next="gravity"] {
+  top: 50%;
+  background: #e8fbff;
+  box-shadow:
+    0 0 12px 3px #7fe8ff99,
+    0 0 70px 20px #3fc8ff22;
+}
+.fx-library-mark[data-next="gravity"]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 72vmin;
+  height: 72vmin;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(
+      circle,
+      transparent 0 calc(6vmin - 1px),
+      #7fe8ff26 calc(6vmin - 1px) 6vmin
+    ),
+    repeating-conic-gradient(#7fe8ff1c 0 0.4deg, transparent 0.4deg 15deg);
+  mask: radial-gradient(circle, #000 10%, transparent 70%);
+  opacity: 0;
+  scale: 0.5;
+  transition:
+    opacity 0.3s ease,
+    scale 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fx-library-veil.is-dark .fx-library-mark[data-next="gravity"]::before {
+  opacity: 1;
+  scale: 1;
+  transition-delay: 0.1s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-library-veil,
+  .fx-library-mark,
+  .fx-library-mark::before {
+    transition: none !important;
+    animation: none !important;
+  }
+}
