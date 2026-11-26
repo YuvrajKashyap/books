@@ -1,0 +1,652 @@
+/* The shared dock. One shape everywhere; each room only lends it a finish.
+   The three finishes are stacked material layers that crossfade, and every
+   colour is a variable that eases, so moving between rooms re-dresses the
+   dock in place instead of swapping it. */
+
+.fx-dock {
+  /* study: brass on walnut (the default finish) */
+  --d-ink: #f3dfb4;
+  --d-dim: #b8956a;
+  --d-faint: #8a6a45;
+  --d-rule: #c9a25a40;
+  --d-field: #0d0703b3;
+  --d-field-edge: #c9a25a33;
+  --d-on: #2a1607;
+  --d-on-bg: linear-gradient(180deg, #f6dc98, #d2a457 52%, #9c6c2b);
+  --d-on-glow:
+    0 1px 0 #fff3c955 inset, 0 -1px 0 #5a3a1255 inset, 0 2px 6px #0007;
+  --d-pop: #1b0f07f5;
+  --d-radius: 12px;
+  --d-item-radius: 7px;
+  --d-font: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+  --d-label: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+  --d-value: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+  --d-value-style: normal;
+  --d-track: 0.12em;
+  --d-case: uppercase;
+  --d-label-size: 10.5px;
+  --d-value-size: 12.5px;
+
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 1001; /* above the veil, so it stays while rooms change */
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  translate: -50% 0;
+  color: var(--d-ink);
+  font: 500 var(--d-value-size) / 1 var(--d-font);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    translate 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s ease,
+    color 0.45s ease;
+}
+.fx-dock[data-skin="rotunda"] {
+  /* gilt on midnight */
+  --d-ink: #f2e6c4;
+  --d-dim: #b3a37f;
+  --d-faint: #7f7660;
+  --d-rule: #d9b56a3d;
+  --d-field: #050a24b3;
+  --d-field-edge: #d9b56a38;
+  --d-on: #171233;
+  --d-on-bg: linear-gradient(180deg, #f6dd9c, #d3aa58 55%, #a77b33);
+  --d-on-glow: 0 1px 0 #fff4cf66 inset, 0 0 14px #e8c56f33;
+  --d-pop: #0b1131f5;
+  --d-radius: 30px;
+  --d-item-radius: 20px;
+  --d-label: "IBM Plex Mono", ui-monospace, monospace;
+  --d-value: "Cormorant Garamond", Georgia, serif;
+  --d-value-style: italic;
+  --d-value-size: 15px;
+  --d-label-size: 10px;
+  --d-track: 0.14em;
+}
+.fx-dock[data-skin="gravity"] {
+  /* dark glass, amber light */
+  --d-ink: #dce8ec;
+  --d-dim: #7f949c;
+  --d-faint: #56676e;
+  --d-rule: #7fe8ff24;
+  --d-field: #00000080;
+  --d-field-edge: #7fe8ff26;
+  --d-on: #ffbf5e;
+  --d-on-bg: linear-gradient(180deg, #ffb2470f, #ffb24724);
+  --d-on-glow:
+    0 0 0 1px #ffb24766 inset, 0 0 18px #ffb2472e, 0 -2px 0 #ffbf5e inset;
+  --d-pop: #03070bf2;
+  --d-radius: 6px;
+  --d-item-radius: 3px;
+  --d-font: "IBM Plex Mono", ui-monospace, monospace;
+  --d-label: "IBM Plex Mono", ui-monospace, monospace;
+  --d-value: "IBM Plex Mono", ui-monospace, monospace;
+  --d-value-size: 11.5px;
+  --d-label-size: 10px;
+  --d-track: 0.16em;
+}
+
+/* Away while a book is open: the reader has the room. */
+.fx-dock.is-away {
+  translate: -50% calc(100% + 40px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fx-dock-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: var(--d-radius);
+  isolation: isolate;
+  transition: border-radius 0.45s ease;
+}
+
+/* The three materials, crossfading. */
+.fx-dock-mat {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.fx-dock[data-skin="lamp"] .fx-dock-mat[data-k="lamp"],
+.fx-dock[data-skin="rotunda"] .fx-dock-mat[data-k="rotunda"],
+.fx-dock[data-skin="gravity"] .fx-dock-mat[data-k="gravity"] {
+  opacity: 1;
+}
+/* walnut with a brass frame and a lamp-warm top edge */
+.fx-dock-mat[data-k="lamp"] {
+  background:
+    radial-gradient(120% 140% at 50% -40%, #ffcf8a24, transparent 60%),
+    repeating-linear-gradient(
+      91deg,
+      #ffffff00 0 7px,
+      #ffd9a008 7px 8px,
+      #00000010 8px 13px
+    ),
+    linear-gradient(180deg, #33200f, #1f1208 60%, #160c05);
+  box-shadow:
+    0 0 0 1px #0b0602,
+    0 0 0 2px #b88d4699,
+    0 0 0 3px #3a240f,
+    inset 0 1px 0 #ffdca233,
+    inset 0 -1px 0 #00000080,
+    0 22px 50px -10px #000c,
+    0 6px 16px #0008;
+}
+/* midnight glass in a double gilt rule */
+.fx-dock-mat[data-k="rotunda"] {
+  background:
+    radial-gradient(90% 160% at 50% 0%, #2a3a8a55, transparent 70%),
+    linear-gradient(180deg, #121a46eb, #080d2ceb);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow:
+    0 0 0 1px #e6c47aa6,
+    0 0 0 4px #0a0f2ecc,
+    0 0 0 5px #d9b56a55,
+    inset 0 1px 0 #fff1c826,
+    0 20px 50px -12px #000d,
+    0 0 40px #6f8cff1a;
+}
+/* black glass with a cyan hairline, like an instrument face */
+.fx-dock-mat[data-k="gravity"] {
+  background:
+    linear-gradient(180deg, #0b141bcc, #020507e6),
+    repeating-linear-gradient(90deg, #7fe8ff08 0 1px, transparent 1px 24px);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 0 1px #7fe8ff33,
+    inset 0 1px 0 #7fe8ff26,
+    0 24px 60px -10px #000,
+    0 0 50px #3fc8ff12;
+}
+.fx-dock-mat[data-k="gravity"]::before,
+.fx-dock-mat[data-k="gravity"]::after {
+  /* corner ticks */
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 1px solid #7fe8ff99;
+}
+.fx-dock-mat[data-k="gravity"]::before {
+  left: -1px;
+  top: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.fx-dock-mat[data-k="gravity"]::after {
+  right: -1px;
+  bottom: -1px;
+  border-left: 0;
+  border-top: 0;
+}
+
+/* Every control shares one height and one way of being pressed. */
+.fx-dock button,
+.fx-dock-owner {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fx-dock-views button,
+.fx-dock-layout button,
+.fx-dock-menu > button,
+.fx-dock-owner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--d-item-radius);
+  color: var(--d-dim);
+  font: 500 var(--d-label-size) / 1 var(--d-label);
+  letter-spacing: var(--d-track);
+  text-transform: var(--d-case);
+  white-space: nowrap;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    border-radius 0.45s ease;
+}
+.fx-dock-views button:hover,
+.fx-dock-layout button:hover,
+.fx-dock-menu > button:hover,
+.fx-dock-owner:hover {
+  color: var(--d-ink);
+  background-color: #ffffff0d;
+}
+.fx-dock [aria-pressed="true"] {
+  color: var(--d-on);
+  background: var(--d-on-bg);
+  box-shadow: var(--d-on-glow);
+}
+.fx-dock [aria-pressed="true"]:hover {
+  color: var(--d-on);
+}
+.fx-dock :focus-visible {
+  outline: 2px solid var(--d-ink);
+  outline-offset: 2px;
+}
+.fx-dock .fx-dock-search input:focus-visible {
+  outline: 0; /* the field's own ring shows focus */
+}
+.fx-dock svg {
+  flex: none;
+}
+
+.fx-dock-views,
+.fx-dock-layout {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: calc(var(--d-item-radius) + 2px);
+  background: var(--d-field);
+  box-shadow: 0 0 0 1px var(--d-field-edge);
+}
+.fx-dock-layout button {
+  width: 38px;
+  padding: 0;
+}
+
+/* Thin rules between groups. */
+.fx-dock-search,
+.fx-dock-focus,
+.fx-dock-slot:not(:empty),
+.fx-dock-owner {
+  position: relative;
+  margin-left: 6px;
+}
+.fx-dock-search::before,
+.fx-dock-focus::before,
+.fx-dock-slot:not(:empty)::before,
+.fx-dock-owner::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--d-rule);
+}
+
+.fx-dock-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: clamp(170px, 20vw, 260px);
+  height: 40px;
+  padding: 0 10px 0 12px;
+  border-radius: var(--d-item-radius);
+  background: var(--d-field);
+  box-shadow: 0 0 0 1px var(--d-field-edge);
+  color: var(--d-dim);
+  cursor: text;
+  transition: box-shadow 0.25s ease;
+}
+.fx-dock-search:focus-within {
+  box-shadow:
+    0 0 0 1px var(--d-ink),
+    0 0 0 4px var(--d-rule);
+  color: var(--d-ink);
+}
+.fx-dock-search input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--d-ink);
+  font: var(--d-value-style) 500 var(--d-value-size) / 1 var(--d-value);
+  letter-spacing: 0.01em;
+}
+.fx-dock-search input::placeholder {
+  color: var(--d-faint);
+  opacity: 1;
+}
+.fx-dock-search input::-webkit-search-cancel-button {
+  display: none;
+}
+.fx-dock-search kbd {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--d-field-edge);
+  color: var(--d-faint);
+  font: 500 10px / 1 var(--d-label);
+}
+.fx-dock-clear {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--d-dim);
+}
+.fx-dock-clear:hover {
+  color: var(--d-ink);
+  background: #ffffff14;
+}
+
+/* The two menus show their value, not just their name. */
+.fx-dock-menu {
+  position: relative;
+}
+.fx-dock-menu > button {
+  padding: 0 10px 0 12px;
+}
+.fx-dock-shown {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.fx-dock-shown b {
+  color: var(--d-ink);
+  font: var(--d-value-style) 500 var(--d-value-size) / 1 var(--d-value);
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+.fx-dock[data-skin="gravity"] .fx-dock-shown b,
+.fx-dock[data-skin="lamp"] .fx-dock-shown b {
+  font-size: var(--d-label-size);
+  letter-spacing: var(--d-track);
+  text-transform: uppercase;
+  font-style: normal;
+}
+.fx-dock-shown em {
+  color: var(--d-faint);
+  font: 500 10px / 1 var(--d-label);
+  font-style: normal;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.fx-dock-chev {
+  color: var(--d-faint);
+  transition: rotate 0.25s ease;
+}
+.fx-dock-menu > button[aria-expanded="true"] .fx-dock-chev {
+  rotate: 180deg;
+}
+
+.fx-dock-menu ul {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 14px);
+  min-width: 240px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: max(var(--d-item-radius), 8px);
+  background: var(--d-pop);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 0 1px var(--d-field-edge),
+    0 24px 50px -10px #000d;
+  outline: 0;
+  transform-origin: 50% 100%;
+  animation: fx-dock-pop 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fx-dock-sort ul {
+  min-width: 200px;
+}
+@keyframes fx-dock-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+}
+.fx-dock-menu-head {
+  padding: 8px 10px 9px;
+  color: var(--d-faint);
+  font: 500 9.5px / 1 var(--d-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.fx-dock-menu li[role="option"] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  padding: 0 12px 0 10px;
+  border-radius: var(--d-item-radius);
+  color: var(--d-dim);
+  font: var(--d-value-style) 500 var(--d-value-size) / 1.2 var(--d-value);
+  cursor: pointer;
+}
+.fx-dock-menu li[role="option"] span {
+  flex: 1;
+}
+.fx-dock-menu li[role="option"] em {
+  color: var(--d-faint);
+  font: 500 10.5px / 1 var(--d-label);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+.fx-dock-menu li[data-at] {
+  color: var(--d-ink);
+  background: #ffffff0f;
+}
+.fx-dock-tick {
+  opacity: 0;
+  color: var(--d-ink);
+}
+.fx-dock-menu li[aria-selected="true"] {
+  color: var(--d-ink);
+}
+.fx-dock-menu li[aria-selected="true"] .fx-dock-tick {
+  opacity: 1;
+}
+
+/* A view's own instrument. */
+.fx-dock-slot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.fx-dock-slot:empty {
+  display: none;
+}
+/* What a view may put in its slot: small square tools and one readout. */
+.fx-dock .fx-dock-tool {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--d-item-radius);
+  color: var(--d-dim);
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
+.fx-dock .fx-dock-tool:hover:not(:disabled, [aria-disabled="true"]) {
+  color: var(--d-ink);
+  background-color: #ffffff0d;
+}
+.fx-dock .fx-dock-tool:disabled,
+.fx-dock .fx-dock-tool[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+.fx-dock-read {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 64px;
+  padding: 0 6px;
+  text-align: center;
+}
+.fx-dock-read small {
+  color: var(--d-faint);
+  font: 500 9px / 1 var(--d-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.fx-dock-read b {
+  color: var(--d-ink);
+  font: var(--d-value-style) 500 var(--d-value-size) / 1 var(--d-value);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  max-width: 18ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fx-dock-owner {
+  width: 36px;
+  padding: 0;
+  color: var(--d-faint);
+}
+
+/* Narrower desktops: the rooms keep their icons, the order its icon. */
+@media (max-width: 1180px) {
+  .fx-dock-views span {
+    display: none;
+  }
+  .fx-dock-views button {
+    width: 40px;
+    padding: 0;
+  }
+}
+@media (max-width: 960px) {
+  .fx-dock-sort .fx-dock-shown,
+  .fx-dock-sort .fx-dock-chev {
+    display: none;
+  }
+  .fx-dock-sort > button {
+    width: 40px;
+    padding: 0;
+  }
+}
+
+/* Phones: a full-width bar under the thumb. Search, category, order and
+   layout on one row; the three rooms on the row beneath. */
+@media (max-width: 720px) {
+  .fx-dock {
+    left: 8px;
+    right: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: auto;
+    max-width: none;
+    translate: 0 0;
+  }
+  .fx-dock.is-away {
+    translate: 0 calc(100% + 30px);
+  }
+  .fx-dock-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    grid-template-areas:
+      "slot slot slot slot"
+      "search focus sort layout"
+      "views views views owner";
+    gap: 6px;
+    padding: 6px;
+    border-radius: min(var(--d-radius), 20px);
+  }
+  .fx-dock-search,
+  .fx-dock-focus,
+  .fx-dock-slot:not(:empty),
+  .fx-dock-owner {
+    margin-left: 0;
+  }
+  .fx-dock-search::before,
+  .fx-dock-focus::before,
+  .fx-dock-slot:not(:empty)::before,
+  .fx-dock-owner::before {
+    display: none;
+  }
+  .fx-dock-search {
+    grid-area: search;
+    width: auto;
+    height: 44px;
+  }
+  .fx-dock-search input {
+    font-size: 16px; /* no zoom on focus in iOS */
+  }
+  .fx-dock-search kbd {
+    display: none;
+  }
+  .fx-dock-focus {
+    grid-area: focus;
+  }
+  .fx-dock-sort {
+    grid-area: sort;
+  }
+  .fx-dock-layout {
+    grid-area: layout;
+  }
+  .fx-dock-slot {
+    grid-area: slot;
+    justify-content: center;
+  }
+  .fx-dock-views {
+    grid-area: views;
+  }
+  .fx-dock-owner {
+    grid-area: owner;
+    height: 44px;
+    width: 44px;
+  }
+  .fx-dock-menu > button,
+  .fx-dock-layout button,
+  .fx-dock-views button {
+    height: 40px;
+  }
+  .fx-dock-focus > button {
+    padding: 0 8px 0 10px;
+  }
+  .fx-dock-focus .fx-dock-chev {
+    display: none;
+  }
+  .fx-dock-layout button {
+    width: 36px;
+  }
+  .fx-dock-views button {
+    flex: 1;
+    width: auto;
+    padding: 0 8px;
+  }
+  .fx-dock-views span {
+    display: inline;
+  }
+  .fx-dock-menu ul {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: calc(var(--fx-dock-h, 140px) - 10px);
+    min-width: 0;
+  }
+  .fx-dock-menu li[role="option"] {
+    min-height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-dock,
+  .fx-dock *,
+  .fx-dock-mat {
+    transition: none !important;
+    animation: none !important;
+  }
+}

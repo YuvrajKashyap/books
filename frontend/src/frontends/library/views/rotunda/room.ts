@@ -67,7 +67,8 @@ export function measure(vw: number, vh: number): Dims {
     sigma: (2 * Math.PI) / segments,
     ow: phone ? Math.min(vw * 1.25, 640) : Math.min(vw * 0.62, vh * 1.02, 940),
     fw: phone ? Math.min(vw * 1.3, 620) : Math.min(vw * 0.74, vh * 1.05, 900),
-    cy: phone ? -Math.round(vh * 0.1) : -Math.round(vh * 0.012),
+    // Phones lift the room a little above the shared dock at the foot.
+    cy: phone ? -Math.round(vh * 0.05) : -Math.round(vh * 0.012),
   };
 }
 

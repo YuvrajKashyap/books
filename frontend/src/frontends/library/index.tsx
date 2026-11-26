@@ -11,6 +11,7 @@ import {
   views,
   type ViewSlug,
 } from "./views";
+import { Dock, DockSlotProvider } from "./Dock";
 import "./library.css";
 
 const loaded = new Map<ViewSlug, ComponentType>();
@@ -65,13 +66,15 @@ function ShelfRoom({ asked }: { asked: ViewSlug }) {
     return () => clearTimeout(timer);
   }, [asked, shown]);
 
+  const [slot, setSlot] = useState<HTMLElement | null>(null);
   const View = viewComponent(shown);
   return (
-    <>
+    <DockSlotProvider slot={slot}>
       <Suspense fallback={null}>
         <View key={shown} />
         <Lift onReady={setReady} view={shown} />
       </Suspense>
+      <Dock skin={asked} onSlot={setSlot} />
       <div
         className={"fx-library-veil" + (dark ? " is-dark" : "")}
         data-at={shown}
@@ -79,7 +82,7 @@ function ShelfRoom({ asked }: { asked: ViewSlug }) {
       >
         <i className="fx-library-mark" data-next={asked} />
       </div>
-    </>
+    </DockSlotProvider>
   );
 }
 

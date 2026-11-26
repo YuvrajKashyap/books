@@ -188,7 +188,9 @@ export function viewFor(w: number, h: number) {
     Math.min(1150, Math.min(w * (narrow ? 1.98 : 0.95), h * 1.3)),
   );
   const originY = Math.round(h * 0.6);
-  const rails = w >= 900 ? 400 : 12;
+  // A quiet margin each side of the near shelf (64px on wide screens); the
+  // controls live in the shared dock, so nothing else claims the width.
+  const rails = w >= 900 ? 128 : 12;
   const nearScale = P / (EYE_H * Math.sin(TILT) + NEAR * Math.cos(TILT));
   const cols = Math.max(
     2,

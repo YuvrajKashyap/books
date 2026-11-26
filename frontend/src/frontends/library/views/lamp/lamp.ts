@@ -129,8 +129,8 @@ export class Lamp {
   private lastB = { x: 0, y: 0 };
   private box: DOMRect | null = null;
   private followers = new Set<HTMLElement>();
-  // The control bar. The bulb never hangs lower than just under it, so it
-  // stays above the rows it lights and its cord stays behind the bar.
+  // The foot of the pediment. The bulb never hangs lower than just over
+  // it, so it stays above the rows it lights.
   private ceiling: HTMLElement | null = null;
   private floorY = Infinity;
   private holeR = -1;
@@ -425,7 +425,7 @@ export class Lamp {
     if (this.ctx) this.dust(dt, now);
   };
 
-  // The longest the cord may be: down to just under the control bar.
+  // The longest the cord may be: down to the foot of the pediment.
   private maxL() {
     return Math.max(
       this.vh * 0.08,
@@ -483,8 +483,8 @@ export class Lamp {
           (clamp(ax, -6000, 6000) / this.L) * Math.cos(this.th) -
           0.85 * this.om;
         // A pointer nearby and the lamp leans toward it.
-        // Not while it is tucked under the bar: there it keeps clear of
-        // the spines.
+        // Not while it is tucked up at its ceiling: there it keeps clear
+        // of the spines.
         if (
           !this.opt.lite &&
           now - this.ptr.t < 1800 &&

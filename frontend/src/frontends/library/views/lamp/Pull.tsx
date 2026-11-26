@@ -29,7 +29,14 @@ export type PullHandle = {
   take: (id: string) => DOMRect | null;
   current: () => string | null;
 };
-export type Bounds = { left: number; right: number; top: number };
+// Where a drawn-out book may rest: beside the case, under the top of the
+// window and above the shared dock at its foot.
+export type Bounds = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
 
 type Pose = { x: number; y: number; s: number; ry: number; rx: number };
 type Out = {
@@ -107,7 +114,7 @@ export const Pull = forwardRef<
       let y = spines ? r.bottom + 10 : r.bottom - 16;
       const minTop = b.top + 10;
       if (y - c.H < minTop) y = minTop + c.H;
-      const maxBottom = vh - 78; // room for the plate
+      const maxBottom = Math.min(vh, b.bottom) - 78; // room for the plate
       if (y > maxBottom) y = Math.max(maxBottom, minTop + c.H);
       return {
         start,

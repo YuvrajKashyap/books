@@ -1,8 +1,10 @@
 /* One Lamp. Everything is scoped under .fx-lamplit.
    Stacking, bottom to top: the page (pediment, case, plinth), the darkness
    with its hole (20), haze and dust (21, 22), a pulled book (28), the lamp
-   (29, so its cord passes behind the control bar), the cornice controls
-   (30), the reader (60), and the lamp again above the reader (69, 70). */
+   (29), the cornice with any empty-search note (25, under the bulb but
+   above the dark), the reader (60), and the lamp again above the reader
+   (69, 70). The shared dock (the shell's, not ours) sits over all of it,
+   so the page pads its foot by var(--fx-dock-h). */
 
 /* Stand-ins for Instrument Serif while it loads, scaled to its widths so
    the name is the right size from the first paint and never runs off the
@@ -41,6 +43,10 @@ html:has(.fx-lamplit) {
 html:has(.fx-lamplit) body {
   margin: 0;
   background: #000;
+}
+/* Keyboard focus scrolls books clear of the shared dock at the foot. */
+html:has(.fx-lamplit) {
+  scroll-padding-bottom: var(--fx-dock-h, 110px);
 }
 html:has(.fx-lamplit.is-reading) {
   overflow: hidden;
@@ -333,6 +339,11 @@ html:has(.fx-lamplit.is-reading) {
   transform: scale(1.18);
 }
 
+/* Nothing of the room sits under the shared dock: the floor ends above it. */
+.fx-lamplit .page {
+  padding-bottom: var(--fx-dock-h, 110px);
+}
+
 /* ------------------------------------------------------------ pediment */
 
 .fx-lamplit .pediment {
@@ -472,11 +483,14 @@ html:has(.fx-lamplit.is-reading) {
   margin: 0 auto;
   padding: 0 clamp(8px, 2.4vw, 28px);
 }
+/* The crown of the case. It used to carry the controls; now it is a plain
+   moulding (tall enough to take the foot of the resting bulb) that speaks
+   only when a search finds nothing. */
 .fx-lamplit .cornice {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  padding: 12px var(--post) 13px;
+  position: relative;
+  z-index: 25;
+  min-height: 36px;
+  padding: 0 var(--post);
   overflow: hidden;
   background: #040201;
   box-shadow:
@@ -506,254 +520,10 @@ html:has(.fx-lamplit.is-reading) {
   opacity: var(--heat, 0);
   pointer-events: none;
 }
-.fx-lamplit .tools,
-.fx-lamplit .plates,
 .fx-lamplit .empty {
   position: relative;
   opacity: calc(0.3 + var(--heat, 0) * 0.7);
-}
-.fx-lamplit .tools {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.fx-lamplit .find {
-  flex: 1 1 240px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  max-width: 400px;
-  height: 38px;
-  padding: 0 10px 0 12px;
-  border: 1px solid rgba(201, 164, 92, 0.4);
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.5);
-  color: var(--brass);
-  transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-.fx-lamplit .find:focus-within {
-  border-color: #f3d79a;
-  box-shadow:
-    0 0 0 1px rgba(243, 215, 154, 0.5),
-    0 0 26px rgba(255, 176, 86, 0.22);
-}
-.fx-lamplit .find svg {
-  flex: none;
-}
-.fx-lamplit .find input {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  background: none;
-  color: var(--gold-hi);
-  font: 400 0.9rem var(--sans);
-  -webkit-appearance: none;
-  appearance: none;
-}
-.fx-lamplit .find input::placeholder {
-  color: #8d7449;
-  opacity: 1;
-}
-.fx-lamplit .find input::-webkit-search-cancel-button {
-  display: none;
-}
-.fx-lamplit .find kbd {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border: 1px solid rgba(201, 164, 92, 0.35);
-  border-radius: 2px;
-  font: 500 0.7rem var(--sans);
-  color: #a58b5a;
-}
-.fx-lamplit .find-clear {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  color: var(--gold);
-}
-.fx-lamplit .find-clear:hover {
-  background: rgba(201, 164, 92, 0.18);
-}
-.fx-lamplit .status {
-  margin-right: auto;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: #b0935b;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
-}
-.fx-lamplit .sort {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: none;
-}
-.fx-lamplit .sort span {
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: #8f774a;
-}
-.fx-lamplit .sort select {
-  height: 38px;
-  padding: 0 30px 0 12px;
-  border: 1px solid rgba(201, 164, 92, 0.4);
-  border-radius: 2px;
-  background:
-    linear-gradient(45deg, rgba(0, 0, 0, 0) 50%, #c9a45c 50%) calc(100% - 15px)
-      16px / 5px 5px no-repeat,
-    linear-gradient(-45deg, rgba(0, 0, 0, 0) 50%, #c9a45c 50%) calc(100% - 10px)
-      16px / 5px 5px no-repeat,
-    rgba(0, 0, 0, 0.5);
-  color: var(--gold-hi);
-  font: 400 0.84rem var(--sans);
-  -webkit-appearance: none;
-  appearance: none;
-  cursor: pointer;
-}
-.fx-lamplit .sort select option {
-  background: #120a04;
-  color: #f3dca2;
-}
-.fx-lamplit .turn {
-  flex: none;
-  display: flex;
-  border: 1px solid rgba(201, 164, 92, 0.4);
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.5);
-}
-.fx-lamplit .turn button {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  height: 36px;
-  padding: 0 13px;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #a58b5a;
-  transition:
-    color 0.2s ease,
-    background 0.3s ease;
-}
-.fx-lamplit .turn button:hover {
-  color: var(--gold-hi);
-}
-.fx-lamplit .turn button[aria-pressed="true"] {
-  background: linear-gradient(
-    180deg,
-    #f3deab,
-    #c79d51 48%,
-    #a57c37 54%,
-    #d3ae66
-  );
-  color: #22150a;
-}
-.fx-lamplit .plates {
-  display: flex;
-  gap: 10px;
-  margin-top: 11px;
-  padding: 2px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.fx-lamplit .plates::-webkit-scrollbar {
-  display: none;
-}
-.fx-lamplit .plate {
-  flex: 1 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 34px;
-  padding: 0 24px;
-  border-radius: 2px;
-  background:
-    radial-gradient(
-      circle at 10px 50%,
-      #b8944f 0 1.6px,
-      #201508 2px 2.8px,
-      rgba(0, 0, 0, 0) 3px
-    ),
-    radial-gradient(
-      circle at calc(100% - 10px) 50%,
-      #b8944f 0 1.6px,
-      #201508 2px 2.8px,
-      rgba(0, 0, 0, 0) 3px
-    ),
-    linear-gradient(180deg, #3b2b13, #1d1408);
-  box-shadow:
-    inset 0 0 0 1px rgba(201, 164, 92, 0.34),
-    inset 0 1px 0 rgba(255, 232, 176, 0.14),
-    0 2px 5px rgba(0, 0, 0, 0.6);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: #c4a669;
-  transition:
-    color 0.25s ease,
-    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 0.25s ease;
-}
-.fx-lamplit .plate b {
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.7;
-}
-.fx-lamplit .plate:hover {
-  color: var(--gold-hi);
-  transform: translateY(-1px);
-}
-.fx-lamplit .plate:active {
-  transform: translateY(1px);
-}
-.fx-lamplit .plate[aria-pressed="true"] {
-  background:
-    radial-gradient(
-      circle at 10px 50%,
-      #6b4d1e 0 1.6px,
-      #f7e6b8 2px 2.8px,
-      rgba(0, 0, 0, 0) 3px
-    ),
-    radial-gradient(
-      circle at calc(100% - 10px) 50%,
-      #6b4d1e 0 1.6px,
-      #f7e6b8 2px 2.8px,
-      rgba(0, 0, 0, 0) 3px
-    ),
-    linear-gradient(180deg, #f8e6b6, #d2aa5e 44%, #a67d38 56%, #dcb970);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 240, 200, 0.5),
-    0 0 22px rgba(255, 180, 90, 0.28),
-    0 2px 5px rgba(0, 0, 0, 0.6);
-  color: #23160a;
-  text-shadow: 0 1px 0 rgba(255, 240, 204, 0.5);
-}
-.fx-lamplit .empty {
-  margin-top: 12px;
-  padding-top: 13px;
-  border-top: 1px solid rgba(201, 164, 92, 0.25);
+  padding: 14px 0 15px;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -1299,8 +1069,7 @@ html:has(.fx-lamplit.is-reading) {
 .fx-lamplit.is-off .lede,
 .fx-lamplit.is-off .hint,
 .fx-lamplit.is-off .plinth-plate,
-.fx-lamplit.is-off .plinth-out,
-.fx-lamplit.is-off .owner {
+.fx-lamplit.is-off .plinth-out {
   opacity: 0.3;
 }
 
@@ -1392,21 +1161,6 @@ html:has(.fx-lamplit.is-reading) {
 .fx-lamplit.is-off .plinth-out {
   opacity: 0.6;
 }
-.fx-lamplit .owner {
-  position: relative;
-  padding: 6px 2px;
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: #8f774a;
-  transition: color 0.2s ease;
-}
-.fx-lamplit .owner:hover {
-  color: var(--gold-hi);
-}
-
 /* ------------------------------------------------- waiting and the label */
 
 .fx-lamplit .wait {
@@ -2117,55 +1871,8 @@ html:has(.fx-lamplit.is-reading) {
     font-size: clamp(3.9rem, 20.5vw, 6rem);
   }
   .fx-lamplit .cornice {
-    padding: 9px 9px 10px;
-  }
-  .fx-lamplit .tools {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .fx-lamplit .find {
-    flex: 1 1 120px;
-    height: 42px;
-  }
-  .fx-lamplit .find input {
-    font-size: 16px;
-  }
-  .fx-lamplit .find kbd {
-    display: none;
-  }
-  .fx-lamplit .sort span,
-  .fx-lamplit .turn button span {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
-  .fx-lamplit .sort select {
-    width: 104px;
-    height: 42px;
-    font-size: 0.8rem;
-  }
-  .fx-lamplit .turn button {
-    position: relative;
-    height: 40px;
-    padding: 0 12px;
-  }
-  .fx-lamplit .status {
-    order: 5;
-    flex: 1 0 100%;
-    margin: 0;
-    font-size: 0.56rem;
-  }
-  .fx-lamplit .plates {
-    gap: 7px;
-    margin: 8px -9px 0;
-    padding: 2px 9px;
-  }
-  .fx-lamplit .plate {
-    height: 36px;
-    padding: 0 20px;
-    font-size: 0.58rem;
+    min-height: 28px;
+    padding: 0 9px;
   }
   .fx-lamplit .shelf {
     perspective: 900px;
@@ -2912,198 +2619,5 @@ html:has(.fx-lamplit.is-reading) {
   }
   .fx-lamplit .pull-plate b {
     font-size: 1.08rem;
-  }
-}
-
-/* ---------------------------------------------------------- view switch */
-
-/* The three rooms, as brass plaques like the category tabs. */
-.fx-lamplit .view-switch {
-  flex: none;
-  display: flex;
-  gap: 6px;
-}
-.fx-lamplit .view-switch button {
-  flex: 1 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 38px;
-  padding: 0 20px 0 22px;
-  border-radius: 2px;
-  background:
-    radial-gradient(
-      circle at 9px 50%,
-      #b8944f 0 1.5px,
-      #201508 1.9px 2.7px,
-      rgba(0, 0, 0, 0) 2.9px
-    ),
-    radial-gradient(
-      circle at calc(100% - 9px) 50%,
-      #b8944f 0 1.5px,
-      #201508 1.9px 2.7px,
-      rgba(0, 0, 0, 0) 2.9px
-    ),
-    linear-gradient(180deg, #3b2b13, #1d1408);
-  box-shadow:
-    inset 0 0 0 1px rgba(201, 164, 92, 0.42),
-    inset 0 1px 0 rgba(255, 232, 176, 0.16),
-    0 2px 5px rgba(0, 0, 0, 0.6);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: #cfb173;
-  transition:
-    color 0.25s ease,
-    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.25s ease;
-}
-.fx-lamplit .view-switch button svg {
-  flex: none;
-  opacity: 0.9;
-}
-.fx-lamplit .view-switch button:hover {
-  color: var(--gold-hi);
-  transform: translateY(-1px);
-  box-shadow:
-    inset 0 0 0 1px rgba(243, 215, 154, 0.6),
-    inset 0 1px 0 rgba(255, 232, 176, 0.2),
-    0 0 18px rgba(255, 176, 86, 0.16),
-    0 2px 5px rgba(0, 0, 0, 0.6);
-}
-.fx-lamplit .view-switch button:active {
-  transform: translateY(1px);
-}
-.fx-lamplit .view-switch button[aria-pressed="true"] {
-  background:
-    radial-gradient(
-      circle at 9px 50%,
-      #6b4d1e 0 1.5px,
-      #f7e6b8 1.9px 2.7px,
-      rgba(0, 0, 0, 0) 2.9px
-    ),
-    radial-gradient(
-      circle at calc(100% - 9px) 50%,
-      #6b4d1e 0 1.5px,
-      #f7e6b8 1.9px 2.7px,
-      rgba(0, 0, 0, 0) 2.9px
-    ),
-    linear-gradient(180deg, #f8e6b6, #d2aa5e 44%, #a67d38 56%, #dcb970);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 240, 200, 0.5),
-    0 0 22px rgba(255, 180, 90, 0.28),
-    0 2px 5px rgba(0, 0, 0, 0.6);
-  color: #23160a;
-  text-shadow: 0 1px 0 rgba(255, 240, 204, 0.5);
-  cursor: default;
-}
-
-/* Narrower cases: the order and stance controls drop their words, then the
-   rooms take a row of their own above the search. */
-@media (min-width: 720px) and (max-width: 1139px) {
-  .fx-lamplit .sort span,
-  .fx-lamplit .turn button span {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
-  .fx-lamplit .turn button {
-    position: relative;
-  }
-}
-@media (max-width: 1019px) {
-  .fx-lamplit .tools {
-    flex-wrap: wrap;
-  }
-  .fx-lamplit .view-switch {
-    flex: 1 0 100%;
-  }
-  .fx-lamplit .view-switch button {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-}
-@media (max-width: 719px) {
-  .fx-lamplit .view-switch {
-    gap: 5px;
-  }
-  .fx-lamplit .view-switch button {
-    gap: 6px;
-    height: 40px;
-    padding: 0 6px;
-    background-size:
-      0 0,
-      0 0,
-      auto;
-    font-size: 0.58rem;
-    letter-spacing: 0.15em;
-  }
-  .fx-lamplit .view-switch button[aria-pressed="true"] {
-    background-size:
-      0 0,
-      0 0,
-      auto;
-  }
-}
-
-/* ------------------------------------------------- tabs, status, order */
-
-.fx-lamplit .plates-row .status {
-  margin-top: 9px;
-}
-.fx-lamplit .sort-icon {
-  display: none;
-}
-/* Narrower desktops: the tabs tighten up, and wrap rather than clip. */
-@media (min-width: 720px) and (max-width: 1279px) {
-  .fx-lamplit .plates {
-    flex-wrap: wrap;
-    gap: 6px;
-    overflow: visible;
-  }
-  .fx-lamplit .plate {
-    gap: 7px;
-    padding: 0 16px;
-    letter-spacing: 0.1em;
-  }
-}
-@media (max-width: 719px) {
-  /* The count is read out to screen readers; on a phone the tabs say it. */
-  .fx-lamplit .plates-row .status {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
-  /* Search, order and stance share one row: order becomes an icon that
-     opens the native list of orders. */
-  .fx-lamplit .find {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-  .fx-lamplit .sort {
-    position: relative;
-  }
-  .fx-lamplit .sort select {
-    width: 44px;
-    padding: 0;
-    background: rgba(0, 0, 0, 0.5);
-    color: transparent;
-  }
-  .fx-lamplit .sort-icon {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    display: block;
-    color: var(--gold);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
   }
 }

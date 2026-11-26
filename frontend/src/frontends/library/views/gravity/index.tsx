@@ -1,13 +1,7 @@
 // Gravity Well: the public shelf, standing on a sheet of spacetime that every
 // book bends in proportion to its page count.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import { Search, X } from "lucide-react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import "@fontsource-variable/fraunces/opsz.css";
 import "@fontsource-variable/fraunces/opsz-italic.css";
 import "@fontsource/ibm-plex-mono/latin-400.css";
@@ -23,7 +17,7 @@ import {
 } from "../../../../shared/catalogue";
 import type { BookArt, Sort } from "../../../../shared/catalogue";
 import { site, useTitle } from "../../../../shared/site";
-import { ViewSwitch } from "../../ViewSwitch";
+import { focusShelfSearch } from "../../Dock";
 import { Reader } from "./Reader";
 import { Stage } from "./Stage";
 import type { Probe, StageApi } from "./Stage";
@@ -125,10 +119,16 @@ export default function GravityWell() {
     },
     [setParams, location.state],
   );
-  const reform = (changes: Record<string, string | null>) => {
-    patch(changes);
+  const reform = patch;
+  // Whenever the shelf is re-formed (here or from the dock), travel back to
+  // the front shelves, where the matches gather.
+  const shape = `${q}|${focusIdx}|${sort}|${layout}`;
+  const lastShape = useRef(shape);
+  useEffect(() => {
+    if (lastShape.current === shape) return;
+    lastShape.current = shape;
     if (gl) window.scrollTo({ top: 0 });
-  };
+  }, [shape, gl]);
 
   // ---- the shelf ----
   const arts = useMemo(() => {
@@ -189,7 +189,6 @@ export default function GravityWell() {
 
   // ---- the reader ----
   const rootRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
   const stageApi = useRef<StageApi | null>(null);
   const probe = useRef<Probe | null>(null);
   const origin = useRef<{ id: string; rect: DOMRect } | null>(null);
@@ -263,7 +262,7 @@ export default function GravityWell() {
 
   useShelfKeys({
     paused: Boolean(shown),
-    search: () => searchRef.current?.focus(),
+    search: focusShelfSearch,
     enter: () => navigate("/admin"),
   });
   const openArt = readingId ? arts.get(readingId) : undefined;
@@ -280,41 +279,6 @@ export default function GravityWell() {
   const [first, ...rest] = site.name.split(" ");
   const maxS = Math.max(0, plan.rows - 1 + OVERRUN);
   const chosen = focusIdx >= 0 ? focuses[focusIdx] : null;
-
-  const strata = (variant: "rail" | "chips") => (
-    <div
-      className={"gw-strata is-" + variant}
-      role="group"
-      aria-label="Category"
-    >
-      {variant === "rail" && <p className="gw-label">Strata</p>}
-      <button
-        type="button"
-        aria-pressed={focusIdx < 0}
-        onClick={() => reform({ focus: null })}
-      >
-        <span>All</span>
-        <b>{state === "ok" ? books.length : "--"}</b>
-        <i style={{ transform: "scaleX(1)" }} />
-      </button>
-      {stats.per.map((row, i) => (
-        <button
-          key={row.focus}
-          type="button"
-          aria-pressed={focusIdx === i}
-          onClick={() => reform({ focus: row.focus })}
-        >
-          <span>{row.focus}</span>
-          <b>{state === "ok" ? row.count : "--"}</b>
-          <i
-            style={{
-              transform: `scaleX(${stats.pages ? (row.pages / stats.pages).toFixed(3) : 0})`,
-            }}
-          />
-        </button>
-      ))}
-    </div>
-  );
 
   return (
     <div
@@ -429,7 +393,7 @@ export default function GravityWell() {
                 className="gw-button"
                 onClick={() => {
                   reform({ q: null });
-                  searchRef.current?.focus();
+                  focusShelfSearch();
                 }}
               >
                 Clear the search
@@ -446,98 +410,6 @@ export default function GravityWell() {
             </div>
           </div>
         )}
-
-        {gl && strata("rail")}
-
-        <div className="gw-console">
-          <form
-            className="gw-search"
-            role="search"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <Search size={15} strokeWidth={1.5} aria-hidden="true" />
-            <input
-              ref={searchRef}
-              type="text"
-              inputMode="search"
-              enterKeyHint="search"
-              autoComplete="off"
-              spellCheck={false}
-              value={q}
-              placeholder="Search title or author"
-              aria-label="Search by title or author"
-              onChange={(e) => reform({ q: e.target.value || null })}
-              onKeyDown={(e) => {
-                if (e.key === "Escape" && q) {
-                  e.preventDefault();
-                  reform({ q: null });
-                }
-              }}
-            />
-            {q ? (
-              <button
-                type="button"
-                className="gw-clear"
-                aria-label="Clear the search"
-                onClick={() => {
-                  reform({ q: null });
-                  searchRef.current?.focus();
-                }}
-              >
-                <X size={14} strokeWidth={1.5} aria-hidden="true" />
-              </button>
-            ) : (
-              <kbd aria-hidden="true">/</kbd>
-            )}
-          </form>
-
-          <p className="gw-count" aria-live="polite">
-            {state !== "ok"
-              ? ""
-              : matches !== null
-                ? `${matches} of ${plan.slots.length} match`
-                : `${plan.slots.length} ${plan.slots.length === 1 ? "body" : "bodies"}`}
-          </p>
-
-          {strata("chips")}
-
-          <ViewSwitch />
-
-          <label className="gw-sort">
-            <span>Sort</span>
-            <select
-              value={sort}
-              onChange={(e) =>
-                reform({
-                  sort: e.target.value === "shelf" ? null : e.target.value,
-                })
-              }
-            >
-              {sorts.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <div className="gw-layout" role="group" aria-label="Show books by">
-            <button
-              type="button"
-              aria-pressed={layout === "covers"}
-              onClick={() => reform({ layout: null })}
-            >
-              Covers
-            </button>
-            <button
-              type="button"
-              aria-pressed={layout === "spines"}
-              onClick={() => reform({ layout: "spines" })}
-            >
-              Spines
-            </button>
-          </div>
-        </div>
 
         <footer className="gw-foot">
           <p className="gw-kicker">
@@ -587,9 +459,6 @@ export default function GravityWell() {
             >
               Return to the first shelf
             </button>
-            <Link className="gw-owner" to="/admin">
-              Owner sign in
-            </Link>
           </div>
           <p className="gw-colophon">
             {site.name} · {site.owner}

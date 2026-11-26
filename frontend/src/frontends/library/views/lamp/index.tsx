@@ -14,13 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import { ArrowDownUp, LayoutGrid, Library, Search, X } from "lucide-react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   bookArt,
   focuses,
@@ -35,7 +29,7 @@ import {
   type Sort,
 } from "../../../../shared/catalogue";
 import { site, useTitle } from "../../../../shared/site";
-import { ViewSwitch } from "../../ViewSwitch";
+import { focusShelfSearch } from "../../Dock";
 import { Bookcase, pack, type Layout } from "./Bookcase";
 import { Pull, type PullHandle } from "./Pull";
 import { LampView } from "./LampView";
@@ -88,7 +82,6 @@ export default function OneLamp() {
   const corniceRef = useRef<HTMLDivElement>(null);
   const pedimentRef = useRef<HTMLElement>(null);
   const floorRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
   const pullRef = useRef<PullHandle | null>(null);
 
   const [on, setOn] = useState(true);
@@ -103,11 +96,6 @@ export default function OneLamp() {
     return m;
   }, [books]);
   const byId = useMemo(() => new Map(books.map((b) => [b.id, b])), [books]);
-  const counts = useMemo(() => {
-    const m = new Map<string, number>();
-    for (const b of books) m.set(b.focus, (m.get(b.focus) ?? 0) + 1);
-    return m;
-  }, [books]);
   const pages = useMemo(() => {
     let sum = 0;
     let known = 0;
@@ -136,6 +124,13 @@ export default function OneLamp() {
   }, [focus, shownFocus, env.reduced]);
   const leaving = focus !== shownFocus && focus !== null ? focus : null;
 
+  // A change of stance (from the dock) turns the books over like a row of
+  // dominoes. Noted while rendering, so the class lands with the new layout.
+  const [seenLayout, setSeenLayout] = useState(layout);
+  if (seenLayout !== layout) {
+    setSeenLayout(layout);
+    setSwitched(true);
+  }
   // The turning class only lives as long as the row of dominoes does.
   useEffect(() => {
     if (!switched) return;
@@ -195,9 +190,11 @@ export default function OneLamp() {
     ]
       .filter((el): el is HTMLElement => Boolean(el))
       .map((el) => lamp.follow(el));
-    // The lamp hangs above the case: once the control bar is pinned at the
-    // top of the window, the bulb rests just under it, beside the rows.
-    lamp.setCeiling(corniceRef.current);
+    // The lamp hangs above the case: the bulb never drops below the foot of
+    // the pediment, so it rests over the crown and never over a spine. Once
+    // the pediment has scrolled away it tucks up at the top of the window,
+    // beside the rows.
+    lamp.setCeiling(pedimentRef.current);
     return () => {
       stops.forEach((stop) => stop());
       lamp.setCeiling(null);
@@ -215,14 +212,15 @@ export default function OneLamp() {
   }, [matches, packing]);
 
   useEffect(() => {
+    // A search brings the top of the case into view, where the light
+    // gathers what it found (or says it found nothing).
     if (!q.trim() || !ok) return;
-    const el = shelvesRef.current;
+    const el = corniceRef.current ?? shelvesRef.current;
     if (!el) return;
     const top = el.getBoundingClientRect().top;
-    const bar = corniceRef.current?.offsetHeight ?? 100;
-    if (top < bar - 6 || top > window.innerHeight * 0.55)
+    if (top < 0 || top > window.innerHeight * 0.4)
       window.scrollTo({
-        top: window.scrollY + top - bar - 10,
+        top: window.scrollY + top - 12,
         behavior: env.reduced ? "auto" : "smooth",
       });
   }, [q, ok, env.reduced]);
@@ -322,11 +320,19 @@ export default function OneLamp() {
   }, []);
   const bounds = useCallback(() => {
     const box = shelvesRef.current?.getBoundingClientRect();
-    const bar = corniceRef.current?.getBoundingClientRect();
+    // The shared dock covers the foot of the window; a book drawn out stays
+    // clear of it.
+    const dock =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--fx-dock-h",
+        ),
+      ) || 0;
     return {
       left: box ? box.left : 0,
       right: box ? box.right : document.documentElement.clientWidth,
-      top: bar ? Math.max(0, bar.bottom) : 0,
+      top: 0,
+      bottom: window.innerHeight - dock,
     };
   }, []);
 
@@ -334,10 +340,7 @@ export default function OneLamp() {
 
   useShelfKeys({
     paused: Boolean(reading),
-    search: () => {
-      searchRef.current?.focus();
-      searchRef.current?.select();
-    },
+    search: focusShelfSearch,
     enter: () => navigate("/admin"),
   });
   const readingBook = reading ? byId.get(reading.id) : undefined;
@@ -346,10 +349,6 @@ export default function OneLamp() {
 
   const total = books.length;
   const empty = Boolean(matches && matches.length === 0);
-  let status = total + " books";
-  if (matches)
-    status = matches.length + " of " + order.length + " in the light";
-  else if (shownFocus) status = order.length + " books in " + shownFocus;
 
   const rootClass =
     "fx-lamplit is-" +
@@ -406,127 +405,6 @@ export default function OneLamp() {
                 <Walnut seed={23} />
               </div>
               <div className="cornice-light" aria-hidden="true" />
-              <div className="tools">
-                <ViewSwitch />
-                <div className="find">
-                  <Search size={15} aria-hidden="true" />
-                  <input
-                    ref={searchRef}
-                    type="search"
-                    value={q}
-                    placeholder="Title or author"
-                    aria-label="Search the shelf by title or author"
-                    autoComplete="off"
-                    spellCheck={false}
-                    enterKeyHint="search"
-                    onChange={(e) => patch({ q: e.target.value || null })}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && matches?.length) {
-                        e.preventDefault();
-                        open(matches[0].id);
-                      }
-                      if (e.key === "Escape" && q) {
-                        e.preventDefault();
-                        patch({ q: null });
-                      }
-                    }}
-                  />
-                  {q ? (
-                    <button
-                      type="button"
-                      className="find-clear"
-                      aria-label="Clear search"
-                      onClick={() => {
-                        patch({ q: null });
-                        searchRef.current?.focus();
-                      }}
-                    >
-                      <X size={14} aria-hidden="true" />
-                    </button>
-                  ) : (
-                    <kbd aria-hidden="true">/</kbd>
-                  )}
-                </div>
-                <label className="sort">
-                  <span>Order</span>
-                  <ArrowDownUp
-                    className="sort-icon"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                  <select
-                    value={sort}
-                    onChange={(e) =>
-                      patch({
-                        sort:
-                          e.target.value === "shelf" ? null : e.target.value,
-                      })
-                    }
-                  >
-                    {sorts.map((s) => (
-                      <option key={s.value} value={s.value}>
-                        {s.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <div
-                  className="turn"
-                  role="group"
-                  aria-label="How the books stand"
-                >
-                  <button
-                    type="button"
-                    aria-pressed={layout === "spines"}
-                    onClick={() => {
-                      if (layout !== "spines") setSwitched(true);
-                      patch({ layout: null });
-                    }}
-                  >
-                    <Library size={15} aria-hidden="true" />
-                    <span>Spines</span>
-                  </button>
-                  <button
-                    type="button"
-                    aria-pressed={layout === "covers"}
-                    onClick={() => {
-                      if (layout !== "covers") setSwitched(true);
-                      patch({ layout: "covers" });
-                    }}
-                  >
-                    <LayoutGrid size={15} aria-hidden="true" />
-                    <span>Covers</span>
-                  </button>
-                </div>
-              </div>
-              <div className="plates-row">
-                <div className="plates" role="group" aria-label="Category">
-                  <button
-                    type="button"
-                    className="plate"
-                    aria-pressed={focus === null}
-                    onClick={() => patch({ focus: null })}
-                  >
-                    <span>All</span>
-                    <b>{total}</b>
-                  </button>
-                  {focuses.map((f) => (
-                    <button
-                      type="button"
-                      className="plate"
-                      key={f}
-                      aria-pressed={focus === f}
-                      onClick={() => patch({ focus: focus === f ? null : f })}
-                    >
-                      <span>{f}</span>
-                      <b>{counts.get(f) ?? 0}</b>
-                    </button>
-                  ))}
-                </div>
-                <p className="status" role="status" aria-live="polite">
-                  {status}
-                </p>
-              </div>
               {empty && (
                 <div className="empty" role="status">
                   <p>
@@ -535,7 +413,10 @@ export default function OneLamp() {
                     here matches.
                   </p>
                   <div>
-                    <button type="button" onClick={() => patch({ q: null })}>
+                    <button
+                      type="button"
+                      onClick={() => patch({ q: null, focus: null })}
+                    >
                       Clear the search
                     </button>
                     {shownFocus && (
@@ -589,9 +470,6 @@ export default function OneLamp() {
                   {on ? "Put the light out" : "Light the lamp"}
                 </button>
               </p>
-              <Link className="owner" to="/admin">
-                Owner sign in
-              </Link>
             </footer>
           </main>
         )}
@@ -615,9 +493,6 @@ export default function OneLamp() {
           <button type="button" onClick={reload}>
             Try again
           </button>
-          <Link className="owner" to="/admin">
-            Owner sign in
-          </Link>
         </div>
       )}
 

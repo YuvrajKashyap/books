@@ -11,19 +11,8 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Compass as CompassIcon,
-  Search,
-  X,
-} from "lucide-react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import "@fontsource/cormorant-garamond/latin-500.css";
 import "@fontsource/cormorant-garamond/latin-500-italic.css";
 import "@fontsource/ibm-plex-mono/latin-400.css";
@@ -63,7 +52,7 @@ import { Sky, type SkyHandle } from "./Sky";
 import { Compass, type Tick } from "./Compass";
 import { Reader, type Place } from "./Reader";
 import { Flat } from "./Flat";
-import { ViewSwitch } from "../../ViewSwitch";
+import { DockSlot, focusShelfSearch } from "../../Dock";
 
 type Phase = "dark" | "opening" | "live";
 const THIRD = (Math.PI * 2) / 3;
@@ -248,11 +237,8 @@ export default function Rotunda() {
   const plate = useRef<HTMLDivElement>(null);
   const plateTitle = useRef<HTMLElement>(null);
   const plateAuthor = useRef<HTMLSpanElement>(null);
-  const hdg = useRef<HTMLElement>(null);
-  const pos = useRef<HTMLSpanElement>(null);
-  const ladder = useRef<HTMLElement>(null);
+  const pos = useRef<HTMLElement>(null);
   const sky = useRef<SkyHandle>(null);
-  const searchBox = useRef<HTMLInputElement>(null);
   const registry = useRef(new Map<string, HTMLElement>());
   const peek = useRef<ShelfBook | null>(null);
   const origin = useRef<Place | null>(null);
@@ -457,16 +443,28 @@ export default function Rotunda() {
     face(found[n].id);
   };
 
-  const setLayout = (next: Layout) => {
-    if (next === layout) return;
+  // The dock sets the layout and the search; the room answers from where you
+  // stand: books turn in a wave, matches step forward and the rest fall back
+  // in a ripple from the centre.
+  const lastLayout = useRef(layout);
+  useEffect(() => {
+    if (layout === lastLayout.current) return;
+    lastLayout.current = layout;
+    let timer = 0;
     if (!reduce && !flat) {
       setLinger({ ids: new Set(registry.current.keys()), c: motion.turn });
-      window.setTimeout(() => setLinger(null), 1500);
+      timer = window.setTimeout(() => setLinger(null), 1500);
     }
     setWaveAt(motion.turn);
-    if (next === "covers") setEverCovers(true);
-    setParam("layout", next === "covers" ? "covers" : null);
-  };
+    if (layout === "covers") setEverCovers(true);
+    return () => clearTimeout(timer);
+  }, [layout]);
+  const lastQ = useRef(q);
+  useEffect(() => {
+    if (q === lastQ.current) return;
+    lastQ.current = q;
+    setWaveAt(motion.turn);
+  }, [q]);
 
   // ---- the reader --------------------------------------------------------
   const openBook = useCallback(
@@ -580,7 +578,7 @@ export default function Rotunda() {
   useTitle(shown && !shown.closing ? bookArt(shown.book).title : undefined);
   useShelfKeys({
     paused: Boolean(shown),
-    search: () => searchBox.current?.focus(),
+    search: focusShelfSearch,
     enter: () => navigate("/admin"),
   });
 
@@ -732,8 +730,6 @@ export default function Rotunda() {
       rosa = 0,
       frontEl: HTMLElement | undefined,
       plateId = "",
-      hdgText = "",
-      posText = "",
       saidId = "",
       shownFront = "",
       wasSettled = false,
@@ -783,7 +779,6 @@ export default function Rotunda() {
         dome.current.style.transform = `translateY(${(lookUp * D.ow * 0.19).toFixed(1)}px)`;
       if (floor.current)
         floor.current.style.transform = `translateY(${(-lookDown * D.fw * 0.07).toFixed(1)}px)`;
-      ladder.current?.style.setProperty("--lift", m.lift.toFixed(3));
 
       const speed = Math.min(1, Math.abs(m.vel) / 7);
       if (shaft.current) {
@@ -840,16 +835,11 @@ export default function Rotunda() {
           plateAuthor.current.textContent = seen.author;
         }
         const heading = headingOf(tier, m.turn);
-        const text = heading.toFixed(1).padStart(5, "0") + "°";
-        if (text !== hdgText && hdg.current) {
-          hdgText = text;
-          hdg.current.textContent = text;
-        }
+        // The dock's readout can come and go (it steps matches while a
+        // search is on), so it is compared with what it shows, not cached.
         const where = `${f.index + 1} / ${tier.books.length}`;
-        if (where !== posText && pos.current) {
-          posText = where;
+        if (pos.current && pos.current.textContent !== where)
           pos.current.textContent = where;
-        }
         let gap = heading - rosa;
         gap -= Math.round(gap / 360) * 360;
         rosa += gap * Math.min(1, dt * 16);
@@ -968,14 +958,6 @@ export default function Rotunda() {
     },
     [face],
   );
-  const hitsByTier = useMemo(
-    () =>
-      found
-        ? focuses.map((f) => found.filter((b) => b.focus === f).length)
-        : null,
-    [found],
-  );
-
   // ---- markup ------------------------------------------------------------
   const ready = shelf.state === "ok";
   const nothing = Boolean(found && !found.length);
@@ -984,163 +966,53 @@ export default function Rotunda() {
     if (t !== null) motion.rideTo(t);
   };
 
-  const find = (
-    <div className="find">
-      <label className="search">
-        <Search size={15} aria-hidden="true" />
-        <span className="sr-only">Search by title or author</span>
-        <input
-          ref={searchBox}
-          type="search"
-          value={q}
-          placeholder={dims.phone ? "Search" : "Title or author"}
-          autoComplete="off"
-          spellCheck={false}
-          enterKeyHint="search"
-          onChange={(e) => {
-            // The shelf answers from where you stand outwards: matches step
-            // forward and the rest fall back in a ripple from the centre.
-            setWaveAt(motion.turn);
-            setParam("q", e.target.value || null);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Escape" && q) {
-              e.preventDefault();
-              setParam("q", null);
-            } else if (e.key === "Enter" && found?.length) {
-              e.preventDefault();
-              stepMatch(e.shiftKey ? -1 : 1);
-            }
-          }}
-        />
-        {q ? (
-          <button
-            type="button"
-            className="clear"
-            onClick={() => {
-              setParam("q", null);
-              searchBox.current?.focus();
-            }}
-          >
-            <X size={14} aria-hidden="true" />
-            <span className="sr-only">Clear search</span>
-          </button>
-        ) : (
-          <kbd aria-hidden="true">/</kbd>
-        )}
-      </label>
-      {found && found.length > 0 && (
-        <div className="hits">
-          <button type="button" onClick={() => stepMatch(-1)}>
-            <ChevronLeft size={14} aria-hidden="true" />
-            <span className="sr-only">Previous match</span>
-          </button>
-          <span role="status">
-            {Math.min(matchAt, found.length - 1) + 1} of {found.length}{" "}
-            {found.length === 1 ? "match" : "matches"}
-          </span>
-          <button type="button" onClick={() => stepMatch(1)}>
-            <ChevronRight size={14} aria-hidden="true" />
-            <span className="sr-only">Next match</span>
-          </button>
-        </div>
-      )}
-      <div className="switches">
-        <div className="toggle" role="group" aria-label="Show the books by">
-          <button
-            type="button"
-            aria-pressed={layout === "spines"}
-            onClick={() => setLayout("spines")}
-          >
-            Spines
-          </button>
-          <button
-            type="button"
-            aria-pressed={layout === "covers"}
-            onClick={() => setLayout("covers")}
-          >
-            Covers
-          </button>
-        </div>
-        <label className="sort">
-          <span className="sr-only">Order of the shelves</span>
-          <select
-            value={sort}
-            onChange={(e) =>
-              setParam(
-                "sort",
-                e.target.value === "shelf" ? null : e.target.value,
-              )
-            }
-          >
-            {sorts.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-    </div>
-  );
-
-  const rungs = (
-    <nav className="ladder" aria-label="Categories" ref={ladder}>
-      <span className="rail" aria-hidden="true" />
+  // The room's own instrument, lent to the shared dock: step the books on
+  // this tier, or the matches while a search is on.
+  const searchingHits = Boolean(found?.length);
+  const matchNo = found?.length ? Math.min(matchAt, found.length - 1) + 1 : 0;
+  const step = (by: number) => {
+    if (intro.current) endIntro();
+    if (searchingHits) stepMatch(by);
+    else stepBook(by);
+  };
+  const instrument = (
+    <>
       <button
         type="button"
-        className="rung all"
-        aria-pressed={lit === null}
-        onClick={() => pickFocus(null)}
+        className="fx-dock-tool"
+        aria-label={searchingHits ? "Previous match" : "Previous book"}
+        title={searchingHits ? "Previous match" : "Previous book"}
+        disabled={!ready}
+        onClick={() => step(-1)}
       >
-        <b>All</b>
-        <span>Every tier</span>
-        <i>{total}</i>
+        <ChevronLeft size={16} strokeWidth={1.6} aria-hidden="true" />
       </button>
-      <div className="rungs">
-        <span className="carriage" aria-hidden="true" />
-        {focuses.map((f, t) => (
-          <button
-            key={f}
-            type="button"
-            className={"rung" + (active === t ? " here" : "")}
-            aria-pressed={lit === t}
-            aria-current={active === t ? "location" : undefined}
-            onClick={() => pickFocus(t)}
-          >
-            <b>{roman[t]}</b>
-            <span>
-              <em className="wide">{f}</em>
-              <em className="narrow">{short(f)}</em>
-            </span>
-            <i>
-              {hitsByTier ? hitsByTier[t] + " / " : ""}
-              {tiers[t].books.length}
-            </i>
-          </button>
-        ))}
-      </div>
-    </nav>
+      {searchingHits ? (
+        <span className="fx-dock-read" role="status">
+          <small>Match</small>
+          <b>
+            {matchNo} of {found!.length}
+          </b>
+        </span>
+      ) : (
+        <span className="fx-dock-read" title={focuses[active]}>
+          <small>Tier {roman[active]}</small>
+          <b ref={pos} />
+        </span>
+      )}
+      <button
+        type="button"
+        className="fx-dock-tool"
+        aria-label={searchingHits ? "Next match" : "Next book"}
+        title={searchingHits ? "Next match" : "Next book"}
+        disabled={!ready}
+        onClick={() => step(1)}
+      >
+        <ChevronRight size={16} strokeWidth={1.6} aria-hidden="true" />
+      </button>
+    </>
   );
 
-  const lede = (
-    <p className="lede">
-      <b>A personal library</b>
-      <span>
-        {ready ? total : "—"} books in four categories, kept by {site.owner}.
-      </span>
-    </p>
-  );
-  const foot = (
-    <footer className="foot">
-      <span>
-        {dims.phone && !flat
-          ? `A personal library${ready ? ` · ${total} books · four categories` : ""}`
-          : site.name + (ready ? ` · ${total} books · four tiers` : "")}
-      </span>
-      <Link to="/admin">Owner sign in</Link>
-    </footer>
-  );
   const reader = shown && (
     <Reader
       book={shown.book}
@@ -1194,10 +1066,6 @@ export default function Rotunda() {
         <div className="flat-scroll" inert={shown ? true : undefined}>
           <header className="flat-head">
             <h1>{site.name}</h1>
-            {lede}
-            <ViewSwitch className="views" />
-            {find}
-            {rungs}
           </header>
           {shelf.state === "loading" && (
             <p className="flat-wait">Opening the room</p>
@@ -1213,7 +1081,6 @@ export default function Rotunda() {
               onOpen={openBook}
             />
           )}
-          {foot}
         </div>
         {reader}
       </div>
@@ -1309,41 +1176,9 @@ export default function Rotunda() {
       </div>
 
       <div className="hud" inert={shown ? true : undefined}>
-        {lede}
-        <ViewSwitch className="views" />
-        {find}
-        {rungs}
         <div className="plate" ref={plate} aria-hidden="true">
           <b ref={plateTitle} />
           <span ref={plateAuthor} />
-        </div>
-        <div className="readout">
-          <button type="button" className="turn" onClick={() => bay(-1)}>
-            <ChevronLeft size={16} aria-hidden="true" />
-            <span className="sr-only">Previous bay</span>
-          </button>
-          <dl>
-            <div>
-              <dt>Hdg</dt>
-              <dd ref={hdg}>000.0°</dd>
-            </div>
-            <div className="where">
-              <dt>Tier {roman[active]}</dt>
-              <dd>{dims.phone ? short(focuses[active]) : focuses[active]}</dd>
-            </div>
-            <div>
-              <dt>Book</dt>
-              <dd ref={pos}>0 / 0</dd>
-            </div>
-          </dl>
-          <button type="button" className="turn north" onClick={north}>
-            <CompassIcon size={15} aria-hidden="true" />
-            <span className="sr-only">Return to north, the front row</span>
-          </button>
-          <button type="button" className="turn" onClick={() => bay(1)}>
-            <ChevronRight size={16} aria-hidden="true" />
-            <span className="sr-only">Next bay</span>
-          </button>
         </div>
         {shelf.state === "loading" && (
           <p className="wait" role="status">
@@ -1352,12 +1187,12 @@ export default function Rotunda() {
         )}
         {errorCard}
         {emptyCard}
-        {foot}
         <p className="sr-only" aria-live="polite">
           {announce}
         </p>
       </div>
       {reader}
+      <DockSlot>{instrument}</DockSlot>
     </div>
   );
 }

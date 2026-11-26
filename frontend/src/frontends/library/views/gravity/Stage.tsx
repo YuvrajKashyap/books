@@ -1,7 +1,10 @@
 // The fixed stage: the WebGL fabric behind, the CSS 3D shelves in front, and
-// the one loop that moves the camera, weighs the books and fills the readouts.
+// the one loop that moves the camera, weighs the books and fills the shelf
+// readout it lends the shared dock.
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { DockSlot } from "../../Dock";
 import { ShelfBook } from "./Book";
 import type { BookHandlers } from "./Book";
 import { Fabric } from "./scene";
@@ -18,7 +21,6 @@ import {
   clamp,
   pad,
   project,
-  signed,
   smooth,
   toFabric,
 } from "./layout";
@@ -102,11 +104,9 @@ export function Stage(props: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const worldRef = useRef<HTMLDivElement>(null);
   const tagRef = useRef<HTMLDivElement>(null);
-  const gaugeRef = useRef<HTMLSpanElement>(null);
-  const markRef = useRef<HTMLElement>(null);
-  const coordRef = useRef<HTMLSpanElement>(null);
-  const speedRef = useRef<HTMLSpanElement>(null);
-  const bodiesRef = useRef<HTMLSpanElement>(null);
+  const gaugeRef = useRef<HTMLElement>(null);
+  const upRef = useRef<HTMLButtonElement>(null);
+  const downRef = useRef<HTMLButtonElement>(null);
   const fabricRef = useRef<Fabric | null>(null);
   const regs = useRef(new Map<string, Reg>());
   const delays = useRef(new Map<string, number>());
@@ -372,16 +372,23 @@ export function Stage(props: Props) {
     let lastPast = false;
     let lastTick = 0;
     const mountedAt = performance.now();
-    // Where the console begins, so nothing in the scene slides in under it.
+    // Where the shared dock begins, so nothing in the scene slides in under
+    // it. The dock publishes the room it takes at the foot as --fx-dock-h,
+    // which holds steady even while the dock steps away for the reader.
     let floor = live.current.view.h;
-    const consoleEl = stage
-      .closest(".fx-gravity")
-      ?.querySelector<HTMLElement>(".gw-console");
     const measureFloor = () => {
-      const r = consoleEl?.getBoundingClientRect();
-      floor = r && r.height > 0 ? r.top : live.current.view.h;
+      const h = live.current.view.h;
+      const dock = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--fx-dock-h",
+        ),
+      );
+      floor = dock > 0 && dock < h ? h - dock : h;
     };
-    const written = { gauge: "", coord: "", speed: "", bodies: "" };
+    const written = {
+      gauge: "",
+      gaugeEl: null as HTMLElement | null,
+    };
     const order: { d: number; i: number }[] = [];
     const staged = new Float32Array(400 * 4);
 
@@ -454,7 +461,7 @@ export function Stage(props: Props) {
       const pointerDepth = hit ? m.strength * (lite ? 52 : 68) * (1 - rb) : 0;
 
       // How far a shelf has passed into the near zone: 0 in clear view, 1 once
-      // the middle of its books has gone under the console. Spines stand tall
+      // the middle of its books has gone under the dock. Spines stand tall
       // enough that a shelf passing under the camera would otherwise sweep
       // giant book tops across the controls.
       const spinesNow = L.layout === "spines";
@@ -490,7 +497,7 @@ export function Stage(props: Props) {
         reg.m += reg.v * dt;
         const d = cam.ez - slot.z;
         // Fog with distance. A shelf passing under the camera dissolves
-        // instead, and is not drawn at all once it would reach the console.
+        // instead, and is not drawn at all once it would reach the dock.
         const veil =
           Math.round(smooth(farA, farB, d) * (0.9 + 0.1 * heroT) * 50) / 50;
         if (veil !== reg.veil) {
@@ -627,37 +634,26 @@ export function Stage(props: Props) {
           : { x: 0, y: 0, w: 1, h: 1, on: 0 },
       });
 
-      // Instrument readouts, all read off the live scene.
+      // The shelf readout in the dock, read off the live scene. The dock's
+      // slot can arrive after the loop starts, so a new element is filled.
       const total = L.plan.rows;
       const shelf = total ? clamp(Math.round(m.s) + 1, 1, total) : 0;
       const gauge = `${pad(shelf)} / ${pad(total)}`;
-      if (gauge !== written.gauge && gaugeRef.current) {
+      const gaugeEl = gaugeRef.current;
+      if (gaugeEl && (gauge !== written.gauge || gaugeEl !== written.gaugeEl)) {
         written.gauge = gauge;
-        gaugeRef.current.textContent = gauge;
+        written.gaugeEl = gaugeEl;
+        gaugeEl.textContent = gauge;
       }
-      if (markRef.current)
-        markRef.current.style.transform = `translate3d(0,${(clamp(total > 1 ? m.s / (total - 1) : 0, 0, 1) * 100).toFixed(2)}%,0)`;
-      const coord =
-        hit && m.strength > 0.05
-          ? `X ${signed(hit.x)}  Z ${signed(-hit.z, 5)}`
-          : "OFF THE SHEET";
-      if (coord !== written.coord && coordRef.current) {
-        written.coord = coord;
-        coordRef.current.textContent = coord;
-      }
-      const speed =
-        Math.abs(m.v) < 0.005
-          ? "AT REST"
-          : `${Math.abs(m.v).toFixed(2)} SHELVES/S`;
-      if (speed !== written.speed && speedRef.current) {
-        written.speed = speed;
-        speedRef.current.textContent = speed;
-      }
-      const bodies = pad(regs.current.size, 3);
-      if (bodies !== written.bodies && bodiesRef.current) {
-        written.bodies = bodies;
-        bodiesRef.current.textContent = bodies;
-      }
+      // aria-disabled rather than disabled, so a focused button keeps focus.
+      const atFirst = shelf <= 1;
+      const atLast = shelf >= total;
+      for (const [el, off] of [
+        [upRef.current, atFirst],
+        [downRef.current, atLast],
+      ] as const)
+        if (el && el.getAttribute("aria-disabled") !== String(off))
+          el.setAttribute("aria-disabled", String(off));
 
       // The label that follows the book under the pointer.
       const tag = tagRef.current;
@@ -735,6 +731,16 @@ export function Stage(props: Props) {
   useLayoutEffect(() => {
     kickRef.current?.();
   }, [phase, plan, layout, view.w, view.h, view.P, reading, searching, base]);
+
+  // One shelf nearer or farther, from the dock.
+  const travel = (dir: -1 | 1) => {
+    const last = Math.max(0, rows - 1);
+    const now = Math.round(window.scrollY / STEP);
+    // At the first or last shelf the button stays focused and does nothing.
+    if (dir < 0 ? now <= 0 : now >= last) return;
+    const row = clamp(now + dir, 0, last);
+    window.scrollTo({ top: row * STEP, behavior: "smooth" });
+  };
 
   const mounted =
     phase === "ok"
@@ -821,30 +827,33 @@ export function Stage(props: Props) {
         )}
       </div>
 
-      <aside className="gw-rail gw-rail-right" aria-hidden="true">
-        <p className="gw-label">Shelf · scroll to travel</p>
-        <p className="gw-gauge">
-          <span ref={gaugeRef}>00 / 00</span>
-        </p>
-        <div className="gw-depth">
-          {Array.from({ length: Math.min(rows, 48) }, (_, i) => (
-            <i key={i} />
-          ))}
-          <b ref={markRef} />
-        </div>
-        <p className="gw-label">Pointer mass</p>
-        <p className="gw-read">
-          <span ref={coordRef}>OFF THE SHEET</span>
-        </p>
-        <p className="gw-label">Camera</p>
-        <p className="gw-read">
-          <span ref={speedRef}>AT REST</span>
-        </p>
-        <p className="gw-label">Bodies in range</p>
-        <p className="gw-read">
-          <span ref={bodiesRef}>000</span>
-        </p>
-      </aside>
+      <DockSlot>
+        <button
+          ref={upRef}
+          type="button"
+          className="fx-dock-tool"
+          aria-label="Previous shelf"
+          title="Previous shelf"
+          onClick={() => travel(-1)}
+        >
+          <ChevronUp size={16} strokeWidth={1.6} aria-hidden="true" />
+        </button>
+        <span className="fx-dock-read">
+          <small>Shelf</small>
+          {/* The loop writes the figures; React only sets the first ones. */}
+          <b ref={gaugeRef}>{"-- / --"}</b>
+        </span>
+        <button
+          ref={downRef}
+          type="button"
+          className="fx-dock-tool"
+          aria-label="Next shelf"
+          title="Next shelf"
+          onClick={() => travel(1)}
+        >
+          <ChevronDown size={16} strokeWidth={1.6} aria-hidden="true" />
+        </button>
+      </DockSlot>
     </div>
   );
 }
