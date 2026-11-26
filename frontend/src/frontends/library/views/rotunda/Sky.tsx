@@ -7,7 +7,7 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
-import { site } from "../../shared/site";
+import { site } from "../../../../shared/site";
 
 export type SkyHandle = {
   // rot: sky rotation in radians. streak: arc each star smears across.

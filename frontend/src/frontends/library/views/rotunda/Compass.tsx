@@ -1,7 +1,7 @@
 // The inlaid floor: a brass compass rose marked in degrees. It turns with the
 // room, and search results appear on its ring as ticks you can jump to.
 import { memo, type Ref } from "react";
-import { focuses } from "../../shared/catalogue";
+import { focuses } from "../../../../shared/catalogue";
 
 export type Tick = { id: string; bearing: number; label: string };
 

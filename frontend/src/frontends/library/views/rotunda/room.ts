@@ -1,5 +1,5 @@
 // The geometry of the round room and the physics that turn it. No React here.
-import type { BookArt, ShelfBook } from "../../shared/catalogue";
+import type { BookArt, ShelfBook } from "../../../../shared/catalogue";
 
 export type Layout = "spines" | "covers";
 
@@ -85,7 +85,13 @@ export type Tier = {
   arts: BookArt[];
   angle: number[];
   lap: number;
-  seam: number; // where the brass tier plate stands
+  seam: number; // where the brass tier plate stands, centred in its own bay
+  bay: number; // arc of the clear bay the plate stands in, in radians
+  // How this tier stands. A tier too short to fill the view as spines is
+  // shown face-out and spaced round the whole lap, whatever was asked for.
+  layout: Layout;
+  // Face-out books with room between them, each on its own stand and light.
+  spaced: boolean;
 };
 
 export type Anchor = { id: string; angle: number } | undefined;
@@ -100,16 +106,38 @@ export function layTier(
   anchor: Anchor,
 ): Tier {
   const { u, R } = dims;
-  const gap = layout === "spines" ? Math.max(2, 3 * u) : 18 * u;
-  const plate = 150 * u;
-  let x = plate + (layout === "spines" ? 10 * u : 0);
+  // The plate stands alone in a bay: its own width plus a clear margin on
+  // each side, so neither the first book nor the last, pulled out and
+  // turned, can reach it.
+  const plateBay = (dims.phone ? 112 + 2 * 64 : 112 + 2 * 104) * u;
+  const minLap = (2 * dims.phiMount + 0.4) * R;
+  const spineGap = Math.max(2, 3 * u);
+  const n = arts.length;
+  const asSpines =
+    plateBay + arts.reduce((s, a) => s + thickness(a, u) + spineGap, 0);
+  const stands: Layout =
+    layout === "spines" && asSpines < 2 * dims.phiVis * R * 1.15
+      ? "covers"
+      : layout;
+  let gap = stands === "spines" ? spineGap : 18 * u;
+  if (stands === "covers" && n > 1) {
+    // A short tier spreads its books evenly round the lap rather than
+    // bunching them up and leaving a bare wall.
+    const room = (minLap - plateBay - n * dims.coverW) / (n - 1);
+    if (room > gap) gap = Math.min(dims.coverW * 1.6, room);
+  }
+  let x = 0;
   const angle: number[] = [];
   for (const art of arts) {
-    const w = layout === "spines" ? thickness(art, u) : dims.coverW;
+    const w = stands === "spines" ? thickness(art, u) : dims.coverW;
     angle.push((x + w / 2) / R);
     x += w + gap;
   }
-  const lap = Math.max(x + 12 * u, (2 * dims.phiMount + 0.4) * R) / R;
+  const lastEnd = n ? x - gap : 0;
+  const lap = Math.max(lastEnd + plateBay, minLap);
+  // The plate sits in the middle of whatever wall is left between the last
+  // book and the first one round again.
+  const seamAt = (lastEnd + lap) / 2;
   let offset = 0;
   if (anchor) {
     const at = books.findIndex((b) => b.id === anchor.id);
@@ -121,8 +149,25 @@ export function layTier(
     books,
     arts,
     angle: angle.map((a) => a + offset),
-    lap,
-    seam: plate / 2 / R + offset,
+    lap: lap / R,
+    seam: seamAt / R + offset,
+    bay: (lap - lastEnd) / R,
+    layout: stands,
+    spaced: stands === "covers" && gap > dims.coverW * 0.45,
+  };
+}
+
+// The tiers that can be on screen with the ladder at `lift`: every tier whose
+// books reach into the view, above and below, so the room reads as tall.
+export function tierWindow(D: Dims, lift: number) {
+  const base = D.H * 0.53;
+  const margin = 0.15;
+  // The floor and the dome cover the very bottom and top of the view.
+  const below = (D.vh / 2 - D.cy - base + D.H - D.fw * 0.1) / D.pitch + margin;
+  const above = (D.vh / 2 + D.cy + base - D.ow * 0.1) / D.pitch + margin;
+  return {
+    lo: clamp(Math.ceil(lift - above), 0, 3),
+    hi: clamp(Math.floor(lift + below), 0, 3),
   };
 }
 
@@ -188,6 +233,21 @@ export class Motion {
       Math.abs(this.lift - this.liftTarget) > 0.0005 ||
       Math.abs(this.liftVel) > 0.001
     );
+  }
+
+  // Jump to wherever the motion was heading. Used when frames stop coming
+  // (a background tab, a frozen page) so the room is never left half-turned.
+  finish() {
+    if (this.mode === "tween") this.turn = this.to;
+    else if (this.mode === "spring") this.turn = this.target;
+    else if (this.mode === "coast") this.turn = this.snap(this.turn);
+    else if (this.mode === "drag") return;
+    this.vel = 0;
+    this.mode = "idle";
+    if (!this.liftHeld) {
+      this.lift = this.liftTarget;
+      this.liftVel = 0;
+    }
   }
 
   turnTo(to: number, ms: number, now: number) {

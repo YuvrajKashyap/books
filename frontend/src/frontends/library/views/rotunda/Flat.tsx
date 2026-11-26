@@ -1,6 +1,6 @@
 // Without 3D transforms the room is laid out flat: one long bay per tier that
 // scrolls sideways, with the same books, light and brass.
-import type { ShelfBook } from "../../shared/catalogue";
+import type { ShelfBook } from "../../../../shared/catalogue";
 import { roman, type Layout, type Tier } from "./room";
 
 export function Flat({
