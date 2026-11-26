@@ -31,6 +31,7 @@ export type Scene = {
   shelfH: number;
   bookH: number;
   boardH: number;
+  pad: number; // clear space between a case side and the first book
   shelves: SceneShelf[];
 };
 export type LampEls = {
@@ -106,7 +107,9 @@ export class Lamp {
   private grabbed = false;
   private grab = { x: 0, y: 0 };
   private user: Target | null = null; // where the visitor left the lamp
-  private search: Target | null = null;
+  private search: { y: number } | null = null;
+  private side: -1 | 1 = -1; // which case side the lamp rests beside
+  private sideAsk = 0;
   private reading: Target | null = null;
   private ptr = { x: 0, y: 0, t: -1e9 };
   private scrollY = 0;
@@ -126,6 +129,13 @@ export class Lamp {
   private lastB = { x: 0, y: 0 };
   private box: DOMRect | null = null;
   private followers = new Set<HTMLElement>();
+  // The control bar. The bulb never hangs lower than just under it, so it
+  // stays above the rows it lights and its cord stays behind the bar.
+  private ceiling: HTMLElement | null = null;
+  private floorY = Infinity;
+  private holeR = -1;
+  private frames = 0;
+  private watchdog = 0;
 
   constructor(
     private els: LampEls,
@@ -187,11 +197,25 @@ export class Lamp {
     };
     document.addEventListener("visibilitychange", vis);
     this.off.push(() => document.removeEventListener("visibilitychange", vis));
+    // The first picture is written now, before the page is painted, so the
+    // room starts dark and warms from there rather than flashing lit.
+    this.bx = this.px;
+    this.by = PIVOT_Y + this.L;
+    this.write(true);
     this.raf = requestAnimationFrame(this.frame);
+    // The finished room never depends on animation frames: if none arrive
+    // (a hidden or frozen tab), the lamp is simply lit.
+    this.watchdog = window.setTimeout(() => {
+      if (this.frames > 2) return;
+      this.heat = this.on ? 1 : 0;
+      this.fil = this.on ? 1 : 0.05;
+      this.write(true);
+    }, 2600);
   }
 
   destroy() {
     cancelAnimationFrame(this.raf);
+    window.clearTimeout(this.watchdog);
     this.off.forEach((f) => f());
     this.off = [];
     this.scene = null;
@@ -210,6 +234,10 @@ export class Lamp {
       this.followers.delete(el);
     };
   }
+  setCeiling(el: HTMLElement | null) {
+    this.ceiling = el;
+    this.dirty = true;
+  }
   setReady(ready: boolean) {
     this.ready = ready;
   }
@@ -226,8 +254,9 @@ export class Lamp {
     this.reader = reader;
     this.dirty = true;
   }
-  // Send the lamp to a point measured from the scene's top-left corner.
-  setSearchTarget(t: Target | null) {
+  // Send the lamp down its side of the case to a height measured from the
+  // top of the shelves.
+  setSearchTarget(t: { y: number } | null) {
     this.search = t;
     if (t) this.user = null;
   }
@@ -265,6 +294,37 @@ export class Lamp {
       : this.vh * (0.24 + 0.2 * p);
   }
 
+  // Where the lamp hangs when nobody has moved it. Over the name at the
+  // top of the page; after that beside the case, on the side the visitor
+  // is working, so it lights the shelves without hanging in front of them.
+  private restX(now: number, side?: -1 | 1) {
+    const box = this.box;
+    const p = clamp(this.scrollY / (this.vh * 0.8), 0, 1);
+    if (
+      !box ||
+      !this.scene ||
+      (side === undefined && p < 0.3 && !this.opt.reduced)
+    )
+      return this.vw / 2;
+    if (side === undefined && !this.opt.lite && now - this.ptr.t < 6000) {
+      const ask =
+        this.ptr.x > this.vw * 0.62 ? 1 : this.ptr.x < this.vw * 0.38 ? -1 : 0;
+      if (!ask || ask === this.side) this.sideAsk = 0;
+      else if (!this.sideAsk) this.sideAsk = now;
+      else if (now - this.sideAsk > 650) {
+        this.side = ask;
+        this.sideAsk = 0;
+      }
+    }
+    const half = this.fixH * 0.316; // half the bulb's width
+    const pad = this.scene.pad;
+    // A little further out than the first spine, so its sway clears them.
+    const out = half + 14;
+    return (side ?? this.side) < 0
+      ? Math.max(half * 0.5, box.left + pad - out)
+      : Math.min(this.vw - half * 0.5, box.right - pad + out);
+  }
+
   private resize() {
     const { els } = this;
     this.vw = document.documentElement.clientWidth || window.innerWidth;
@@ -273,17 +333,27 @@ export class Lamp {
     this.R =
       this.vw < 720
         ? Math.max(this.vw * 1.5, 600)
-        : clamp(this.vw * 0.75, 760, 1250);
+        : clamp(this.vw * 0.95, 900, 1500);
     if (this.opt.reduced) this.R *= 1.5;
     const reach = Math.hypot(this.vw, this.vh) * 1.2;
     this.S = reach / (HOLE / 2);
-    // Stops are px from the filament, written as a share of the scaled square.
-    const at = (r: number) => ((r * this.R) / reach) * 100;
-    els.hole.style.background = `radial-gradient(circle closest-side, rgba(0,0,0,0) 0%, rgba(0,0,0,.03) ${at(0.18)}%, rgba(0,0,0,.14) ${at(0.36)}%, rgba(0,0,0,.32) ${at(0.55)}%, rgba(0,0,0,.54) ${at(0.76)}%, rgba(0,0,0,.74) ${at(1)}%, rgba(0,0,0,.84) 100%)`;
+    this.holeR = -1;
     this.dpr = Math.min(window.devicePixelRatio || 1, this.opt.lite ? 1 : 1.5);
     els.canvas.width = Math.round(this.vw * this.dpr);
     els.canvas.height = Math.round(this.vh * this.dpr);
     this.dirty = true;
+  }
+
+  // The pool of light. It opens out from the filament as it warms, so the
+  // case comes up out of the dark from the bulb outwards.
+  private pool() {
+    const reach = Math.hypot(this.vw, this.vh) * 1.2;
+    const R = this.R * (0.2 + 0.8 * Math.pow(clamp(this.heat, 0, 1), 0.65));
+    if (this.holeR > 0 && Math.abs(R - this.holeR) < this.R * 0.008) return;
+    this.holeR = R;
+    // Stops are px from the filament, written as a share of the scaled square.
+    const at = (r: number) => Math.min(99.5, ((r * R) / reach) * 100);
+    this.els.hole.style.background = `radial-gradient(circle closest-side, rgba(0,0,0,0) 0%, rgba(0,0,0,.03) ${at(0.18)}%, rgba(0,0,0,.14) ${at(0.36)}%, rgba(0,0,0,.32) ${at(0.55)}%, rgba(0,0,0,.54) ${at(0.76)}%, rgba(0,0,0,.74) ${at(1)}%, rgba(0,0,0,.84) 100%)`;
   }
 
   private onScroll() {
@@ -305,6 +375,7 @@ export class Lamp {
 
   private frame = (now: number) => {
     this.raf = requestAnimationFrame(this.frame);
+    this.frames++;
     const dt = this.last ? Math.min((now - this.last) / 1000, 1 / 30) : 1 / 60;
     this.last = now;
     const { opt } = this;
@@ -324,10 +395,16 @@ export class Lamp {
     }
 
     this.box = this.scene ? this.scene.root.getBoundingClientRect() : null;
+    this.floorY =
+      this.ceiling && !this.reading
+        ? this.ceiling.getBoundingClientRect().bottom - this.fixH * 0.22
+        : Infinity;
     if (!opt.reduced) this.swing(dt, now);
     else {
-      this.px = this.vw / 2;
-      this.L = this.vh * (this.vw < 720 ? 0.2 : 0.24);
+      this.px = this.reading ? this.reading.x : this.restX(now, -1);
+      this.L = this.reading
+        ? this.reading.y - PIVOT_Y
+        : Math.min(this.vh * (this.vw < 720 ? 0.26 : 0.36), this.maxL());
       this.th = 0;
     }
 
@@ -348,11 +425,19 @@ export class Lamp {
     if (this.ctx) this.dust(dt, now);
   };
 
+  // The longest the cord may be: down to just under the control bar.
+  private maxL() {
+    return Math.max(
+      this.vh * 0.08,
+      Math.min(this.vh * 0.94, this.floorY - PIVOT_Y),
+    );
+  }
+
   private swing(dt: number, now: number) {
     const target =
       this.reading ??
       (this.search && this.box
-        ? { x: this.search.x + this.box.left, y: this.search.y + this.box.top }
+        ? { x: this.restX(now, -1), y: this.search.y + this.box.top }
         : null) ??
       this.user;
     const steps = 2;
@@ -376,17 +461,17 @@ export class Lamp {
         this.om = mix(this.om, (this.th - prev) / h, 0.3);
         const len = clamp(
           Math.hypot(gx - this.px, gy - PIVOT_Y),
-          this.vh * 0.1,
-          this.vh * 0.94,
+          this.vh * 0.08,
+          this.maxL(),
         );
         this.L += (len - this.L) * Math.min(1, h * 40);
         this.LV = 0;
       } else {
-        const tx = target ? target.x : this.vw / 2;
+        const tx = target ? target.x : this.restX(now);
         const tl = clamp(
           target ? target.y - PIVOT_Y : this.restL(),
           this.vh * 0.08,
-          this.vh * 0.94,
+          this.maxL(),
         );
         ax = 26 * (tx - this.px) - 9.5 * this.pxV;
         this.pxV += ax * h;
@@ -398,8 +483,16 @@ export class Lamp {
           (clamp(ax, -6000, 6000) / this.L) * Math.cos(this.th) -
           0.85 * this.om;
         // A pointer nearby and the lamp leans toward it.
-        if (!this.opt.lite && now - this.ptr.t < 1800 && this.heat > 0.5) {
-          const lean = clamp((this.ptr.x - this.bx) / this.vw, -0.5, 0.5) * 0.2;
+        // Not while it is tucked under the bar: there it keeps clear of
+        // the spines.
+        if (
+          !this.opt.lite &&
+          now - this.ptr.t < 1800 &&
+          this.heat > 0.5 &&
+          this.L < this.maxL() - 24
+        ) {
+          const lean =
+            clamp((this.ptr.x - this.bx) / this.vw, -0.5, 0.5) * 0.12;
           al += 5 * (lean - this.th * 0.25);
         }
         this.om += al * h;
@@ -428,7 +521,10 @@ export class Lamp {
       Math.max(0, this.L - this.fixH * 0.632).toFixed(1) + "px";
     els.chain.style.transform = `rotate(${(this.th + this.chainA).toFixed(4)}rad)`;
     els.anchor.style.transform = `translate3d(${bx.toFixed(1)}px,${by.toFixed(1)}px,0)`;
-    els.hole.style.transform = `translate3d(${(bx - HOLE / 2).toFixed(1)}px,${(by - HOLE / 2).toFixed(1)}px,0) scale(${this.S.toFixed(3)})`;
+    // The pool of light reaches a little further into the room than a true
+    // point source would, so a lamp beside the case still lights its far end.
+    const hx = bx + (this.vw / 2 - bx) * 0.22;
+    els.hole.style.transform = `translate3d(${(hx - HOLE / 2).toFixed(1)}px,${(by - HOLE / 2).toFixed(1)}px,0) scale(${this.S.toFixed(3)})`;
     els.haze.style.transform = `translate3d(${(bx - HOLE / 2).toFixed(1)}px,${(by - HOLE / 2).toFixed(1)}px,0) scale(${((this.R * 0.95) / (HOLE / 2)).toFixed(3)})`;
     const root = els.root.style;
     const lx = bx.toFixed(0) + "px";
@@ -444,6 +540,7 @@ export class Lamp {
       root.setProperty("--heat", heat.toFixed(3));
       root.setProperty("--fil-heat", this.fil.toFixed(3));
       root.setProperty("--fil", filamentColour(this.fil));
+      this.pool();
       els.full.style.opacity = (
         1 -
         clamp((heat - 0.05) / 0.75, 0, 1) ** 0.8

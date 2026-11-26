@@ -2,6 +2,7 @@
 // dust it lights. All motion comes from the Lamp engine; this only draws.
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type PointerEvent,
@@ -37,7 +38,8 @@ export function LampView({
   const [held, setHeld] = useState(false);
   const [pulled, setPulled] = useState(false);
 
-  useEffect(() => {
+  // Made before the first paint, so the room starts in the dark.
+  useLayoutEffect(() => {
     const host = root.current;
     if (
       !host ||
