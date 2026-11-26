@@ -1,0 +1,144 @@
+html:has(.fx-picker) {
+  background: #0b0d10;
+  color-scheme: dark;
+}
+html:has(.fx-picker) body {
+  margin: 0;
+}
+.fx-picker {
+  --ink: #ece6d6;
+  --dim: #8d8a80;
+  --line: #ece6d61f;
+  --lamp: #ffcf87;
+  box-sizing: border-box;
+  min-height: 100vh;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(28px, 7vw, 96px) clamp(16px, 4vw, 40px);
+  color: var(--ink);
+  font:
+    400 15px/1.5 "IBM Plex Mono",
+    ui-monospace,
+    monospace;
+}
+.fx-picker *,
+.fx-picker *::before {
+  box-sizing: border-box;
+}
+.fx-picker .pk-mark {
+  margin: 0 0 18px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--lamp);
+}
+.fx-picker h1 {
+  margin: 0;
+  font:
+    400 clamp(44px, 9vw, 112px) / 0.92 "Fraunces Variable",
+    serif;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.035em;
+}
+.fx-picker h1 em {
+  font-style: italic;
+  color: var(--lamp);
+}
+.fx-picker .pk-lede {
+  max-width: 62ch;
+  margin: 26px 0 0;
+  color: var(--dim);
+  font-size: 13px;
+}
+.fx-picker .pk-lede b,
+.fx-picker code {
+  font: inherit;
+  color: var(--ink);
+}
+.fx-picker ol {
+  margin: clamp(36px, 6vw, 72px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.fx-picker li {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+}
+.fx-picker li > a:first-child {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 0.8fr) minmax(0, 1.4fr) 28px;
+  align-items: baseline;
+  gap: 16px;
+  padding: 22px 8px;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color 0.3s,
+    padding 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fx-picker li > a:first-child:is(:hover, :focus-visible) {
+  padding-left: 20px;
+  background: #ece6d60a;
+  outline: none;
+}
+.fx-picker .pk-n {
+  font-size: 11px;
+  color: var(--dim);
+}
+.fx-picker .pk-name {
+  font:
+    400 clamp(26px, 3.6vw, 44px) / 1 "Fraunces Variable",
+    serif;
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.02em;
+}
+.fx-picker .pk-idea {
+  font-size: 13px;
+  color: var(--dim);
+}
+.fx-picker .pk-go {
+  justify-self: end;
+  color: var(--lamp);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fx-picker li > a:first-child:is(:hover, :focus-visible) .pk-go {
+  transform: translateX(6px);
+}
+.fx-picker .pk-rooms,
+.fx-picker .pk-live {
+  position: absolute;
+  right: 52px;
+  top: 8px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.fx-picker .pk-rooms {
+  color: var(--dim);
+  text-underline-offset: 3px;
+}
+.fx-picker .pk-rooms:is(:hover, :focus-visible) {
+  color: var(--lamp);
+}
+.fx-picker .pk-live {
+  color: var(--lamp);
+}
+@media (max-width: 640px) {
+  .fx-picker li > a:first-child {
+    grid-template-columns: 30px 1fr 20px;
+    row-gap: 6px;
+    padding-top: 30px;
+  }
+  .fx-picker .pk-idea {
+    grid-column: 2 / 3;
+  }
+  .fx-picker .pk-go {
+    grid-row: 1;
+    grid-column: 3;
+  }
+  .fx-picker .pk-rooms,
+  .fx-picker .pk-live {
+    right: 8px;
+  }
+}

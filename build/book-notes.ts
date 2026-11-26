@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import type { Plugin } from "vite";
-import manuscript from "../frontend/src/shelf/synopses.json" with { type: "json" };
+import manuscript from "../frontend/src/shared/synopses.json" with { type: "json" };
 
 // Each book is an independently cacheable static file. Keep the editable
 // manuscript together and keep its prose out of the landing-page bundle.
