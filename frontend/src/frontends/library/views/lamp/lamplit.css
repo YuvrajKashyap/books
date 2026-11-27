@@ -3,8 +3,10 @@
    with its hole (20), haze and dust (21, 22), a pulled book (28), the lamp
    (29), the cornice with any empty-search note (25, under the bulb but
    above the dark), the reader (60), and the lamp again above the reader
-   (69, 70). The shared dock (the shell's, not ours) sits over all of it,
-   so the page pads its foot by var(--fx-dock-h). */
+   (69, 70). The shared nav (the shell's, not ours) sits over all of it:
+   a rail down the left on a desktop, var(--fx-rail-w) wide, and a bar
+   across the top on a phone, var(--fx-top-h) tall. The room stands clear
+   of both; its background runs on behind them. */
 
 /* Stand-ins for Instrument Serif while it loads, scaled to its widths so
    the name is the right size from the first paint and never runs off the
@@ -44,9 +46,9 @@ html:has(.fx-lamplit) body {
   margin: 0;
   background: #000;
 }
-/* Keyboard focus scrolls books clear of the shared dock at the foot. */
+/* Keyboard focus scrolls books clear of the nav bar at the top (phones). */
 html:has(.fx-lamplit) {
-  scroll-padding-bottom: var(--fx-dock-h, 110px);
+  scroll-padding-top: var(--fx-top-h, 0px);
 }
 html:has(.fx-lamplit.is-reading) {
   overflow: hidden;
@@ -65,6 +67,9 @@ html:has(.fx-lamplit.is-reading) {
   --paper: #f3e4c3;
   --ink: #26170a;
   --post: 22px;
+  /* The room the nav leaves: the rail on the left, the bar on top. */
+  --rail: var(--fx-rail-w, 0px);
+  --bar: var(--fx-top-h, 0px);
   position: relative;
   isolation: isolate;
   min-height: 100vh;
@@ -339,9 +344,10 @@ html:has(.fx-lamplit.is-reading) {
   transform: scale(1.18);
 }
 
-/* Nothing of the room sits under the shared dock: the floor ends above it. */
+/* The case and its pediment stand in the width the nav rail leaves, and
+   centre there; the wall and the floor run on behind the rail. */
 .fx-lamplit .page {
-  padding-bottom: var(--fx-dock-h, 110px);
+  padding-left: var(--rail);
 }
 
 /* ------------------------------------------------------------ pediment */
@@ -350,7 +356,9 @@ html:has(.fx-lamplit.is-reading) {
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 33vh clamp(20px, 5vw, 60px) 4vh;
+  /* The top bar of a phone lies over the head of the page; the bulb's
+     cord may run up behind it, the name may not. */
+  padding: calc(33vh + var(--bar)) clamp(20px, 5vw, 60px) 4vh;
   text-align: center;
 }
 /* Every wooden surface holds its own drawn walnut (a canvas, z -2) under
@@ -437,7 +445,7 @@ html:has(.fx-lamplit.is-reading) {
   opacity: 0.9;
   filter: blur(5px);
   transform: translate3d(
-    calc((50vw - var(--lx, 50vw)) * 0.05),
+    calc((50vw + var(--rail) / 2 - var(--lx, 50vw)) * 0.05),
     calc(7px + (42vh - var(--ly, 24vh)) * 0.06),
     0
   );
@@ -507,7 +515,7 @@ html:has(.fx-lamplit.is-reading) {
 }
 .fx-lamplit .cornice-light {
   position: absolute;
-  left: calc(50% - 50vw);
+  left: calc(50% - 50vw - var(--rail) / 2);
   top: -130px;
   width: 720px;
   height: 380px;
@@ -1165,7 +1173,7 @@ html:has(.fx-lamplit.is-reading) {
 
 .fx-lamplit .wait {
   position: fixed;
-  left: 50%;
+  left: calc(50% + var(--rail) / 2);
   top: 47vh;
   z-index: 36;
   display: grid;
@@ -1243,9 +1251,12 @@ html:has(.fx-lamplit.is-reading) {
 
 /* --------------------------------------------------------------- reader */
 
+/* On a desktop the nav rail stays (dimmed) while a book is open, so the
+   reader centres in the width right of it; its veil still covers the
+   whole window. On a phone the top bar steps away, so it takes it all. */
 .fx-lamplit .rd {
   position: fixed;
-  inset: 0;
+  inset: 0 0 0 var(--rail);
   z-index: 60;
   overflow: hidden auto;
   overscroll-behavior: contain;
@@ -1863,7 +1874,7 @@ html:has(.fx-lamplit.is-reading) {
     height: 50px;
   }
   .fx-lamplit .pediment {
-    padding-top: 33vh;
+    padding-top: calc(33vh + var(--bar));
     padding-bottom: 4.5vh;
   }
   .fx-lamplit .name,
@@ -2040,11 +2051,11 @@ html:has(.fx-lamplit.is-reading) {
         rgba(255, 220, 170, 0.06) 2px 3px,
         rgba(0, 0, 0, 0) 3px 100%
       )
-      50% 0 / 184px 100%,
+      calc(50% + var(--rail) / 2) 0 / 184px 100%,
     linear-gradient(
       90deg,
       rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0) 22%,
+      rgba(0, 0, 0, 0) calc(22% + var(--rail) * 0.78),
       rgba(0, 0, 0, 0) 78%,
       rgba(0, 0, 0, 0.5)
     ),
@@ -2124,11 +2135,13 @@ html:has(.fx-lamplit.is-reading) {
 }
 /* The floor: boards running away under the case, and the lamp's pool. */
 .fx-lamplit .floor {
+  --mid: calc(50% + var(--rail) / 2); /* under the middle of the case */
   position: relative;
   height: max(24vh, 190px);
+  margin-left: calc(-1 * var(--rail)); /* on under the rail, to the edge */
   overflow: hidden;
   perspective: 520px;
-  perspective-origin: 50% 0;
+  perspective-origin: var(--mid) 0;
   background: #000;
   transition: opacity 0.5s ease;
 }
@@ -2152,7 +2165,7 @@ html:has(.fx-lamplit.is-reading) {
   z-index: 2;
   background:
     radial-gradient(
-      ellipse min(700px, 60%) 70% at 50% 0,
+      ellipse min(700px, 60%) 70% at var(--mid) 0,
       rgba(0, 0, 0, 0.8),
       rgba(0, 0, 0, 0)
     ),

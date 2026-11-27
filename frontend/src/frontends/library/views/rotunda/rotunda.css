@@ -2005,35 +2005,65 @@ html:has(.fx-rotunda) body {
   top: calc(var(--ow) * 0.19 + 46px);
 }
 
-/* ---- the shared dock --------------------------------------------------- */
+/* ---- the shared nav --------------------------------------------------- */
 
-/* The dock floats over the foot of the room (its height is --fx-dock-h, set
-   on <html> by the dock). Nothing of the room's own is fixed there: the
-   floor sinks a little so the rose rides low behind it, and fades out
-   towards the bottom edge so the dock reads cleanly over dark stone. */
-.fx-rotunda .floor {
-  bottom: calc(var(--fx-dock-h, 64px) * -0.35);
-  -webkit-mask-image: linear-gradient(
-    0deg,
-    transparent 0,
-    rgba(0, 0, 0, 0.25) calc(var(--fx-dock-h, 64px) * 0.55),
-    #000 calc(var(--fx-dock-h, 64px) * 1.25)
-  );
-  mask-image: linear-gradient(
-    0deg,
-    transparent 0,
-    rgba(0, 0, 0, 0.25) calc(var(--fx-dock-h, 64px) * 0.55),
-    #000 calc(var(--fx-dock-h, 64px) * 1.25)
-  );
+/* The shared nav is a rail down the left on desktop (--fx-rail-w) and a bar
+   across the top on phones (--fx-top-h); the shell publishes both on <html>,
+   and whichever is not in use is 0px. The room is composed in the free area
+   beside it: the space, the instruments and the reader are inset by the nav,
+   so every centred thing (the oculus and its name, the book ahead and its
+   plate, the notices, the reader) centres in what is left. The room reads
+   its own size off .space (see freeArea in index.tsx). */
+.fx-rotunda {
+  --rail: var(--fx-rail-w, 0px);
+  --top: var(--fx-top-h, 0px);
 }
-/* Phones: the old stack of controls is gone, so the floor sits just above
-   the dock and the shelves keep the height the stack used to take. */
-.fx-rotunda.phone .floor {
-  bottom: calc(var(--fx-dock-h, 140px) - 24px);
-  -webkit-mask-image: linear-gradient(0deg, transparent 0, #000 46px);
-  mask-image: linear-gradient(0deg, transparent 0, #000 46px);
+.fx-rotunda .space,
+.fx-rotunda .hud {
+  left: var(--rail);
+  top: var(--top);
 }
-/* The flat fallback scrolls clear of the dock. */
+/* The reader keeps clear of the rail, which stays (dimmed) while a book is
+   open, but takes the full height: the phone bar steps away while reading
+   even though --fx-top-h keeps its value. */
+.fx-rotunda .reader {
+  left: var(--rail);
+  top: 0;
+}
+/* The wall still runs on behind the opaque rail to the window's edge; only
+   the eye moves, to the middle of the free area. */
+.fx-rotunda .stage {
+  left: calc(var(--rail) * -1);
+  perspective-origin: calc(50% + var(--rail) / 2) 50%;
+}
+.fx-rotunda .cam {
+  left: calc(50% + var(--rail) / 2);
+}
+.fx-rotunda .shade {
+  left: calc(var(--rail) * -1);
+  background:
+    radial-gradient(
+      ellipse 62% 78% at calc(50% + var(--rail) / 2) 50%,
+      rgba(5, 6, 13, 0) 0%,
+      rgba(5, 6, 13, 0) 36%,
+      rgba(5, 6, 13, 0.4) 74%,
+      rgba(5, 6, 13, 0.86) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5, 6, 13, 0.34) 0%,
+      rgba(5, 6, 13, 0) 18%,
+      rgba(5, 6, 13, 0) 82%,
+      rgba(5, 6, 13, 0.34) 100%
+    );
+}
+/* The entrance's darkness covers the whole window, nav strip and all. */
+.fx-rotunda .veil {
+  left: calc(var(--rail) * -1);
+  top: calc(var(--top) * -1);
+}
+/* The flat fallback scrolls in the free area too. */
 .fx-rotunda.flat-mode .flat-scroll {
-  padding-bottom: calc(var(--fx-dock-h, 64px) + 24px);
+  left: var(--rail);
+  top: var(--top);
 }

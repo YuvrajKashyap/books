@@ -180,23 +180,28 @@ export function toFabric(cam: Camera, sx: number, sy: number) {
   return { x: t * sx, z: cam.ez + t * (sy * s - cam.P * c) };
 }
 
-export function viewFor(w: number, h: number) {
+// w and h are the whole window; rail is the strip the shared nav keeps at the
+// left edge on a desktop. The scene centres itself in what is left over.
+export function viewFor(w: number, h: number, rail = 0) {
+  const free = Math.max(1, w - rail);
   // A phone looks through a longer lens, so three covers fill its width.
   const narrow = w < 760;
   const P = Math.max(
     600,
-    Math.min(1150, Math.min(w * (narrow ? 1.98 : 0.95), h * 1.3)),
+    Math.min(1150, Math.min(free * (narrow ? 1.98 : 0.95), h * 1.3)),
   );
   const originY = Math.round(h * 0.6);
-  // A quiet margin each side of the near shelf (64px on wide screens); the
-  // controls live in the shared dock, so nothing else claims the width.
-  const rails = w >= 900 ? 128 : 12;
+  // A quiet margin each side of the near shelf (64px on wide screens),
+  // measured inside the free area beside the nav.
+  const rails = w >= 900 || rail > 0 ? 128 : 12;
   const nearScale = P / (EYE_H * Math.sin(TILT) + NEAR * Math.cos(TILT));
   const cols = Math.max(
     2,
-    Math.min(8, Math.floor((w - rails) / (PITCH_X * nearScale))),
+    Math.min(8, Math.floor((free - rails) / (PITCH_X * nearScale))),
   );
-  return { P, originY, cols };
+  // The camera's principal point, in px from the left edge of the window.
+  const originX = rail + free / 2;
+  return { P, originY, originX, cols };
 }
 
 export const clamp = (v: number, lo: number, hi: number) =>

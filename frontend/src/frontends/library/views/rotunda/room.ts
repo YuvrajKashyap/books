@@ -10,12 +10,15 @@ export const easeInOut = (p: number) =>
   p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
 export const roman = ["I", "II", "III", "IV"];
 
-// Everything measured from the viewport. The viewer stands a little behind the
-// centre of the cylinder, so the wall ahead is at true size and the shelves
-// curl in towards them at the edges of the view.
+// Everything measured from the room's free area: the window less the shared
+// nav (the rail on the left on desktop, the bar on top on phones). The viewer
+// stands a little behind the centre of the cylinder, so the wall ahead is at
+// true size and the shelves curl in towards them at the edges of the view.
 export type Dims = {
-  vw: number;
-  vh: number;
+  vw: number; // width of the free area
+  vh: number; // height of the free area
+  ox: number; // where the free area starts, from the window's left edge
+  oy: number; // and from its top edge
   phone: boolean;
   u: number; // overall scale
   R: number; // radius of the shelf fronts
@@ -33,7 +36,7 @@ export type Dims = {
   cy: number; // how far the eye line sits from the middle of the screen
 };
 
-export function measure(vw: number, vh: number): Dims {
+export function measure(vw: number, vh: number, ox = 0, oy = 0): Dims {
   const phone = vw < 720;
   const u = phone
     ? clamp(vh / 900, 0.7, 0.86)
@@ -41,10 +44,13 @@ export function measure(vw: number, vh: number): Dims {
   const R = phone ? clamp(vw * 0.86, 290, 560) : clamp(vw * 0.52, 560, 880);
   const d = R * 0.6;
   const P = R + d;
+  // The wall runs on behind the rail, so the arc reaches to the window's
+  // left edge, not just to the edge of the free area.
+  const reach = vw / 2 + ox;
   let phiVis = 0.3;
   while (
     phiVis < 1.45 &&
-    (P * R * Math.sin(phiVis)) / (R * Math.cos(phiVis) + d) < vw / 2
+    (P * R * Math.sin(phiVis)) / (R * Math.cos(phiVis) + d) < reach
   )
     phiVis += 0.01;
   const H = Math.round(190 * u);
@@ -53,6 +59,8 @@ export function measure(vw: number, vh: number): Dims {
   return {
     vw,
     vh,
+    ox,
+    oy,
     phone,
     u,
     R,
@@ -67,8 +75,8 @@ export function measure(vw: number, vh: number): Dims {
     sigma: (2 * Math.PI) / segments,
     ow: phone ? Math.min(vw * 1.25, 640) : Math.min(vw * 0.62, vh * 1.02, 940),
     fw: phone ? Math.min(vw * 1.3, 620) : Math.min(vw * 0.74, vh * 1.05, 900),
-    // Phones lift the room a little above the shared dock at the foot.
-    cy: phone ? -Math.round(vh * 0.05) : -Math.round(vh * 0.012),
+    // Phones lift the eye line a touch so the floor has room at the foot.
+    cy: phone ? -Math.round(vh * 0.03) : -Math.round(vh * 0.012),
   };
 }
 

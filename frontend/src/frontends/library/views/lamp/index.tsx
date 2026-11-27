@@ -35,7 +35,7 @@ import { Pull, type PullHandle } from "./Pull";
 import { LampView } from "./LampView";
 import { Reader } from "./Reader";
 import { Walnut } from "./Walnut";
-import type { Lamp } from "./lamp";
+import { navRoom, type Lamp } from "./lamp";
 
 type Reading = { id: string; closing: boolean; fly: boolean };
 
@@ -217,10 +217,12 @@ export default function OneLamp() {
     if (!q.trim() || !ok) return;
     const el = corniceRef.current ?? shelvesRef.current;
     if (!el) return;
+    // On a phone the nav bar lies across the top of the window.
+    const bar = navRoom().top;
     const top = el.getBoundingClientRect().top;
-    if (top < 0 || top > window.innerHeight * 0.4)
+    if (top < bar || top > window.innerHeight * 0.4)
       window.scrollTo({
-        top: window.scrollY + top - 12,
+        top: window.scrollY + top - bar - 12,
         behavior: env.reduced ? "auto" : "smooth",
       });
   }, [q, ok, env.reduced]);
@@ -254,10 +256,14 @@ export default function OneLamp() {
       lamp.setReadingTarget(null);
       return;
     }
+    // The reader stands right of the nav rail (desktop only; it is 0 on
+    // a phone, where the top bar steps away while a book is open).
+    const left = navRoom().left;
     const vw = document.documentElement.clientWidth;
+    const w = vw - left;
     const small = vw < 720;
     lamp.setReadingTarget({
-      x: small ? vw * 0.17 : vw / 2 - Math.min(vw * 0.3, 380),
+      x: small ? vw * 0.17 : left + w / 2 - Math.min(w * 0.3, 380),
       y: window.innerHeight * (small ? 0.1 : 0.15),
     });
   }, [isReading]);
@@ -320,19 +326,14 @@ export default function OneLamp() {
   }, []);
   const bounds = useCallback(() => {
     const box = shelvesRef.current?.getBoundingClientRect();
-    // The shared dock covers the foot of the window; a book drawn out stays
-    // clear of it.
-    const dock =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--fx-dock-h",
-        ),
-      ) || 0;
+    // A book drawn out stays clear of the shared nav: the rail down the
+    // left on a desktop, the bar across the top on a phone.
+    const nav = navRoom();
     return {
-      left: box ? box.left : 0,
+      left: Math.max(box ? box.left : 0, nav.left),
       right: box ? box.right : document.documentElement.clientWidth,
-      top: 0,
-      bottom: window.innerHeight - dock,
+      top: nav.top,
+      bottom: window.innerHeight,
     };
   }, []);
 

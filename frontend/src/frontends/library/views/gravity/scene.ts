@@ -244,6 +244,7 @@ export class Fabric {
   private clock = 0;
   private nameTex: THREE.CanvasTexture | null = null;
   private originY = 0;
+  private originX = 0;
 
   constructor(canvas: HTMLCanvasElement, lite: boolean) {
     this.maxWells = lite ? 28 : 72;
@@ -360,7 +361,7 @@ export class Fabric {
     this.scene.add(mesh);
   }
 
-  resize(w: number, h: number, P: number, originY: number) {
+  resize(w: number, h: number, P: number, originY: number, originX = w / 2) {
     this.w = w;
     this.h = h;
     this.renderer.setSize(w, h, false);
@@ -368,16 +369,18 @@ export class Fabric {
     this.camera.aspect = w / h;
     this.camera.position.set(0, 0, P);
     (this.stars.uniforms.uRes.value as THREE.Vector2).set(w, h);
-    this.setOrigin(originY);
+    this.setOrigin(originY, originX);
   }
 
-  // Where the camera's principal point sits, in px from the top.
-  setOrigin(originY: number) {
+  // Where the camera's principal point sits, in px from the top (and from
+  // the left: the scene centres itself beside the shared nav).
+  setOrigin(originY: number, originX = this.originX) {
     this.originY = originY;
+    this.originX = originX;
     this.camera.setViewOffset(
       this.w,
       this.h,
-      0,
+      this.w / 2 - originX,
       this.h / 2 - originY,
       this.w,
       this.h,
@@ -455,7 +458,7 @@ export class Fabric {
     );
     su.uNameOn.value = this.nameTex ? f.name.on : 0;
     (su.uVanish.value as THREE.Vector2).set(
-      this.w / 2,
+      this.originX,
       this.h - (this.originY - cam.P * Math.tan(cam.pitch)),
     );
     this.renderer.render(this.scene, this.camera);

@@ -27,7 +27,18 @@ import {
 import type { Camera, Layout, Plan } from "./layout";
 
 export type Probe = { x: number; y: number; r: number };
-export type View = { w: number; h: number; P: number; originY: number };
+// w and h are the whole window. originX is where the scene is centred: the
+// middle of the free area beside the shared nav's rail (rail px at the left).
+// top is the height of the nav's bar over the top of a phone.
+export type View = {
+  w: number;
+  h: number;
+  P: number;
+  originY: number;
+  originX: number;
+  rail: number;
+  top: number;
+};
 export type StageApi = {
   restRect: (id: string) => DOMRect | null;
   focusBook: (id: string) => void;
@@ -133,14 +144,14 @@ export function Stage(props: Props) {
     s: Math.max(0, window.scrollY / STEP),
     v: 0,
     rb: 0,
-    px: view.w / 2,
+    px: view.originX,
     py: view.h * 0.7,
-    tx: view.w / 2,
+    tx: view.originX,
     ty: view.h * 0.7,
     strength: 0,
     wanted: 0,
     moved: false,
-    lx: view.w / 2,
+    lx: view.originX,
     ly: view.h / 2,
     theta: 0,
     ring: 0,
@@ -153,11 +164,11 @@ export function Stage(props: Props) {
   const maxS = Math.max(0, rows - 1 + OVERRUN);
   const ahead = layout === "spines" ? 4 : lite ? 5 : 6;
 
-  // At the top of the page the whole scene sits lower, under the name.
+  // At the top of the page the whole scene sits lower, under the name (and on
+  // a phone a little lower still, as the nav's bar pushes the name down).
   const liftAt = (scrollY: number, h: number) =>
     (1 - smooth(0, 1.1, scrollY / STEP)) *
-    h *
-    (live.current.lite ? 0.11 : 0.13);
+    (h * (live.current.lite ? 0.11 : 0.13) + live.current.view.top * 0.5);
 
   // The moment the shelf arrived, noted during render so the entrance needs
   // no timer and no effect to begin.
@@ -232,7 +243,7 @@ export function Stage(props: Props) {
         const pw = (spine ? depth : w) * p.scale;
         const ph = h * p.scale;
         return new DOMRect(
-          v.w / 2 + p.x - pw / 2,
+          v.originX + p.x - pw / 2,
           v.originY + liftAt(window.scrollY, v.h) + p.y - ph / 2,
           pw,
           ph,
@@ -328,7 +339,7 @@ export function Stage(props: Props) {
     fabricRef.current = fabric;
     {
       const v = live.current.view;
-      fabric.resize(v.w, v.h, v.P, v.originY);
+      fabric.resize(v.w, v.h, v.P, v.originY, v.originX);
     }
 
     const m = motion.current;
@@ -366,15 +377,16 @@ export function Stage(props: Props) {
     let last = performance.now();
     let lastBase = -1;
     let lastOy = -1;
+    let lastOx = -1;
     let seenResize = resized.current;
     let frames = 0;
     let skyName = false;
     let lastPast = false;
     let lastTick = 0;
     const mountedAt = performance.now();
-    // Where the shared dock begins, so nothing in the scene slides in under
-    // it. The dock publishes the room it takes at the foot as --fx-dock-h,
-    // which holds steady even while the dock steps away for the reader.
+    // Where the scene's floor is. The shared nav no longer sits at the foot
+    // (--fx-dock-h is 0), so this is the bottom of the window; a room taken
+    // at the foot would still be honoured if the nav ever claimed one.
     let floor = live.current.view.h;
     const measureFloor = () => {
       const h = live.current.view.h;
@@ -430,12 +442,14 @@ export function Stage(props: Props) {
         seenResize = resized.current;
         measureFloor();
       }
-      if (oy !== lastOy) {
+      const ox = Math.round(v.originX);
+      if (oy !== lastOy || ox !== lastOx) {
         lastOy = oy;
-        stage.style.perspectiveOrigin = `50% ${oy}px`;
-        fabric.setOrigin(oy);
+        lastOx = ox;
+        stage.style.perspectiveOrigin = `${ox}px ${oy}px`;
+        fabric.setOrigin(oy, ox);
       }
-      world.style.transform = `translate3d(0,${oy}px,0) translateZ(${v.P}px) rotateX(${(-cam.pitch).toFixed(5)}rad) translate3d(0,${cam.eyeH.toFixed(2)}px,${(-cam.ez).toFixed(2)}px)`;
+      world.style.transform = `translate3d(${ox}px,${oy}px,0) translateZ(${v.P}px) rotateX(${(-cam.pitch).toFixed(5)}rad) translate3d(0,${cam.eyeH.toFixed(2)}px,${(-cam.ez).toFixed(2)}px)`;
 
       const b = Math.floor(m.s);
       if (b !== lastBase) {
@@ -457,17 +471,18 @@ export function Stage(props: Props) {
       m.px += (m.tx - m.px) * (1 - Math.exp(-dt * 11));
       m.py += (m.ty - m.py) * (1 - Math.exp(-dt * 11));
       m.strength += (m.wanted - m.strength) * (1 - Math.exp(-dt * 4));
-      const hit = toFabric(cam, m.px - v.w / 2, m.py - oy);
+      const hit = toFabric(cam, m.px - ox, m.py - oy);
       const pointerDepth = hit ? m.strength * (lite ? 52 : 68) * (1 - rb) : 0;
 
       // How far a shelf has passed into the near zone: 0 in clear view, 1 once
-      // the middle of its books has gone under the dock. Spines stand tall
-      // enough that a shelf passing under the camera would otherwise sweep
-      // giant book tops across the controls.
+      // the middle of its books reaches the bottom of the window. The fade
+      // begins well above the edge, so a shelf dissolves on its way out
+      // rather than being sliced off by the frame. Spines stand tall enough
+      // that they start sooner.
       const spinesNow = L.layout === "spines";
       const midH = (BOOK_H * (spinesNow ? SPINE_SCALE : 1)) / 2;
-      const fadeTop = floor - v.h * (spinesNow ? 0.16 : 0.12);
-      const fadeEnd = floor + (v.h - floor) * 0.2;
+      const fadeTop = floor - v.h * (spinesNow ? 0.22 : 0.18);
+      const fadeEnd = floor + Math.max(v.h * 0.02, (v.h - floor) * 0.2);
       const nearAt = (z: number, d: number) => {
         if (d < 300) return 1;
         const pb = project(cam, 0, -midH, z);
@@ -591,7 +606,7 @@ export function Stage(props: Props) {
 
       // The well the open book falls into.
       if (p) {
-        const under = toFabric(cam, p.x - v.w / 2, p.y + p.r * 0.95 - oy);
+        const under = toFabric(cam, p.x - ox, p.y + p.r * 0.95 - oy);
         if (under) {
           m.rx = under.x;
           m.rz = under.z;
@@ -661,7 +676,7 @@ export function Stage(props: Props) {
         const el = regs.current.get(L.target)?.el.querySelector(".gw-hit");
         if (el) {
           const r = el.getBoundingClientRect();
-          const x = clamp(r.left + r.width / 2, 130, v.w - 130);
+          const x = clamp(r.left + r.width / 2, v.rail + 130, v.w - 130);
           tag.style.transform = `translate3d(${x.toFixed(1)}px,${Math.max(96, r.top - 16).toFixed(1)}px,0)`;
         }
       }
@@ -721,16 +736,34 @@ export function Stage(props: Props) {
   }, [lite]);
 
   useEffect(() => {
-    fabricRef.current?.resize(view.w, view.h, view.P, view.originY);
+    fabricRef.current?.resize(
+      view.w,
+      view.h,
+      view.P,
+      view.originY,
+      view.originX,
+    );
     resized.current++;
-  }, [view.w, view.h, view.P, view.originY, lite]);
+  }, [view.w, view.h, view.P, view.originY, view.originX, lite]);
 
   // Whenever the shelf, its arrangement, the viewport or the reader changes,
   // draw a frame before the browser paints, so the camera, the fog, the
   // readouts and the books always agree with the address on the first paint.
   useLayoutEffect(() => {
     kickRef.current?.();
-  }, [phase, plan, layout, view.w, view.h, view.P, reading, searching, base]);
+  }, [
+    phase,
+    plan,
+    layout,
+    view.w,
+    view.h,
+    view.P,
+    view.originX,
+    view.top,
+    reading,
+    searching,
+    base,
+  ]);
 
   // One shelf nearer or farther, from the dock.
   const travel = (dir: -1 | 1) => {

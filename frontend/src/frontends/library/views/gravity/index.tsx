@@ -40,12 +40,23 @@ function useMedia(query: string) {
   return on;
 }
 
-// Viewport size. On phones the height only ever grows for a given width, so
-// the scene does not jump as the browser bars slide away.
+// Viewport size, and the room the shared nav keeps for itself: a rail at the
+// left on a desktop (--fx-rail-w), a bar over the top on a phone (--fx-top-h).
+// The shell publishes both on <html>, so a change there is watched too. On
+// phones the height only ever grows for a given width, so the scene does not
+// jump as the browser bars slide away.
+function navRoom(name: string) {
+  const v = parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue(name),
+  );
+  return Number.isFinite(v) && v > 0 ? Math.round(v) : 0;
+}
 function useViewport(lite: boolean) {
   const read = () => ({
     w: document.documentElement.clientWidth || window.innerWidth,
     h: window.innerHeight,
+    rail: navRoom("--fx-rail-w"),
+    top: navRoom("--fx-top-h"),
   });
   const [size, setSize] = useState(read);
   useEffect(() => {
@@ -53,11 +64,24 @@ function useViewport(lite: boolean) {
       setSize((cur) => {
         const next = read();
         if (lite && next.w === cur.w) next.h = Math.max(cur.h, next.h);
-        return next.w === cur.w && next.h === cur.h ? cur : next;
+        return next.w === cur.w &&
+          next.h === cur.h &&
+          next.rail === cur.rail &&
+          next.top === cur.top
+          ? cur
+          : next;
       });
     resize();
     window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    const watch = new MutationObserver(resize);
+    watch.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+    return () => {
+      window.removeEventListener("resize", resize);
+      watch.disconnect();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lite]);
   return size;
@@ -86,9 +110,18 @@ export default function GravityWell() {
   const gl = !reduced && !glFailed;
   const size = useViewport(lite);
   const view = useMemo(() => {
-    const v = viewFor(size.w, size.h);
-    return { w: size.w, h: size.h, P: v.P, originY: v.originY, cols: v.cols };
-  }, [size.w, size.h]);
+    const v = viewFor(size.w, size.h, size.rail);
+    return {
+      w: size.w,
+      h: size.h,
+      P: v.P,
+      originY: v.originY,
+      originX: v.originX,
+      rail: size.rail,
+      top: size.top,
+      cols: v.cols,
+    };
+  }, [size.w, size.h, size.rail, size.top]);
 
   // ---- the view, kept in the address ----
   const q = params.get("q") ?? "";

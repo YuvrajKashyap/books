@@ -58,6 +58,18 @@ type Phase = "dark" | "opening" | "live";
 const THIRD = (Math.PI * 2) / 3;
 const short = (focus: string) => focus.split(" + ")[0];
 
+// The free area beside the shared nav: width, height, left, top. Read off
+// `.space` once it is laid out, otherwise off the sizes the nav publishes.
+function freeArea(el: HTMLElement | null): [number, number, number, number] {
+  if (typeof window === "undefined") return [1440, 900, 0, 0];
+  if (el && el.clientWidth > 0 && el.clientHeight > 0)
+    return [el.clientWidth, el.clientHeight, el.offsetLeft, el.offsetTop];
+  const css = getComputedStyle(document.documentElement);
+  const x = parseFloat(css.getPropertyValue("--fx-rail-w")) || 0;
+  const y = parseFloat(css.getPropertyValue("--fx-top-h")) || 0;
+  return [window.innerWidth - x, window.innerHeight - y, x, y];
+}
+
 function useMedia(query: string) {
   const [on, setOn] = useState(
     () => typeof window !== "undefined" && window.matchMedia(query).matches,
@@ -97,32 +109,12 @@ export default function Rotunda() {
       typeof CSS !== "undefined" &&
       !CSS.supports("transform-style", "preserve-3d"),
   );
-  const [dims, setDims] = useState<Dims>(() =>
-    measure(
-      typeof window === "undefined" ? 1440 : window.innerWidth,
-      typeof window === "undefined" ? 900 : window.innerHeight,
-    ),
-  );
+  const [dims, setDims] = useState<Dims>(() => measure(...freeArea(null)));
   const [lite] = useState(
     () =>
       typeof navigator !== "undefined" &&
       (navigator.hardwareConcurrency ?? 8) <= 4,
   );
-  useEffect(() => {
-    let raf = 0;
-    const size = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() =>
-        setDims(measure(window.innerWidth, window.innerHeight)),
-      );
-    };
-    window.addEventListener("resize", size);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", size);
-    };
-  }, []);
-
   // ---- the books, tier by tier ------------------------------------------
   const [motion] = useState(() => new Motion());
   const sorted = useMemo(
@@ -249,6 +241,28 @@ export default function Rotunda() {
   const placed = useRef(false);
   const stalled = useRef(false);
   const introTimers = useRef<number[]>([]);
+
+  // The room is laid out in the free area beside the shared nav. `.space`
+  // is inset by the nav's published size, so watching it catches the window
+  // resizing and the nav changing shape alike.
+  useEffect(() => {
+    let raf = 0;
+    const size = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() =>
+        setDims(measure(...freeArea(space.current))),
+      );
+    };
+    window.addEventListener("resize", size);
+    const watch =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(size);
+    if (space.current) watch?.observe(space.current);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", size);
+      watch?.disconnect();
+    };
+  }, []);
 
   const register = useCallback((id: string, el: HTMLElement | null) => {
     if (el) registry.current.set(id, el);
@@ -552,8 +566,8 @@ export default function Rotunda() {
     setParam("book", next.id);
   };
   let landing: Place = {
-    x: dims.vw / 2,
-    y: dims.vh / 2,
+    x: dims.ox + dims.vw / 2,
+    y: dims.oy + dims.vh / 2,
     h: dims.H,
     spine: true,
   };
@@ -566,8 +580,8 @@ export default function Rotunda() {
     landing = flat
       ? (origin.current ?? landing)
       : {
-          x: dims.vw / 2,
-          y: dims.vh / 2 + dims.cy + shift + dims.H * 0.53 - h / 2,
+          x: dims.ox + dims.vw / 2,
+          y: dims.oy + dims.vh / 2 + dims.cy + shift + dims.H * 0.53 - h / 2,
           h,
           spine: tiers[t].layout === "spines",
         };

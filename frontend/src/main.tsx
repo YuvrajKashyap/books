@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, useLocation } from "react-router-dom";
 import { ACTIVE, frontends, type Frontend } from "./frontends/registry";
+import { reloadOnStale } from "./shared/reloadOnStale";
 import { sessionMayExist } from "./shared/session";
 
 // "/" wears the active frontend. "/d/<slug>" previews any of them, and
@@ -19,7 +20,7 @@ const preview = Boolean(previewed && chosen?.slug === previewed);
 // lazy() must keep one identity per loader across renders.
 const loaded = new Map<Frontend["load"], ReturnType<typeof lazy>>();
 function once(load: Frontend["load"]) {
-  if (!loaded.has(load)) loaded.set(load, lazy(load));
+  if (!loaded.has(load)) loaded.set(load, lazy(reloadOnStale(load)));
   return loaded.get(load)!;
 }
 
@@ -51,7 +52,7 @@ function Site({ frontend }: { frontend: Frontend }) {
   return <Rooms />;
 }
 
-const Picker = lazy(() => import("./frontends/picker"));
+const Picker = lazy(reloadOnStale(() => import("./frontends/picker")));
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter basename={preview ? "/d/" + chosen!.slug : "/"}>

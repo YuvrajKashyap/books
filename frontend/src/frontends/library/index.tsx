@@ -11,13 +11,17 @@ import {
   views,
   type ViewSlug,
 } from "./views";
+import { reloadOnStale } from "../../shared/reloadOnStale";
 import { Dock, DockSlotProvider } from "./Dock";
 import "./library.css";
 
 const loaded = new Map<ViewSlug, ComponentType>();
 function viewComponent(slug: ViewSlug) {
   if (!loaded.has(slug))
-    loaded.set(slug, lazy(views.find((v) => v.slug === slug)!.load));
+    loaded.set(
+      slug,
+      lazy(reloadOnStale(views.find((v) => v.slug === slug)!.load)),
+    );
   return loaded.get(slug)!;
 }
 const close = 280; // ms for the old room to go out; the opening takes ~420

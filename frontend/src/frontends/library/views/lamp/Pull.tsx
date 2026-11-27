@@ -149,9 +149,10 @@ export const Pull = forwardRef<
       const half = Math.min(170, Math.max(110, c.W / 2 + 40));
       el.style.maxWidth = half * 2 + "px";
       const cx = c.end.x + c.W / 2;
+      // Clear of the nav rail too, which the bounds start beyond.
+      const lo = Math.max(half + 8, props.current.bounds().left + half);
       el.style.left =
-        clamp(cx, half + 8, Math.max(half + 8, vw - half - 8)).toFixed(1) +
-        "px";
+        clamp(cx, lo, Math.max(lo, vw - half - 8)).toFixed(1) + "px";
       el.style.top = (c.end.y + 14).toFixed(1) + "px";
       if (title) {
         (el.children[0] as HTMLElement).textContent = title;

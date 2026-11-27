@@ -52,6 +52,15 @@ export type ReaderLight = {
 };
 // A place for the filament to hang, in viewport px.
 export type Target = { x: number; y: number };
+
+// How much of the window the shared nav takes: a rail down the left on a
+// desktop, a bar across the top on a phone. The shell publishes both on
+// <html>; whichever is not in use is 0.
+export function navRoom() {
+  const css = getComputedStyle(document.documentElement);
+  const px = (name: string) => parseFloat(css.getPropertyValue(name)) || 0;
+  return { left: px("--fx-rail-w"), top: px("--fx-top-h") };
+}
 type Mote = {
   x: number;
   y: number;
@@ -88,6 +97,8 @@ function filamentColour(t: number) {
 export class Lamp {
   vw = 0;
   vh = 0;
+  private x0 = 0; // the left edge of the room, clear of the nav rail
+  private y0 = 0; // the foot of the nav bar on a phone
   bx = 0; // the filament, in viewport px
   by = 0;
   private px = 0; // the pivot's place on its rail
@@ -144,7 +155,7 @@ export class Lamp {
     this.ctx = opt.reduced ? null : els.canvas.getContext("2d");
     this.scrollY = window.scrollY;
     this.resize();
-    this.px = this.vw / 2;
+    this.px = this.mid();
     this.L = this.restL();
     if (opt.reduced) {
       this.heat = 1;
@@ -176,6 +187,13 @@ export class Lamp {
       this.user = null;
     });
     listen("scroll", () => this.onScroll(), { passive: true });
+    // The nav publishes its size on <html> when it mounts or changes shape.
+    const nav = new MutationObserver(() => this.readNav());
+    nav.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+    this.off.push(() => nav.disconnect());
     listen(
       "pointermove",
       (e) => {
@@ -289,9 +307,23 @@ export class Lamp {
 
   private restL() {
     const p = clamp(this.scrollY / (this.vh * 0.8), 0, 1);
-    return this.vw < 720
-      ? this.vh * (0.2 + 0.1 * p)
-      : this.vh * (0.24 + 0.2 * p);
+    return (
+      this.y0 +
+      (this.vw < 720 ? this.vh * (0.2 + 0.1 * p) : this.vh * (0.24 + 0.2 * p))
+    );
+  }
+
+  // The middle of the room: the window less the nav rail.
+  private mid() {
+    return this.x0 + (this.vw - this.x0) / 2;
+  }
+
+  private readNav() {
+    const { left, top } = navRoom();
+    if (left === this.x0 && top === this.y0) return;
+    this.x0 = left;
+    this.y0 = top;
+    this.dirty = true;
   }
 
   // Where the lamp hangs when nobody has moved it. Over the name at the
@@ -305,10 +337,15 @@ export class Lamp {
       !this.scene ||
       (side === undefined && p < 0.3 && !this.opt.reduced)
     )
-      return this.vw / 2;
+      return this.mid();
     if (side === undefined && !this.opt.lite && now - this.ptr.t < 6000) {
+      const w = this.vw - this.x0;
       const ask =
-        this.ptr.x > this.vw * 0.62 ? 1 : this.ptr.x < this.vw * 0.38 ? -1 : 0;
+        this.ptr.x > this.x0 + w * 0.62
+          ? 1
+          : this.ptr.x < this.x0 + w * 0.38
+            ? -1
+            : 0;
       if (!ask || ask === this.side) this.sideAsk = 0;
       else if (!this.sideAsk) this.sideAsk = now;
       else if (now - this.sideAsk > 650) {
@@ -321,12 +358,29 @@ export class Lamp {
     // A little further out than the first spine, so its sway clears them.
     const out = half + 14;
     return (side ?? this.side) < 0
-      ? Math.max(half * 0.5, box.left + pad - out)
+      ? Math.max(this.minX(), box.left + pad - out)
       : Math.min(this.vw - half * 0.5, box.right - pad + out);
+  }
+
+  // The furthest left the pivot may run: clear of the nav rail, with room
+  // for half the bulb.
+  private minX() {
+    const half = this.fixH * 0.316;
+    return this.x0 ? this.x0 + half + 8 : half * 0.5;
+  }
+
+  // The pivot's rail stops short of the nav rail.
+  private fence() {
+    const lo = this.minX();
+    if (this.x0 && this.px < lo) {
+      this.px = lo;
+      this.pxV = Math.max(0, this.pxV);
+    }
   }
 
   private resize() {
     const { els } = this;
+    this.readNav();
     this.vw = document.documentElement.clientWidth || window.innerWidth;
     this.vh = window.innerHeight;
     this.fixH = this.vw < 720 ? 104 : 136;
@@ -404,7 +458,10 @@ export class Lamp {
       this.px = this.reading ? this.reading.x : this.restX(now, -1);
       this.L = this.reading
         ? this.reading.y - PIVOT_Y
-        : Math.min(this.vh * (this.vw < 720 ? 0.26 : 0.36), this.maxL());
+        : Math.min(
+            this.y0 + this.vh * (this.vw < 720 ? 0.26 : 0.36),
+            this.maxL(),
+          );
       this.th = 0;
     }
 
@@ -451,6 +508,7 @@ export class Lamp {
         ax = 60 * (gx - this.px) - 13 * this.pxV;
         this.pxV += ax * h;
         this.px += this.pxV * h;
+        this.fence();
         const want = clamp(
           Math.atan2(gx - this.px, gy - PIVOT_Y),
           -MAX_SWING,
@@ -476,6 +534,7 @@ export class Lamp {
         ax = 26 * (tx - this.px) - 9.5 * this.pxV;
         this.pxV += ax * h;
         this.px += this.pxV * h;
+        this.fence();
         this.LV += (30 * (tl - this.L) - 10 * this.LV) * h;
         this.L += this.LV * h;
         let al =
@@ -502,6 +561,16 @@ export class Lamp {
           this.om *= -0.3;
         }
       }
+      // The bulb swings no further left than the nav rail: it knocks
+      // against it and comes back.
+      if (this.x0 && this.L > 0) {
+        const edge = this.x0 + this.fixH * 0.316;
+        const least = Math.asin(clamp((edge - this.px) / this.L, -1, 1));
+        if (this.th < least) {
+          this.th = least;
+          if (this.om < 0) this.om *= -0.3;
+        }
+      }
       // The pull-chain trails the bulb as a small pendulum of its own.
       this.chainV +=
         (-70 * this.chainA - 5 * this.chainV - 1.4 * this.om) * h * 4;
@@ -523,7 +592,7 @@ export class Lamp {
     els.anchor.style.transform = `translate3d(${bx.toFixed(1)}px,${by.toFixed(1)}px,0)`;
     // The pool of light reaches a little further into the room than a true
     // point source would, so a lamp beside the case still lights its far end.
-    const hx = bx + (this.vw / 2 - bx) * 0.22;
+    const hx = bx + (this.mid() - bx) * 0.22;
     els.hole.style.transform = `translate3d(${(hx - HOLE / 2).toFixed(1)}px,${(by - HOLE / 2).toFixed(1)}px,0) scale(${this.S.toFixed(3)})`;
     els.haze.style.transform = `translate3d(${(bx - HOLE / 2).toFixed(1)}px,${(by - HOLE / 2).toFixed(1)}px,0) scale(${((this.R * 0.95) / (HOLE / 2)).toFixed(3)})`;
     const root = els.root.style;
